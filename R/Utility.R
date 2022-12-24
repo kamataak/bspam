@@ -1,4 +1,4 @@
-#' This file includes utilities of orfr package.
+#' This file includes utilities of bspam package.
 #'
 #' Copyright (C) 2021 The ORF Project Team
 #'

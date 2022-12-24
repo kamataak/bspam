@@ -1,14 +1,14 @@
 ---
-title: "orfr"
+title: "bspam"
 output: github_document
 ---
 
 # Model-Based Calibration and Scoring for Oral Reading Fluency Assessment Data with R
 
-`orfr` is an R package that allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.
+`bspam` is an R package that allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.
 
 ## Installation:
-To install `orf` package, follow the steps below.
+To install `bspam` package, follow the steps below.
 
 1. The `MultiGHQuad` package needs to be installed. As of May 31, 2022, `MultiGHQuad` package has been removed from CRAN, so download an archive package file from  https://cran.r-project.org/src/contrib/Archive/MultiGHQuad/ and manually install.
 
@@ -17,9 +17,9 @@ To install `orf` package, follow the steps below.
 if(!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
 ```
 
-3. Install `orfr` by running the following R code.
+3. Install `bspam` by running the following R code.
 ``` {r eval = F}
-remotes::install_github("kamataak/orfr")
+remotes::install_github("kamataak/bspam")
 ```
 
 ## Basic Usage:
@@ -27,12 +27,12 @@ It is recommended that the data are prepared as a long-format data frame, where 
 
 Variable names and the order of the variables can be flexible in the data frame. When running functions in this package, variable names for required variables need to be specified. 
 
-The `orfr` package comes with several data sets. To demonstrate some basic usage of key functions in the package, an example passage-level student data set `passage2` is used here.   The data set `passage2` is consisted of reading accuracy and time data for 12 passages from 85 students. Although the 85 students were assigned to all 12 passages, the number of passages read by the 85 students varied from 2 to 12 passages. The number of students per passage were between 59 to 79.
+The `bspam` package comes with several data sets. To demonstrate some basic usage of key functions in the package, an example passage-level student data set `passage2` is used here.   The data set `passage2` is consisted of reading accuracy and time data for 12 passages from 85 students. Although the 85 students were assigned to all 12 passages, the number of passages read by the 85 students varied from 2 to 12 passages. The number of students per passage were between 59 to 79.
 
 Load required packages, and load/view the example data set `passage2`.  
 ```{r eval = F}
 library(tidyverse)
-library(orfr)
+library(bspam)
 View(passage2)
 ```
 
@@ -136,7 +136,7 @@ WCPM_sample_ext2 <- wcpm(calib.data=MCEM_run,
 summary(WCPM_sample_ext2)
 ```
 
-Please see the [package website](https://kamataak.github.io/orfr/) for more detailed usage of the package.
+Please see the [package website](https://kamataak.github.io/bspam/) for more detailed usage of the package.
 
 ## Citation
 
@@ -144,12 +144,12 @@ Please see the [package website](https://kamataak.github.io/orfr/) for more deta
 ## Copyright Statement
 Copyright (C) 2022 The ORF Project Team
 
-The orfr package is free software: you can redistribute it and/or modify
+The bspam package is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
  any later version.
 
-The orfr package is distributed in the hope that it will be useful,
+The bspam package is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.

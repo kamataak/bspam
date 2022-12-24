@@ -1,4 +1,4 @@
-#' This file includes the Base functions of orfr package.
+#' This file includes the Base functions of bspam package.
 #'
 #' Copyright (C) 2021 The ORF Project Team
 #'
