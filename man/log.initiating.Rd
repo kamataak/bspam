@@ -2,7 +2,7 @@
 % Please edit documentation in R/Logger.R
 \name{log.initiating}
 \alias{log.initiating}
-\title{This file includes the log functions of orfr package.}
+\title{This file includes the log functions of bspam package.}
 \usage{
 \method{log}{initiating}()
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Utility.R
 \name{prep}
 \alias{prep}
-\title{This file includes utilities of orfr package.}
+\title{This file includes utilities of bspam package.}
 \usage{
 prep(
   data = data,

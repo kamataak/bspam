@@ -2,7 +2,7 @@
 % Please edit documentation in R/Base.R
 \name{run.mcem}
 \alias{run.mcem}
-\title{This file includes the Base functions of orfr package.}
+\title{This file includes the Base functions of bspam package.}
 \usage{
 run.mcem(Y, logT10, N, I, k.in = 5, reps.in = 2, ests.in = NA, verbose = FALSE)
 }
