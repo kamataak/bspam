@@ -62,7 +62,7 @@ By default, the standard errors for the model parameters are not estimated. This
 
 Passage calibration can also be done by using the `est="mcmc"` option, which implements a fully Bayesian approach through Gibbs sampling or Hamiltonian Monte Carlo. `bspam` employs JAGS and Stan, respectively, for the two Bayesian estimation methods. Currently, JAGS is used by default for estimations in the calibration data due to faster sampling with missing observations. Stan will be used in case of complete data, namely, if all students read all passages.  `bspam` runs JAGS in auto mode, which does not require the user to supply any specifications for Bayesian estimation (e.g., number of the iterations) or monitor convergence. Standard errors are provided by default as the standard deviations of the posterior distributions.
 
-```{r, message=FALSE}
+```{r, eval = F, message=FALSE}
 Bayes_run <- fit.model(person.data=passage2,
                        person.id = "id.student",
                        task.id = "id.passage",

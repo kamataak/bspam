@@ -1,14 +1,14 @@
-orfr
+bspam
 ================
 
 # Model-Based Calibration and Scoring for Oral Reading Fluency Assessment Data with R
 
-`orfr` is an R package that allows model-based calibration and scoring
+`bspam` is an R package that allows model-based calibration and scoring
 for oral reading fluency (ORF) assessment data.
 
 ## Installation:
 
-To install `orf` package, follow the steps below.
+To install `bspam` package, follow the steps below.
 
 1.  The `MultiGHQuad` package needs to be installed. As of May 31, 2022,
     `MultiGHQuad` package has been removed from CRAN, so download an
@@ -22,11 +22,24 @@ To install `orf` package, follow the steps below.
 if(!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
 ```
 
-3.  Install `orfr` by running the following R code.
+3.  Install `bspam` by running the following R code.
 
 ``` r
-remotes::install_github("kamataak/orfr")
+remotes::install_github("kamataak/bspam")
 ```
+
+`bspam` uses JAGS and Stan for Bayesian estimation. Download JAGS
+installation file from
+<https://sourceforge.net/projects/mcmc-jags/files/JAGS/> as per
+operating system requirements and follow the installation steps. `bspam`
+internally uses `runjags` package as an interface to JAGS. `runjags`
+will be automatically installed along with other R packages that `bspam`
+depends on. Stan can be installed by following the steps explained here:
+<https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>. Note
+that these steps show the installation of `RStan`, which `bspam` uses as
+an internal package to run Stan code. Please follow the installation
+steps carefully along with recommended versions of R and RStudio to
+prevent any issues releated to running Stan with `bspam`.
 
 ## Basic Usage:
 
@@ -42,7 +55,7 @@ Variable names and the order of the variables can be flexible in the
 data frame. When running functions in this package, variable names for
 required variables need to be specified.
 
-The `orfr` package comes with several data sets. To demonstrate some
+The `bspam` package comes with several data sets. To demonstrate some
 basic usage of key functions in the package, an example passage-level
 student data set `passage2` is used here. The data set `passage2` is
 consisted of reading accuracy and time data for 12 passages from 85
@@ -54,25 +67,27 @@ Load required packages, and load/view the example data set `passage2`.
 
 ``` r
 library(tidyverse)
-library(orfr)
+library(bspam)
 View(passage2)
 ```
 
 ### Passage Calibration
 
-Calibrate the passages using the `mcem()` function by implementing the
-Monte Carlo EM algorithm described in Potgieter et al. (2017).
+Calibrate the passages using the `fit.model()` function by implementing
+the Monte Carlo EM algorithm described in Potgieter et al. (2017).
 
 ``` r
-MCEM_run <- mcem(stu.data=passage2,
-                 studentid = "id.student",
-                 passageid = "id.passage",
-                 numwords.p = "numwords.pass",
-                 wrc = "wrc",
-                 time = "sec",
-                 k.in = 5,
-                 reps.in = 50,
-                 est = "mcem")
+MCEM_run <- fit.model(person.data=passage2,
+                      person.id = "id.student",
+                      task.id = "id.passage",
+                      max.counts = "numwords.pass",
+                      obs.counts = "wrc",
+                      time = "sec",
+                      k.in = 5,
+                      reps.in = 50,
+                      est = "mcem",
+                      verbose=TRUE,
+                      se="analytic")
 MCEM_run
 ```
 
@@ -81,18 +96,43 @@ estimated. This will allow one to increase the number of Monte-Carlo
 iterations `reps.in` to improve the quality of the model parameter
 estimates, while minimizing the computation time. The number of
 `reps.in` should be 50 to 100 in realistic calibrations. SE’s for model
-parameters are not required for running the `wcpm()` function to
+parameters are not required for running the `scoring()` function to
 estimate WCPM scores in the next step. If standard errors for model
-parameters are desired, an additional argument `se = "analytical"` or
-`se = "bootstrap"` needs to be added to the `mcem()` function.
+parameters are desired, an additional argument `se = "analytic"` or
+`se = "bootstrap"` needs to be added to the `fit.model()` function.
+
+Passage calibration can also be done by using the `est="mcmc"` option,
+which implements a fully Bayesian approach through Gibbs sampling or
+Hamiltonian Monte Carlo. `bspam` employs JAGS and Stan, respectively,
+for the two Bayesian estimation methods. Currently, JAGS is used by
+default for estimations in the calibration data due to faster sampling
+with missing observations. Stan will be used in case of complete data,
+namely, if all students read all passages. `bspam` runs JAGS in auto
+mode, which does not require the user to supply any specifications for
+Bayesian estimation (e.g., number of the iterations) or monitor
+convergence. Standard errors are provided by default as the standard
+deviations of the posterior distributions.
+
+``` r
+Bayes_run <- fit.model(person.data=passage2,
+                       person.id = "id.student",
+                       task.id = "id.passage",
+                       max.counts = "numwords.pass",
+                       obs.counts = "wrc",
+                       time = "sec",
+                       est = "mcmc",
+                       verbose=TRUE)
+Bayes_run
+```
 
 ### Estimating WCPM scores 1
 
 To estimate WCPM scores, we can do in two steps.
 
 **Step 1:** Prepare the data using the `prep()` function, where required
-data for the `wcpm()` function are prepared, including changing variable
-names and a generation of the natural-logarithm of the time data.
+data for the `scoring()` function are prepared, including changing
+variable names and a generation of the natural-logarithm of the time
+data.
 
 The output from the `prep()` function is a list of two components. The
 `data.long` component is a data frame, which is a long format of student
@@ -108,12 +148,12 @@ interest is to estimate WCPM scores only for selected cases.
 
 ``` r
 data <- prep(data = passage2,
-             studentid = "id.student",
-             season = "occasion",
-             grade = "grade",
-             passageid = "id.passage",
-             numwords.p = "numwords.pass",
-             wrc = "wrc",
+             person.id = "id.student",
+             occasion = "occasion",
+             group = "grade",
+             task.id = "id.passage",
+             max.counts = "numwords.pass",
+             obs.counts = "wrc",
              time = "sec")
 ```
 
@@ -123,20 +163,20 @@ Generate a list of unique cases:
 get.cases(data$data.long)
 ```
 
-**Step 2:** Run the `wcpm()` function to estimate WCPM scores. Note that
-we pass the output object `MCEM_run` from the passage calibration phase,
-as well as the manipulated data `data.long` from Step 1. By default,
-WCPM scores will be estimated for all cases in the data. Additionally,
-there are several estimator options and standard error estimation
-options. In this example, maximum a priori (MAP) estimators for model
-parameter estimation and analytic approach to estimate standard errors
-are used.
+**Step 2:** Run the `scoring()` function to estimate WCPM scores. Note
+that we pass the output object `MCEM_run` from the passage calibration
+phase, as well as the manipulated data `data.long` from Step 1. By
+default, WCPM scores will be estimated for all cases in the data.
+Additionally, there are several estimator options and standard error
+estimation options. In this example, maximum a priori (MAP) estimators
+for model parameter estimation and analytic approach to estimate
+standard errors are used.
 
 ``` r
-WCPM_all <- wcpm(calib.data=MCEM_run, 
-                 stu.data = data$data.long,
-                 est = "map", 
-                 se = "analytic")
+WCPM_all <- scoring(calib.data=MCEM_run, 
+                    person.data = data$data.long,
+                    est = "map", 
+                    se = "analytic")
 summary(WCPM_all)
 ```
 
@@ -149,11 +189,11 @@ shown earlier in this document.
 
 ``` r
 sample.cases <- data.frame(cases = c("2033_fall", "2043_fall", "2089_fall"))
-WCPM_sample <- wcpm(calib.data=MCEM_run, 
-                    stu.data = data$data.long,
-                    cases = sample.cases,
-                    est = "map", 
-                    se = "analytic")
+WCPM_sample <- scoring(calib.data=MCEM_run, 
+                       person.data = data$data.long,
+                       cases = sample.cases,
+                       est = "map", 
+                       se = "analytic")
 summary(WCPM_sample)
 ```
 
@@ -168,38 +208,58 @@ different sets of passages, as well as within students for longitudinal
 data, where a student are likely to read different sets of passages.
 
 ``` r
-WCPM_sample_ext1 <- wcpm(calib.data=MCEM_run, 
-                         stu.data = data$data.long,
-                         cases = sample.cases, 
-                         external = c("32004","32010","32015","32016","33003","33037"),
-                         est = "map", 
-                         se = "analytic")
+WCPM_sample_ext1 <- scoring(calib.data=MCEM_run, 
+                            person.data = data$data.long,
+                            cases = sample.cases, 
+                            external = c("32004","32010","32015","32016","33003","33037"),
+                            est = "map", 
+                            se = "analytic")
 summary(WCPM_sample_ext1)
+```
+
+As mentioned above, fully Bayesian approach can also be used as an
+estimator in `scoring()` function. The output object from the passage
+calibration phase should be used as per `calib.data` argument and it can
+be the one obtained from `fit.model()` by using the fully Bayesian or
+the “mcem” estimator. Note that if `est="mcmc"` is used, there is no
+need to use the `se=` argument. Standard errors will be provided by
+default as the standard deviations of the posterior distributions along
+with 95% high density intervals (i.e., confidence intervals). Here is an
+example of using fully Bayesian approach for estimating the same WCPM
+scores from external passages used in the former example:
+
+``` r
+WCPM_sample_ext1_bayes <- scoring(calib.data=MCEM_run, 
+                                  person.data = data$data.long,
+                                  cases = sample.cases, 
+                                  external = c("32004","32010","32015","32016","33003","33037"),
+                                  est = "mcmc")
+summary(WCPM_sample_ext1_bayes)
 ```
 
 ### Estimating WCPM scores 2
 
-**Alternatively, we can run the `wcpm()` function without Step 1**
+**Alternatively, we can run the `scoring()` function without Step 1**
 above, by entering the original data `passage2` directly as follows.
 
 ``` r
-WCPM_sample_ext2 <- wcpm(calib.data=MCEM_run, 
-                         stu.data = passage2,
-                         studentid = "id.student",
-                         passageid = "id.passage",
-                         season = "occasion",
-                         grade = "grade",
-                         numwords.p = "numwords.pass",
-                         wrc = "wrc",
-                         time = "sec",
-                         cases = sample.cases, 
-                         external = c("32004","32010","32015","32016","33003","33037"),
-                         est = "map", 
-                         se = "analytic")
+WCPM_sample_ext2 <- scoring(calib.data=MCEM_run, 
+                            person.data = passage2,
+                            person.id = "id.student",
+                            occasion = "occasion",
+                            group = "grade",
+                            task.id = "id.passage",
+                            max.counts = "numwords.pass",
+                            obs.counts = "wrc",
+                            time = "sec",
+                            cases = sample.cases, 
+                            external = c("32004","32010","32015","32016","33003","33037"),
+                            est = "map", 
+                            se = "analytic")
 summary(WCPM_sample_ext2)
 ```
 
-Please see the [package website](https://kamataak.github.io/orfr/) for
+Please see the [package website](https://github.com/kamataak/bspam/) for
 more detailed usage of the package.
 
 ## Citation
@@ -208,12 +268,12 @@ more detailed usage of the package.
 
 Copyright (C) 2022 The ORF Project Team
 
-The orfr package is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by the
-Free Software Foundation, either version 3 of the License, or any later
-version.
+The bspam package is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as published
+by the Free Software Foundation, either version 3 of the License, or any
+later version.
 
-The orfr package is distributed in the hope that it will be useful, but
+The bspam package is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
 Public License for more details. You should have received a copy of the
