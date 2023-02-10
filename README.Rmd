@@ -5,7 +5,7 @@ output: github_document
 
 # Speed-Accuracy Psychometric Modeling for Count Outcome Data with R
 
-`bspam` is an R package that fit a speed-accuracy psychometric model for count outcome data, where the accuracy model is a binomial count latent variable model. For example, the use of this modeling technique in this R package allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.
+`bspam` is an R package that contains functions to fit the speed-accuracy psychometric model for count outcome data (Potgieter, Kamata & Kara, 2017; Kara, Kamata, Potgieter & Nese, 2020), where the accuracy is modeled by a binomial count latent variable model. For example, the use of this modeling technique allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.
 
 ## Installation:
 To install `bspam` package, follow the steps below.
@@ -26,11 +26,13 @@ remotes::install_github("kamataak/bspam")
 Stan can be installed by following the steps explained here: https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started. Note that these steps show the installation of `RStan`, which `bspam` uses as an internal package to run Stan code. Please follow the installation steps carefully along with recommended versions of R and RStudio to prevent any issues releated to running Stan with `bspam`. 
 
 ## Basic Usage:
-It is recommended that the data are prepared as a long-format data frame, where each row is data for a unique case, namely, a specific passage from a specific student in a specific testing occasion. The data set should minimally contain the following 7 variables: (1) student ID, (2) grade level, (3) testing occasion ID, (4) passage ID, (5) the number of words in the passage, (6) the number of words correctly read for the passage, and (7) time that took to read the passage.  
+It is recommended that the data are prepared as a long-format data frame, where each row is data for a unique case, namely, a specific task from a specific student in a specific testing occasion. The data set should minimally contain the following 7 variables: (1) individual ID, (2) group ID, (3) testing occasion ID, (4) task ID, (5) the maximum number of attempts in the task, (6) the number of successes in the task, and (7) the time took to complete the task.  
 
 Variable names and the order of the variables can be flexible in the data frame. When running functions in this package, variable names for required variables need to be specified. 
 
-The `bspam` package comes with several data sets. To demonstrate some basic usage of key functions in the package, an example passage-level student data set `passage2` is used here.   The data set `passage2` is consisted of reading accuracy and time data for 12 passages from 85 students. Although the 85 students were assigned to all 12 passages, the number of passages read by the 85 students varied from 2 to 12 passages. The number of students per passage were between 59 to 79.
+The `bspam` package comes with several data sets. To demonstrate some basic usage of key functions in the package, an example ORF assessment data set is used here. In the context of an ORF assessment, a task is a passage given to the student to read aloud, and an attempt is student's reading on a word in the passage, which is scored correct (i.e., success) or not. The number of successes in the task is the number of words correctly read in the passage. 
+
+The data set `passage2` is a passage-level student data and consisted of reading accuracy and time data for 12 passages from 85 students. Although the 85 students were assigned to all 12 passages, the number of passages read by the 85 students varied from 2 to 12 passages. The number of students per passage were between 59 to 79.  
 
 Load required packages, and load/view the example data set `passage2`.  
 ```{r eval = F}
