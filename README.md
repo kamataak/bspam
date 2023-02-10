@@ -1,10 +1,11 @@
 bspam
 ================
 
-# Model-Based Calibration and Scoring for Oral Reading Fluency Assessment Data with R
+# Speed-Accuracy Psychometric Modeling for Count Outcome Data with R
 
-`bspam` is an R package that allows model-based calibration and scoring
-for oral reading fluency (ORF) assessment data.
+`bspam` is an R package that fit a speed-accuracy psychometric model for
+count outcome data. For example, this R package allows model-based
+calibration and scoring for oral reading fluency (ORF) assessment data.
 
 ## Installation:
 
