@@ -1,7 +1,7 @@
-#' summary the information of mcem class
+#' summary the information of fit.model class
 #'
 #'
-#' Copyright (C) 2021 The ORF Project Team
+#' Copyright (C) 2021-2023 The ORF Project Team
 #'
 #' This program is free software; you can redistribute it and/or modify
 #' it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ summary.fit.model <- function(object, digits=4,...) {
 #' summary the information of wcpm class
 #'
 #'
-#' Copyright (C) 2021 The ORF Project Team
+#' Copyright (C) 2021-2023 The ORF Project Team
 #'
 #' This program is free software; you can redistribute it and/or modify
 #' it under the terms of the GNU General Public License as published by
@@ -66,22 +66,24 @@ summary.fit.model <- function(object, digits=4,...) {
 #' @param digits = print out numeric with specific digits
 #' @param verbose - boolean, if TRUE, shows the summary, default is TRUE
 #' @param factor.scores - theta and tau output flag, default is FALSE
+#' @param show - output flag, "long" and "short", default "short" only output estimate result. "long" will output estimate result and data. 
 #'
 #' @return scoring dataset with task information and estimated score
 #' @method summary scoring
 #' @export
-summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=FALSE) {
+summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=FALSE, show="short") {
+  no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')
   z <- object
-
+  
   tb <- as.data.frame(t(do.call(rbind, z)))
-
+  
   # don't output theta and tau, if FALSE
   if (factor.scores==FALSE) {
     tb <- tb %>% select(-contains(c("tau", "theta")))
   }
-
+  
   getNames <- colnames(tb)
-
+  
   cols_num <- ncol(tb)
   #set screen print out to be short decimal
   tt <- as.matrix(unlist(lapply(as.double(unlist((tb[,c(6:cols_num)]))),
@@ -98,6 +100,12 @@ summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=FALSE) {
   #  tm1 <- sapply(tb %>% select(-contains(c("occasion"))), as.numeric)
   tm2 <- tb %>% select("occasion")
   tb <- cbind(tm1, tm2)[,c(1,cols_num,2:(cols_num-1))]
+  
+  if (show == "short") {
+    tt <- tt %>% select(-no_show_columns)
+    tb <- tb %>% select(-no_show_columns)
+  }
+  
   if (verbose == TRUE) {
     # only verbose TRUE will print out on screen
     print(tt)
@@ -105,12 +113,12 @@ summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=FALSE) {
   } else {
     return(invisible(tb))
   }
-
+  
 }
 #' summary the information of bootstrap class
 #'
 #'
-#' Copyright (C) 2021 The ORF Project Team
+#' Copyright (C) 2021-2023 The ORF Project Team
 #'
 #' This program is free software; you can redistribute it and/or modify
 #' it under the terms of the GNU General Public License as published by
@@ -136,7 +144,7 @@ summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=FALSE) {
 #' @export
 summary.bootstrap <- function(object, digits=4, geterror=FALSE,verbose=TRUE,factor.scores=FALSE) {
   z <- object
-
+  
   tb <- z$bootstrap.out
   if (geterror == TRUE) {
     if (length(z$error_case) != 0) {
@@ -151,10 +159,10 @@ summary.bootstrap <- function(object, digits=4, geterror=FALSE,verbose=TRUE,fact
       if (factor.scores==FALSE) {
         tb <- tb %>% select(-contains(c("tau", "theta")))
       }
-
+      
       getNames <- colnames(tb)
       cols_num <- ncol(tb)
-
+      
       #set screen print out to be short decimal
       tt <- as.matrix(unlist(lapply(as.double(unlist((tb[,c(6:cols_num)]))),
                                     sprintf, fmt = "%6.2f")))
@@ -167,7 +175,7 @@ summary.bootstrap <- function(object, digits=4, geterror=FALSE,verbose=TRUE,fact
       } else {
         tm1 <- sapply(tb %>% select(-contains(c("occasion"))), as.numeric)
       }
-
+      
       tm2 <- tb %>% select("occasion")
       tb <- cbind(tm1, tm2)[,c(1,cols_num,2:(cols_num-1))]
       if (verbose == TRUE) {
