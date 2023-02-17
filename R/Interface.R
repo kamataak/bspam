@@ -1,7 +1,7 @@
 #' This is an interface function to call and run mcem.
 #'
 #'
-#' Copyright (C) 2021 The ORF Project Team
+#' Copyright (C) 2021-2023 The ORF Project Team
 #'
 #' This program is free software; you can redistribute it and/or modify
 #' it under the terms of the GNU General Public License as published by
@@ -137,10 +137,10 @@ fit.model <- function(data=NA, person.data=NA, person.id="",task.id="",max.count
   }
 }
 
-#' This is an interface function to call and run wcpm or bootstrap.
+#' This is an interface function to call and run scoring or bootstrap.
 #'
 #'
-#' Copyright (C) 2021 The ORF Project Team
+#' Copyright (C) 2021-2023 The ORF Project Team
 #'
 #' This program is free software; you can redistribute it and/or modify
 #' it under the terms of the GNU General Public License as published by

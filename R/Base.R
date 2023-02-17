@@ -1,6 +1,6 @@
 #' This file includes the Base functions of bspam package.
 #'
-#' Copyright (C) 2021 The ORF Project Team
+#' Copyright (C) 2021-2023 The ORF Project Team
 #'
 #' This program is free software; you can redistribute it and/or modify
 #' it under the terms of the GNU General Public License as published by
@@ -515,7 +515,7 @@ bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
 
 }
 
-#' This is run.wcpm function.
+#' This is run.scoring function.
 #'
 #' Update Memo:
 #' 04/29/2021 Modified the wcpm function

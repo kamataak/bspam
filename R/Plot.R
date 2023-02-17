@@ -1,7 +1,7 @@
 #' Plot function to show graph of mcem class
 #'
 #'
-#' Copyright (C) 2021 The ORF Project Team
+#' Copyright (C) 2021-2023 The ORF Project Team
 #'
 #' This program is free software; you can redistribute it and/or modify
 #' it under the terms of the GNU General Public License as published by
