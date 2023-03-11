@@ -1,7 +1,7 @@
 bspam
 ================
 
-# Speed-Accuracy Psychometric Modeling for Count Outcome Data with R
+# Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R
 
 `bspam` is an R package that contains functions to fit the
 speed-accuracy psychometric model for count outcome data (Potgieter,
