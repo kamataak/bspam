@@ -72,8 +72,12 @@ summary.fit.model <- function(object, digits=4,...) {
 #' @method summary scoring
 #' @export
 summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=FALSE, show="short") {
-  no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')
   z <- object
+  if("wcpm.obs" %in% colnames(z)) {
+    no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')
+  } else {
+    no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs')
+  }
   
   tb <- as.data.frame(t(do.call(rbind, z)))
   
