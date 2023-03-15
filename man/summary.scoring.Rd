@@ -4,7 +4,13 @@
 \alias{summary.scoring}
 \title{summary the information of wcpm class}
 \usage{
-\method{summary}{scoring}(object, digits = 4, verbose = TRUE, factor.scores = FALSE)
+\method{summary}{scoring}(
+  object,
+  digits = 4,
+  verbose = TRUE,
+  factor.scores = FALSE,
+  show = "short"
+)
 }
 \arguments{
 \item{object}{= object}
@@ -14,12 +20,14 @@
 \item{verbose}{- boolean, if TRUE, shows the summary, default is TRUE}
 
 \item{factor.scores}{- theta and tau output flag, default is FALSE}
+
+\item{show}{- output flag, "long" and "short", default "short" only output estimate result. "long" will output estimate result and data.}
 }
 \value{
 scoring dataset with task information and estimated score
 }
 \description{
-Copyright (C) 2021 The ORF Project Team
+Copyright (C) 2021-2023 The ORF Project Team
 }
 \details{
 This program is free software; you can redistribute it and/or modify

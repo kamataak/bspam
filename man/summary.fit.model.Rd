@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{summary.fit.model}
 \alias{summary.fit.model}
-\title{summary the information of mcem class}
+\title{summary the information of fit.model class}
 \usage{
 \method{summary}{fit.model}(object, digits = 4, ...)
 }
@@ -17,7 +17,7 @@
 printing information
 }
 \description{
-Copyright (C) 2021 The ORF Project Team
+Copyright (C) 2021-2023 The ORF Project Team
 }
 \details{
 This program is free software; you can redistribute it and/or modify

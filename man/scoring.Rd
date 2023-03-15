@@ -2,7 +2,7 @@
 % Please edit documentation in R/Interface.R
 \name{scoring}
 \alias{scoring}
-\title{This is an interface function to call and run wcpm or bootstrap.}
+\title{This is an interface function to call and run scoring or bootstrap.}
 \usage{
 scoring(
   calib.data = NA,
@@ -60,7 +60,7 @@ scoring(
 scoring list or Bootstrap dataset
 }
 \description{
-Copyright (C) 2021 The ORF Project Team
+Copyright (C) 2021-2023 The ORF Project Team
 }
 \details{
 This program is free software; you can redistribute it and/or modify

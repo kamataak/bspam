@@ -2,7 +2,7 @@
 % Please edit documentation in R/Base.R
 \name{run.scoring}
 \alias{run.scoring}
-\title{This is run.wcpm function.}
+\title{This is run.scoring function.}
 \usage{
 run.scoring(
   object,

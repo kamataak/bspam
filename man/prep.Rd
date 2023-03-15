@@ -23,7 +23,7 @@ data list (data.long: data frame,
                    data.wide: list of Y, logT10, N, I)
 }
 \description{
-Copyright (C) 2021 The ORF Project Team
+Copyright (C) 2021-2023 The ORF Project Team
 }
 \details{
 This program is free software; you can redistribute it and/or modify

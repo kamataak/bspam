@@ -31,7 +31,7 @@ var_tau = variance of latent reading ability tau
 rho = correlation between two latent variables
 }
 \description{
-Copyright (C) 2021 The ORF Project Team
+Copyright (C) 2021-2023 The ORF Project Team
 }
 \details{
 This program is free software; you can redistribute it and/or modify
