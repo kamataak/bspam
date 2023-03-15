@@ -433,7 +433,7 @@ numerical.cov <- function(Y,logT10,N,I,parms,h.val,M) {
   if (sum(abs(Im(I.eigen)))>0) {pd.check <- -1}
   if (sum(abs(Im(I.eigen)))==0) {pd.check <- min(eigen(I.incomp)$values)}
   if (pd.check<0) {
-    I.incomp <- nearPD(I.incomp,keepDiag = TRUE)$mat
+    I.incomp <- Matrix::nearPD(I.incomp,keepDiag = TRUE)$mat
     print("Estimated Information Matrix not Positive Definite")
     print("Finding nearest Positive Definite Matrix")
   }
