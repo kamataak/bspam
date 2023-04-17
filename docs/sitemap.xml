@@ -1,54 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://kamataak.github.io/orfr/404.html</loc>
+    <loc>/404.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/authors.html</loc>
+    <loc>/authors.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/index.html</loc>
+    <loc>/index.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/get.cases.html</loc>
+    <loc>/reference/bayes.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/get.perfectcases.html</loc>
+    <loc>/reference/bayes.wcpm.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/getBootstrapSE.html</loc>
+    <loc>/reference/exclude_passages.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/index.html</loc>
+    <loc>/reference/get.cases.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/log.initiating.html</loc>
+    <loc>/reference/get.perfectcases.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/mcem.html</loc>
+    <loc>/reference/getBootstrapSE.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/plot.mcem.html</loc>
+    <loc>/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/prep.html</loc>
+    <loc>/reference/log.initiating.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/preplong.html</loc>
+    <loc>/reference/mcem.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/prepwide.html</loc>
+    <loc>/reference/passage.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/summary.bootstrap.html</loc>
+    <loc>/reference/passage2.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/summary.mcem.html</loc>
+    <loc>/reference/plot.mcem.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/summary.wcpm.html</loc>
+    <loc>/reference/prep.html</loc>
   </url>
   <url>
-    <loc>https://kamataak.github.io/orfr/reference/wcpm.html</loc>
+    <loc>/reference/preplong.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prepwide.html</loc>
+  </url>
+  <url>
+    <loc>/reference/run.mcem.html</loc>
+  </url>
+  <url>
+    <loc>/reference/run.scoring.html</loc>
+  </url>
+  <url>
+    <loc>/reference/scoring.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summary.bootstrap.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summary.fit.model.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summary.mcem.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summary.scoring.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summary.wcpm.html</loc>
+  </url>
+  <url>
+    <loc>/reference/wcpm.html</loc>
   </url>
 </urlset>

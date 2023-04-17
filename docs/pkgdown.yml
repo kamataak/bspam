@@ -1,9 +1,6 @@
-pandoc: 2.17.1.1
-pkgdown: 2.0.3
+pandoc: 2.19.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles: {}
-last_built: 2022-05-23T17:34Z
-urls:
-  reference: https://kamataak.github.io/orfr/reference
-  article: https://kamataak.github.io/orfr/articles
+last_built: 2023-04-17T16:39Z
 

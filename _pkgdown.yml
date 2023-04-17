@@ -1,18 +1,5 @@
-url: https://kamataak.github.io/orfr/
+url: ~
 template:
   bootstrap: 5
-  bootswatch: cerulean
+  bootswatch: flatly
 
-deploy:
-  install_metadata: true
-
-reference:
-- title: "All functions"
-  contents:
-  - prep
-  - prepwide
-  - preplong
-  - mcem
-  - wcpm
-  - get.cases
-  - get.perfectcases
