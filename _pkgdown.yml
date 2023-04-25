@@ -1,5 +1,8 @@
-url: ~
+url: https://kamataak.github.io/bspam/
 template:
   bootstrap: 5
   bootswatch: flatly
-
+navbar:
+  structure:
+    left:  [intro, reference, articles, tutorials]
+    right: [search, github]
