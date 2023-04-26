@@ -8,7 +8,7 @@ Authors@R: c(
     person("Joseph F. T.", "Nese", email = "jnese@uoregon.edu", role = "aut", comment = c(ORCID = "0000-0002-9878-7395")),
     person("Yusuf", "Kara", email = "ykara@mail.smu.edu", role = "aut",  comment = c(ORCID = "0000-0003-0691-0630")),
     person("Sarunya", "Somsong", email = "sarunya.ss@hotmail.com", role = "aut", comment = c(ORCID = "0000-0002-4974-7346")),
-    person("Kuo", "Wang", email = "wangkuo@nifty.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-4925-0591"))
+    person("Kuo", "Wang", email = "wangkuo@nifty.com", role = c("aut"), comment = c(ORCID = "0000-0002-4925-0591"))
     )
 Description: bspam is an R package that contains functions to fit the speed-accuracy psychometric model for count outcome data (Potgieter, Kamata & Kara, 2017; Kara, Kamata, Potgieter & Nese, 2020), where the accuracy is modeled by a binomial count latent variable model. For example, the use of this modeling technique allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.
 License: GPL (>= 3)
