@@ -19,6 +19,9 @@
     <loc>/reference/exclude_passages.html</loc>
   </url>
   <url>
+    <loc>/reference/fit.model.html</loc>
+  </url>
+  <url>
     <loc>/reference/get.cases.html</loc>
   </url>
   <url>
@@ -26,6 +29,9 @@
   </url>
   <url>
     <loc>/reference/getBootstrapSE.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_errlist.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
@@ -37,10 +43,16 @@
     <loc>/reference/mcem.html</loc>
   </url>
   <url>
+    <loc>/reference/orf.bayes.html</loc>
+  </url>
+  <url>
     <loc>/reference/passage.html</loc>
   </url>
   <url>
     <loc>/reference/passage2.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pipe.html</loc>
   </url>
   <url>
     <loc>/reference/plot.mcem.html</loc>
