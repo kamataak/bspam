@@ -109,7 +109,7 @@ get.cases <- function(data) {
   cases <- data %>% select(person.id,occasion) %>% unique() %>%
     unite("cases", person.id:occasion, sep = "_", remove = TRUE, na.rm = FALSE) %>%
     select(cases)
-  print(cases)
+  #print(cases)
   return(invisible(cases))
 }
 #' Returns perfect cases (student and occasion) in which every word was read correctly.

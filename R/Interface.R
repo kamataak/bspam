@@ -27,11 +27,11 @@
 #' @param k.in    - number of imputations, default is 5
 #' @param reps.in - number of Monte-Carlo iterations, default is 2
 #' @param ests.in - if not given, mom function will be called and get est.in output
-#' @param est - estimator keyword, mcem or mcmc, default is mcem
+#' @param est - estimator keyword, mcem or bayes, default is mcem
 #' @param se - standard error keyword / c("none","analytic", "bootstrap"), default is none
 #' @param verbose - boolean, if shows the summary, default is FALSE
 #'
-#' @return MCEM list, MCMC list
+#' @return MCEM list, bayes list
 #' @export
 fit.model <- function(data=NA, person.data=NA, person.id="",task.id="",max.counts="",obs.counts="",time="", k.in=5,reps.in=2,ests.in=NA,
                       est="mcem",se="none",verbose=FALSE) {
@@ -44,6 +44,8 @@ fit.model <- function(data=NA, person.data=NA, person.id="",task.id="",max.count
   }
 
   if (est == "mcem") {
+    flog.info("Begin mcem process", name = "orfrlog")
+    
     if (se == "none") {
 
       MCEMests <- run.mcem(data$Y,data$logT10,data$N,data$I,k.in,reps.in,ests.in,verbose=verbose)
@@ -64,7 +66,7 @@ fit.model <- function(data=NA, person.data=NA, person.id="",task.id="",max.count
       # if (is.na(ests.in)) {
       #   ests.in <- mom(data$Y, data$logT10, data$N, data$I)
       # }
-      flog.info("Begin mcem process", name = "orfrlog")
+
       MCEMests <- run.mcem(data$Y, data$logT10, data$N, data$I,
                            k.in=k.in, reps.in=reps.in,ests.in=ests.in)
 
@@ -88,16 +90,16 @@ fit.model <- function(data=NA, person.data=NA, person.id="",task.id="",max.count
         b = MCEMests$b,
         alpha = MCEMests$alpha,
         beta = MCEMests$beta,
-        se_a = SE.analytic[1:length(MCEMests$a)],
-        se_b = SE.analytic[(length(MCEMests$a)+1):(length(MCEMests$a)+length(MCEMests$b))],
-        se_alpha = SE.analytic[(length(MCEMests$a)+length(MCEMests$b)+1):(length(MCEMests$a)+length(MCEMests$b)+length(MCEMests$alpha))],
-        se_beta = SE.analytic[(length(MCEMests$a)+length(MCEMests$b)+length(MCEMests$alpha)+1):(length(MCEMests$a)+length(MCEMests$b)+length(MCEMests$alpha)+length(MCEMests$beta))],
+        se.a = SE.analytic[1:length(MCEMests$a)],
+        se.b = SE.analytic[(length(MCEMests$a)+1):(length(MCEMests$a)+length(MCEMests$b))],
+        se.alpha = SE.analytic[(length(MCEMests$a)+length(MCEMests$b)+1):(length(MCEMests$a)+length(MCEMests$b)+length(MCEMests$alpha))],
+        se.beta = SE.analytic[(length(MCEMests$a)+length(MCEMests$b)+length(MCEMests$alpha)+1):(length(MCEMests$a)+length(MCEMests$b)+length(MCEMests$alpha)+length(MCEMests$beta))],
         task.id = as.numeric(colnames(data$Y)),
         max.counts = data$N)
       hyper.param <- tibble(vartau = MCEMests$vartau,
                             rho = MCEMests$rho,
-                            se_vartau = SE.analytic[(length(MCEMests$a)+length(MCEMests$b)+length(MCEMests$alpha)+length(MCEMests$beta)+1)],
-                            se_rho = SE.analytic[(length(MCEMests$a)+length(MCEMests$b)+length(MCEMests$alpha)+length(MCEMests$beta)+2)])
+                            se.vartau = SE.analytic[(length(MCEMests$a)+length(MCEMests$b)+length(MCEMests$alpha)+length(MCEMests$beta)+1)],
+                            se.rho = SE.analytic[(length(MCEMests$a)+length(MCEMests$b)+length(MCEMests$alpha)+length(MCEMests$beta)+2)])
       MCEM.ests <- list(task.param = task.param,
                         hyper.param = hyper.param)
     }
@@ -112,9 +114,9 @@ fit.model <- function(data=NA, person.data=NA, person.id="",task.id="",max.count
     return(invisible(MCEM.ests))
 
 
-  } else { # for MCMC, mcem parameters are necessary
-    flog.info("Begin mcmc process", name = "orfrlog")
-    MCMC.ests <- bayes(person.data,
+  } else { # for bayes, mcem parameters are necessary
+    flog.info("Begin bayes process", name = "orfrlog")
+    bayes.ests <- bayes(person.data,
                        person.id,
                        task.id,
                        max.counts,
@@ -128,12 +130,12 @@ fit.model <- function(data=NA, person.data=NA, person.id="",task.id="",max.count
     )
     # check if shows the summary
     if (verbose == TRUE) {
-      summary.fit.model(MCMC.ests)
+      summary.fit.model(bayes.ests)
     }
 
-    class(MCMC.ests) <- "fit.model" # define class
-    flog.info("End mcmc process", name = "orfrlog")
-    return(invisible(MCMC.ests))
+    class(bayes.ests) <- "fit.model" # define class
+    flog.info("End bayes process", name = "orfrlog")
+    return(invisible(bayes.ests))
   }
 }
 
@@ -165,7 +167,7 @@ fit.model <- function(data=NA, person.data=NA, person.id="",task.id="",max.count
 #' @param obs.counts The column name in the data that represents the words read correctly for each case.
 #' @param time The column name in the data that represents the time, in seconds, for each case.
 #' @param cases - individual id vectors, will directly use task data if no calib.data provided
-#' @param est - estimator keyword / c("mle", "map", "eap", "mcmc"), default is mcmc
+#' @param est - estimator keyword / c("mle", "map", "eap", "bayes"), default is bayes
 #' @param se - standard error keyword / c("analytic", "bootstrap"), default is analytic
 #' @param failsafe - retry time for bootstrap / default 0, can set to 5 ~ 50
 #' @param bootstrp - set K number of bootstrap / default 100
@@ -182,7 +184,7 @@ scoring <- function(calib.data=NA, person.data=NA, person.id="",task.id="",occas
   bootstrap.out <- tibble()
   error_case <- tibble()
   if (se == "analytic") {
-    if (est != "mcmc") { #not mcmc
+    if (est != "bayes") { #not bayes
       if (person.id != "") {
         person.data <- preplong(person.data,person.id,task.id,occasion,group,max.counts,obs.counts,time)
       }
@@ -215,7 +217,7 @@ scoring <- function(calib.data=NA, person.data=NA, person.id="",task.id="",occas
       }
 
       result.list <- run.scoring(calib.data, person.data, task.data, cases, perfect.cases, est, lo = -4, hi = 4, q = 100, kappa = 1, external=external,type=type)
-    } else  { # mcmc
+    } else  { # bayes
       if (person.id == "") { # if without columns' names
         result.list <- bayes.wcpm(
           calib.data = calib.data,

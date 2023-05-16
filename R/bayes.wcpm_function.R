@@ -1,7 +1,7 @@
 ##################################################################################################
 ################### THIS IS THE FUNCTION TO ESTIMATE MODEL-BASED WCPM PARAMETERS #################
 ##################################################################################################
-#' Bayes function when running mcem with mcmc setting
+#' Bayes function when running mcem with bayes setting
 #' @param calib.data - fit.model class object
 #' @param person.data - individual reading data
 #' @param person.id The column name in the data that represents the unique individual identifier.
@@ -40,11 +40,11 @@ bayes.wcpm <- function(
     thin=1 #pos. int, thinning interval, a.k.a, period of saving samples
 )
 {
-
+  
   # loading logger
   log.initiating()
-  flog.info("Begin wcpm process with mcmc setting", name = "orfrlog")
-
+  flog.info("Begin wcpm process with bayes setting", name = "orfrlog")
+  
   #First, check if calib.data exists. If not, print a warning.
   if(class(calib.data)[1] == "fit.model"){
     pass.data <- calib.data$task.param
@@ -52,7 +52,7 @@ bayes.wcpm <- function(
     flog.info("Missing fit.model object, end wcpm process", name = "orfrlog")
     return(NULL)
   }
-
+  
   #Now, check whether user entered the column names of the data or
   #just used the output of prep data. For former, rename columns of person.data
   if(is.null(c(person.id, task.id, occasion, group, max.counts, obs.counts, time))){
@@ -63,7 +63,7 @@ bayes.wcpm <- function(
     person.data <- person.data[,c(person.id, task.id, occasion, group, max.counts, obs.counts, time)]
     colnames(person.data) <- c("person.id", "task.id", "occasion", "group", "max.counts", "obs.counts", "time")
   }
-
+  
   #Now, check whether users supplied cases or not. If they didn't, then WCPMs will be
   #estimated for all unique cases appear in the supplied student data!
   if(is.null(cases)){
@@ -76,17 +76,17 @@ bayes.wcpm <- function(
       filter(case_sel %in% cases$cases) %>%
       select(-case_sel)
   }
-
-
+  
+  
   #Identify parameters of the passages read from the calibrated pool
   stu_id <- person.data %>%
     select(person.id) %>%
     distinct()
-
+  
   pas_param_read <- calib.data$task.param %>%
     filter(task.id %in% person.data$task.id) %>%
     arrange(task.id)
-
+  
   #Create descriptive part of the output
   desc_out <- person.data %>%
     rename(occasion=occasion) %>%
@@ -97,33 +97,33 @@ bayes.wcpm <- function(
               secs.obs=sum(time)) %>%
     ungroup() %>%
     mutate(wcpm.obs=obs.counts.obs/secs.obs*60)
-
+  
   desc_out <- stu_id %>%
     left_join(desc_out) %>%
     select(person.id, everything())
-
-  #Now, create the datasets for MCMC based on selected cases and passages
+  
+  #Now, create the datasets for bayes based on selected cases and passages
   time.data <- person.data %>%
     select(person.id, task.id, time) %>%
     pivot_wider(names_from = task.id, values_from = time) %>%
     column_to_rownames("person.id") %>%
     select(sort(colnames(.))) %>%
     as.matrix()
-
+  
   count.data <- person.data %>%
     select(person.id, task.id, obs.counts) %>%
     pivot_wider(names_from = task.id, values_from = obs.counts) %>%
     column_to_rownames("person.id") %>%
     select(sort(colnames(.))) %>%
     as.matrix()
-
+  
   n.words <- person.data %>%
     select(task.id, max.counts) %>%
     arrange(task.id) %>%
     distinct() %>%
     deframe()
-
-
+  
+  
   #Now, check if the user supplied external passages or not. If not, WCPM will be estimated for
   #all passages they read in the stu.dat!
   if(is.null(external)){
@@ -131,7 +131,7 @@ bayes.wcpm <- function(
     pas_est_ind <- apply(nonmis_ind, 2, as.numeric)
     rownames(pas_est_ind) <- rownames(time.data)
     pas_param_est <- pas_param_read
-
+    
     desc_out <- desc_out %>%
       mutate(task.n.wcpm=task.n,
              max.counts.total.wcpm=max.counts.total)
@@ -139,7 +139,7 @@ bayes.wcpm <- function(
     pas_param_est <- calib.data$task.param %>%
       filter(task.id %in% external) %>%
       arrange(task.id)
-
+    
     pas_est_ind <- matrix(1, nrow = nrow(time.data),
                           ncol = length(external),
                           dimnames = list(rownames(time.data), pas_param_est$task.id))
@@ -147,51 +147,51 @@ bayes.wcpm <- function(
       mutate(task.n.wcpm=n_distinct(pas_param_est$task.id),
              max.counts.total.wcpm=sum(pas_param_est$max.counts))
   }
-
-
+  
+  
   #Identify number of the examinees and passages from time data matrix
   #And bundle the data as a list (note that time matrix is converted to log seconds!)
   #Also, use known passage parameters as well as person hyper parameters!
   J <- nrow(time.data)
   I <- ncol(time.data)
   K <- nrow(pas_param_est)
-
+  
   #Estimate count, time and wcpm.
   param_est <- c("exp_cnt", "exp_tim", "wcpm")
-
+  
   #Specify number of the chains
   if(is.na(n.chains)){
     n.chains <- min(max(4), detectCores()-1)
   }else{
     n.chains <- min(max(4), n.chains)
   }
-
+  
   #Generate initial values based on the number of chains
   inits <- vector(mode = "list", length = n.chains)
-
+  
   for(i in 1:n.chains){
     theta=rnorm(J)
-
+    
     #Select different RNG names and seeds for each parallel chain as recommended
     rng_names <- c("base::Wichmann-Hill", "base::Marsaglia-Multicarry", "base::Super-Duper", "base::Mersenne-Twister")
-
+    
     if(n.chains <= length(rng_names)){
       rng_name_sel <- rng_names[i]
     }else{
       rng_names_rep <- rep(rng_names, n.chains)
       rng_name_sel <- rng_names_rep[i]
     }
-
+    
     gen_init <- list(theta=theta,
                      .RNG.name=rng_name_sel, .RNG.seed=i)
     inits[[i]] <- gen_init
   }
-
+  
   #Now, check if the data have any missing values.
   #If so, we will use JAGS. If not, we will use STAN.
   time.mis <- T %in% is.na(time.data)
   count.mis <- T %in% is.na(count.data)
-
+  
   if(time.mis==T | count.mis==T){
     bayes.soft="jags"
     cat("==== Running the analyses with JAGS ==== \n \n")
@@ -199,35 +199,35 @@ bayes.wcpm <- function(
     bayes.soft="stan"
     cat("==== Running the analysis with STAN ==== \n \n")
   }
-
+  
   #Now, create a syntax file for model based on the selected software
   #And follow software-based specifications to run the analyses!
-
+  
   if(bayes.soft=="jags"){
-
+    
     #Convert data into vector and create obs/missing indexes!
     time.data <- time.data %>% as.vector()
     count.data <- count.data %>% as.vector()
     ind.per <- rep(1:J, I)
     ind.pas <- rep(1:I, each=J)
     nw <- rep(n.words, each=J)
-
+    
     #locate missing data points
     mis.time.loc <- which(is.na(time.data))
     mis.count.loc <- which(is.na(count.data))
-
+    
     #Now, keep only the observed data & indicators
     time.data <- time.data[-mis.time.loc]
     count.data <- count.data[-mis.count.loc]
     nw <- nw[-mis.count.loc]
     n.obs <- length(time.data)
-
+    
     ind.per.obs <- ind.per[-mis.time.loc]
     ind.pas.obs <- ind.pas[-mis.time.loc]
-
-
+    
+    
     runjags::runjags.options(force.summary=T)
-
+    
     #Check passage parameters from mcem if they exist.
     #Otherwise, user will supply the known parameter values!
     data.list <- list(J=J,
@@ -235,26 +235,26 @@ bayes.wcpm <- function(
                       tim=log(time.data),
                       res=count.data,
                       N=n.obs,
-
+                      
                       ind_per=ind.per.obs,
                       ind_pas=ind.pas.obs,
-
+                      
                       nw_read=nw,
                       a_read=pas_param_read$a,
                       b_read=pas_param_read$b,
                       alpha_read=pas_param_read$alpha,
                       beta_raw_read=pas_param_read$beta + log(pas_param_read$max.counts/10),
-
+                      
                       pas_est_ind=pas_est_ind,
                       nw_est=pas_param_est$max.counts,
                       a_est=pas_param_est$a,
                       b_est=pas_param_est$b,
                       alpha_est=pas_param_est$alpha,
                       beta_raw_est=pas_param_est$beta + log(pas_param_est$max.counts/10),
-
+                      
                       ptau=1/calib.data$hyper.param$vartau,
                       cvr=calib.data$hyper.param$rho*sqrt(calib.data$hyper.param$vartau))
-
+    
     # -------------------------------------------------------- JAGS syntax
     jags.syntax <- "
     model{
@@ -316,35 +316,35 @@ rm(jags_out)
 gc()
 
   }else if(bayes.soft=="stan"){
-
-
+    
+    
     #Transpose data matrices
     time.data <- time.data %>% t()
     count.data <- count.data %>% t()
     pas_est_ind <- pas_est_ind %>% t()
-
+    
     data.list <- list(J=J,
                       I=I,
                       K=K,
                       tim=log(time.data),
                       res=count.data,
-
+                      
                       nw_read=n.words,
                       a_read=pas_param_read$a,
                       b_read=pas_param_read$b,
                       alpha_read=pas_param_read$alpha,
                       beta_raw_read=pas_param_read$beta + log(pas_param_read$max.counts/10),
-
+                      
                       pas_est_ind=pas_est_ind,
                       nw_est=pas_param_est$max.counts,
                       a_est=pas_param_est$a,
                       b_est=pas_param_est$b,
                       alpha_est=pas_param_est$alpha,
                       beta_raw_est=pas_param_est$beta + log(pas_param_est$max.counts/10),
-
+                      
                       stau=sqrt(calib.data$hyper.param$vartau),
                       cvr=calib.data$hyper.param$rho*sqrt(calib.data$hyper.param$vartau))
-
+    
     # ------------------------------------------------------------- STAN Syntax
     stan.syntax <- "
 data{
@@ -463,10 +463,12 @@ par_est_wide <- par_est %>%
 
 final_out <- desc_out %>%
   left_join(par_est_wide) %>%
-  select(student.id=person.id, occasion, group, task.n, max.counts.total, obs.counts.obs, secs.obs, wcpm.obs, obs.counts.est, secs.est, task.n.wcpm,
+  select(person.id, occasion, group, task.n, max.counts.total, obs.counts.obs, secs.obs, wcpm.obs, obs.counts.est, secs.est, task.n.wcpm,
          max.counts.total.wcpm, wcpm.est, se.wcpm.est, low.95.est.wcpm, up.95.est.wcpm)
 
 
 colnames(final_out) <- gsub(pattern = "est", x = colnames(final_out), replacement =bayes.soft)
+flog.info("End wcpm process with bayes setting", name = "orfrlog")
+
 final_out
 }

@@ -73,13 +73,23 @@ summary.fit.model <- function(object, digits=4,...) {
 #' @export
 summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=FALSE, show="short") {
   z <- object
-  if("wcpm.obs" %in% colnames(z)) {
-    no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')
+  
+  tb <- as.data.frame(t(do.call(rbind, z))) # convert list to data frame
+  # print(colnames(tb)) for debug
+  
+  if("wcpm.obs" %in% colnames(tb)) {
+    if ("wcpm.jags" %in% colnames(tb)) {  # for bayes object
+      no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs',
+                           'task.n.wcpm', 'max.counts.total.wcpm', 'wcpm.jags', 'se.wcpm.jags', 'low.95.jags.wcpm', 'up.95.jags.wcpm')  
+    } else if ("wcpm.stan" %in% colnames(tb)) { # for stan output
+      no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs',
+                           'task.n.wcpm', 'max.counts.total.wcpm', 'wcpm.stan', 'se.wcpm.stan', 'low.95.stan.wcpm', 'up.95.stan.wcpm')  
+    } else {
+      no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')
+    }
   } else {
     no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs')
   }
-  
-  tb <- as.data.frame(t(do.call(rbind, z)))
   
   # don't output theta and tau, if FALSE
   if (factor.scores==FALSE) {
@@ -91,7 +101,7 @@ summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=FALSE, s
   cols_num <- ncol(tb)
   #set screen print out to be short decimal
   tt <- as.matrix(unlist(lapply(as.double(unlist((tb[,c(6:cols_num)]))),
-                                sprintf, fmt = "%6.2f")))
+                                sprintf, fmt = "%6.3f")))
   dim(tt) <- c(dim(tb)[1],(cols_num-5))
   tt <- cbind(tb[,c(1:5)], tt)
   colnames(tt) <- getNames
@@ -169,7 +179,7 @@ summary.bootstrap <- function(object, digits=4, geterror=FALSE,verbose=TRUE,fact
       
       #set screen print out to be short decimal
       tt <- as.matrix(unlist(lapply(as.double(unlist((tb[,c(6:cols_num)]))),
-                                    sprintf, fmt = "%6.2f")))
+                                    sprintf, fmt = "%6.3f")))
       dim(tt) <- c(nrow(tb),(cols_num-5))
       tt <- cbind(tb[,c(1:5)], tt)
       colnames(tt) <- getNames

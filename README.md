@@ -276,7 +276,7 @@ more detailed usage of the package.
 
 ## Copyright Statement
 
-Copyright (C) 2022 The ORF Project Team
+Copyright (C) 2022-2023 The ORF Project Team
 
 The bspam package is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as published

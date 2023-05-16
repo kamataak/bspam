@@ -532,7 +532,7 @@ bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
 #' @param person.data = individual response task data
 #' @param task.data = estimate parameters data
 #' @param cases = individual occasion id vector
-#' @param est = estimator, c("mle", "map", "eap", "mcmc"), default "map"
+#' @param est = estimator, c("mle", "map", "eap", "bayes"), default "map"
 #' @param perfect.cases = perfect accurate case
 #' @param lo = default -4
 #' @param hi = default 4
