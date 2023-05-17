@@ -1,96 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://kamataak.github.io/bspam/404.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://kamataak.github.io/bspam/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://kamataak.github.io/bspam/index.html</loc>
   </url>
   <url>
-    <loc>/reference/bayes.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/MCEM.html</loc>
   </url>
   <url>
-    <loc>/reference/bayes.wcpm.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/bayes.html</loc>
   </url>
   <url>
-    <loc>/reference/exclude_passages.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/bayes.wcpm.html</loc>
   </url>
   <url>
-    <loc>/reference/fit.model.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/exclude_passages.html</loc>
   </url>
   <url>
-    <loc>/reference/get.cases.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/fit.model.html</loc>
   </url>
   <url>
-    <loc>/reference/get.perfectcases.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/get.cases.html</loc>
   </url>
   <url>
-    <loc>/reference/getBootstrapSE.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/get.perfectcases.html</loc>
   </url>
   <url>
-    <loc>/reference/get_errlist.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/getBootstrapSE.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/get_errlist.html</loc>
   </url>
   <url>
-    <loc>/reference/log.initiating.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/mcem.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/log.initiating.html</loc>
   </url>
   <url>
-    <loc>/reference/orf.bayes.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/mcem.html</loc>
   </url>
   <url>
-    <loc>/reference/passage.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/orf.bayes.html</loc>
   </url>
   <url>
-    <loc>/reference/passage2.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/passage.html</loc>
   </url>
   <url>
-    <loc>/reference/pipe.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/passage2.html</loc>
   </url>
   <url>
-    <loc>/reference/plot.mcem.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>/reference/prep.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/plot.mcem.html</loc>
   </url>
   <url>
-    <loc>/reference/preplong.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/prep.html</loc>
   </url>
   <url>
-    <loc>/reference/prepwide.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/preplong.html</loc>
   </url>
   <url>
-    <loc>/reference/run.mcem.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/prepwide.html</loc>
   </url>
   <url>
-    <loc>/reference/run.scoring.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/run.mcem.html</loc>
   </url>
   <url>
-    <loc>/reference/scoring.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/run.scoring.html</loc>
   </url>
   <url>
-    <loc>/reference/summary.bootstrap.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/scoring.html</loc>
   </url>
   <url>
-    <loc>/reference/summary.fit.model.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/summary.bootstrap.html</loc>
   </url>
   <url>
-    <loc>/reference/summary.mcem.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/summary.fit.model.html</loc>
   </url>
   <url>
-    <loc>/reference/summary.scoring.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/summary.mcem.html</loc>
   </url>
   <url>
-    <loc>/reference/summary.wcpm.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/summary.scoring.html</loc>
   </url>
   <url>
-    <loc>/reference/wcpm.html</loc>
+    <loc>https://kamataak.github.io/bspam/reference/summary.wcpm.html</loc>
+  </url>
+  <url>
+    <loc>https://kamataak.github.io/bspam/reference/wcpm.html</loc>
   </url>
 </urlset>

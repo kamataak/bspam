@@ -6,11 +6,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">bspam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,21 +48,21 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fit.model</span><span class="op">(</span>
-  data <span class="op">=</span> <span class="cn">NA</span>,
-  person.data <span class="op">=</span> <span class="cn">NA</span>,
-  person.id <span class="op">=</span> <span class="st">""</span>,
-  task.id <span class="op">=</span> <span class="st">""</span>,
-  max.counts <span class="op">=</span> <span class="st">""</span>,
-  obs.counts <span class="op">=</span> <span class="st">""</span>,
-  time <span class="op">=</span> <span class="st">""</span>,
-  k.in <span class="op">=</span> <span class="fl">5</span>,
-  reps.in <span class="op">=</span> <span class="fl">2</span>,
-  ests.in <span class="op">=</span> <span class="cn">NA</span>,
-  est <span class="op">=</span> <span class="st">"mcem"</span>,
-  se <span class="op">=</span> <span class="st">"none"</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fit.model</span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  person.data <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  person.id <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  task.id <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  max.counts <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  obs.counts <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  time <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  k.in <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  reps.in <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  ests.in <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  est <span class="op">=</span> <span class="st">"mcem"</span>,</span>
+<span>  se <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -108,7 +108,7 @@
 
 
 <dt>est</dt>
-<dd><p>- estimator keyword, mcem or mcmc, default is mcem</p></dd>
+<dd><p>- estimator keyword, mcem or bayes, default is mcem</p></dd>
 
 
 <dt>se</dt>
@@ -123,7 +123,7 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>MCEM list, MCMC list</p>
+<p>MCEM list, bayes list</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
