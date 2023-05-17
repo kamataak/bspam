@@ -44,7 +44,7 @@ scoring(
 
 \item{cases}{- individual id vectors, will directly use task data if no calib.data provided}
 
-\item{est}{- estimator keyword / c("mle", "map", "eap", "mcmc"), default is mcmc}
+\item{est}{- estimator keyword / c("mle", "map", "eap", "bayes"), default is bayes}
 
 \item{se}{- standard error keyword / c("analytic", "bootstrap"), default is analytic}
 
