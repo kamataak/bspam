@@ -1,7 +1,7 @@
 ##################################################################################################
 ##### THIS IS THE FUNCTION TO ESTIMATE PASSAGE PARAMETERS AND PERSON-LEVEL HYPERPARAMETERS########
 ##################################################################################################
-#' Bayes function when running mcem with mcmc setting
+#' Bayes function when running mcem with bayes setting
 #'
 #' @param person.data - student reading data
 #' @param person.id The column name in the data that represents the unique individual identifier.
