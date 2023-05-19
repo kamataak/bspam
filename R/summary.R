@@ -28,21 +28,20 @@
 #' @export
 summary.fit.model <- function(object, digits=4,...) {
   z <- object
-  tab <- cbind(as.double(z$task.param$task.id), # change to double to clearly print the columns
-               as.vector(z$task.param$a),
-               as.vector(z$task.param$b),
-               z$task.param$alpha,
-               z$task.param$beta)
-  colnames(tab)=c("task.id","a","      b","   alpha","   beta")
-  rownames(tab)=paste0(c(rep(1:length(tab[,1]))),".")
-  #  print(tab[, 1:3]) # only print a part of columns
-  #  print(tab)
-  print(tab, digits = digits, print.gap = 2L) # specific minimum digits
+  tb <- as.data.frame(t(do.call(rbind, z[[1]])))
+  tb <- tb[,(1:4)]
+  
+  tt <- as.data.frame(sapply(lapply(tb, sprintf, fmt = "%6.3f"), as.numeric))
+  
+  print(tt, digits = digits, print.gap = 3L) # specific minimum digits
   cat("\n====== Hyper Parameters ======\n")
   cat(paste(paste0("Variance of ", greek$tau), ":     "))
-  cat(paste(format(z$hyper.param$vartau,digits=6,nsmall=digits), "\n"))
+  # cat(paste(format(z$hyper.param$vartau,digits=6,nsmall=digits), "\n"))
+  # cat(paste(greek$rho), "            :     ")
+  # cat(paste(format(z$hyper.param$rho,digits=6,nsmall=digits), "\n"))
+  cat(paste(sprintf(fmt = "%6.6f", z$hyper.param$vartau), "\n"))
   cat(paste(greek$rho), "            :     ")
-  cat(paste(format(z$hyper.param$rho,digits=6,nsmall=digits), "\n"))
+  cat(paste(sprintf(fmt = "%6.6f", z$hyper.param$rho), "\n"))
 }
 #' summary the information of wcpm class
 #'

@@ -304,7 +304,7 @@ par_est_list <- list(
     se.b=par_est$SD[grep(pattern = "^b\\[", x = par_est$Parameter)],
     se.alpha=par_est$SD[grep(pattern = "^alpha\\[", x = par_est$Parameter)],
     se.beta=par_est$SD[grep(pattern = "^beta\\[", x = par_est$Parameter)],
-    task.id=names(n.words),
+    task.id=as.numeric(names(n.words)),
     max.counts=n.words),
 
   hyper.param=tibble(
