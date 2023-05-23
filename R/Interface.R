@@ -204,7 +204,7 @@ scoring <- function(calib.data=NA, person.data=NA, person.id="",task.id="",occas
 
       # Check cases
       if (length(cases) == 0) {
-        print("Cases: ")
+        # print("Cases: ")
         cases <- get.cases(person.data)
       }
       # Check if there is a perfect accurate case
