@@ -34,7 +34,6 @@
 #' @import mvtnorm
 #' @import tidyverse
 #' @import nleqslv
-#' @import greekLetters
 #'
 #'
 #' @return mcem list
@@ -43,10 +42,10 @@
 #' var_tau = variance of latent reading ability tau
 #' rho = correlation between two latent variables
 run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=2,ests.in=NA,verbose=FALSE) {
-
+  
   # loading logger
   log.initiating()
-
+  
   neg_logratio <- function(data,par) {
     Y <- data[1,]
     N <- data[2,]
@@ -136,7 +135,7 @@ run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=2,ests.in=NA,verbose=FALSE) {
     Ratio1[Ratio1==0] <- max(Ratio1)
     Ratio2[Ratio2==Inf] <- 0
     Ratio2[Ratio2==0] <- max(Ratio2)
-
+    
     E1 <- sum(Ind*Y*rowMeans(theta*Ratio1) - Ind*(N-Y)*rowMeans(theta*Ratio2))
     E2 <- sum(Ind*Y*rowMeans(Ratio1) - Ind*(N-Y)*rowMeans(Ratio2))
     E <-c(E1,E2)
@@ -187,7 +186,7 @@ run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=2,ests.in=NA,verbose=FALSE) {
     EM.ests <- list(a = EM.a, b = EM.b, alpha = EM.alpha, beta = EM.beta, vartau = EM.vartau, rho = EM.rho, z.opt = EMimps$z.opt)
     return(EM.ests)
   }
-
+  
   nK <- length(k.in)
   #  if (!is.null(Z.in))
   if (length(ests.in) == 1) {
@@ -195,7 +194,7 @@ run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=2,ests.in=NA,verbose=FALSE) {
       ests.in <- mom(Y,logT10,N,I)
     }
   }
-
+  
   # MCEM algorithm can't initiate if any alpha values = inf
   # Somewhat artificial solution to give starting values to EM:
   alpha.check <- ests.in$alpha
@@ -203,19 +202,19 @@ run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=2,ests.in=NA,verbose=FALSE) {
   infIndex1 <- which(is.infinite(alpha.check)==1)
   alpha.check[infIndex1] <- max(alpha.check[infIndex0])*10
   ests.in$alpha <- alpha.check
-
+  
   n <- dim(Y)[1]
   z.in <- matrix(rep(0,n), nrow = n)
-
+  
   total.K <- rep(k.in[1],reps.in[1])
-
+  
   if (nK > 1) {
     for (jj in 2:nK) {
       total.K <- c(total.K,rep(k.in[jj],reps.in[jj]))
     }
   }
   JJ <- length(total.K)
-
+  
   a.store <- matrix(rep(0,JJ*I),nrow = JJ)
   alpha.store <- matrix(rep(0,JJ*I),nrow = JJ)
   b.store <- matrix(rep(0,JJ*I),nrow = JJ)
@@ -226,9 +225,9 @@ run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=2,ests.in=NA,verbose=FALSE) {
   se_b.store <- matrix(rep(0,JJ),nrow = JJ)
   se_alpha.store <- matrix(rep(0,JJ),nrow = JJ)
   se_beta.store <- matrix(rep(0,JJ),nrow = JJ)
-
+  
   for (jj in 1:JJ) {
-
+    
     EM.iter <- MCEM_algorithm_one_iteration(Y,logT10,N,I,ests.in,total.K[jj],z.in)
     ests.in <- EM.iter
     a.store[jj,] <- ests.in$a
@@ -239,12 +238,12 @@ run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=2,ests.in=NA,verbose=FALSE) {
     rho.store[jj] <- ests.in$rho
     z.in <- ests.in$z.opt
   }
-
+  
   mean_a = a.store[JJ,]
   mean_b = b.store[JJ,]
   mean_alpha = alpha.store[JJ,]
   mean_beta = beta.store[JJ,]
-
+  
   MCEM.ests <- list(
     a = mean_a,
     b = mean_b,
@@ -254,11 +253,11 @@ run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=2,ests.in=NA,verbose=FALSE) {
     vartau = vartau.store[JJ,],
     rho = rho.store[JJ,]
   )
-
+  
   return(MCEM.ests)
 }
 mom <- function(Y,logT10,N,I) {
-
+  
   evaluate_rho <- function(data,par) {
     R <- data[1]
     Q <- data[2]
@@ -267,7 +266,7 @@ mom <- function(Y,logT10,N,I) {
     MD <- (R - pmvnorm(upper = c(Q,Q), mean = rep(0,2), sigma = sigma))^2
     return(MD)
   }
-
+  
   reading_data_parms_MOM <- function(Y,N) {
     Y.bar <- mean(Y)
     S2 <- mean((Y-Y.bar)^2)
@@ -283,7 +282,7 @@ mom <- function(Y,logT10,N,I) {
     b.out <- -Q*sqrt(1+a.out^2)
     parms <- list(a = a.out, b = b.out)
   }
-
+  
   n <- dim(Y)[1]
   nancov_T <- cov(logT10,use = "pairwise.complete.obs")
   a.out <- matrix(nrow = 1, ncol = I)
@@ -352,83 +351,83 @@ sim_reading_data <- function(a,b,alpha,beta,var_tau,rho,N,I,n,missing_prop,max_m
   return(data)
 }
 numerical.cov <- function(Y,logT10,N,I,parms,h.val,M) {
-
+  
   if (missing(M)) {M <- 50}
   if (missing(h.val)) {h.val <- 1e-8}
-
+  
   logT10 <- as.matrix(logT10)
-
+  
   cond.distribution <- function(Y,logT10,N,I,parms,Z) {
-
+    
     a <- parms[1:I]
     b <- parms[(I+1):(2*I)]
     alpha <- parms[(2*I+1):(3*I)]
     beta <- parms[(3*I+1):(4*I)]
     vartau <- parms[4*I+1]
     rho <- parms[4*I+2]
-
+    
     n <- dim(Y)[1]
-
+    
     Ind <- 1 - is.na(Y)
     m1 <- colSums(Ind)
     Y[Ind==0] <- 0
     logT10[Ind==0] <- 0
-
+    
     M <- dim(Z)[1]
     Z1 <- Z[,1]
     Z2 <- Z[,2]
-
+    
     a.mat <- matrix(a,nrow=n,ncol=I,byrow=T)
     b.mat <- matrix(b,nrow=n,ncol=I,byrow=T)
     alpha.mat <- matrix(alpha,nrow=n,ncol=I,byrow=T)
     beta.mat <- matrix(beta,nrow=n,ncol=I,byrow=T)
     N.mat <- matrix(N,nrow=n,ncol=I,byrow=T)
-
+    
     log.f <- matrix(0,n,M)
-
+    
     here.is <- Ind > 0
-
+    
     for (m in 1:M) {
-
+      
       logL1 <- rowSums(dbinom(Y,N.mat,pnorm(a.mat*Z1[m]-b.mat),log=T)*(Ind>0))
       #logL2B <- rowSums((log(alpha.mat)+dnorm(alpha.mat*(logT10-beta.mat+rho*sqrt(vartau)*Z1[m]+sqrt(vartau*(1-rho^2))*Z2[m]),log=T))*(Ind>0))
       result <- logT10-beta.mat+rho*sqrt(vartau)*Z1[m]+sqrt(vartau*(1-rho^2))*Z2[m]
-
+      
       sd <-  1/alpha.mat
       #      print(sapply(result, class))
       #      print(sapply(sd, class))
-
+      
       dd <- dnorm(result,sd=sd,log=T)
-
+      
       logL2 <- rowSums(dd*(Ind>0))
       log.f[,m] <- logL1 + logL2
-
+      
     }
-
+    
     f <- rowMeans(exp(log.f))
-
+    
     logL <- log(f)
     logL[is.infinite(logL)] <- -1e-10
-
+    
     return(logL)
-
+    
   }
-
+  
   z <- qnorm((1:M)/(M+1))
   Z <- expand.grid(z,z)
-
+  
   n <- dim(Y)[1]
-
+  
   score.mat <- matrix(0,nrow=n,ncol=(4*I+2))
-
+  
   for (i in 1:(4*I+2)) {
     h <- rep(0,4*I+2)
     h[i] <- h.val
     score.mat[,i] <- (cond.distribution(Y,logT10,N,I,parms+h,Z)-cond.distribution(Y,logT10,N,I,parms-h,Z))/(2*h.val)
   }
-
+  
   I.incomp <- (n-1)*cov(score.mat) + colSums(score.mat)%*%t(colSums(score.mat))
-
+  
   I.eigen <- eigen(I.incomp)$values
   if (sum(abs(Im(I.eigen)))>0) {pd.check <- -1}
   if (sum(abs(Im(I.eigen)))==0) {pd.check <- min(eigen(I.incomp)$values)}
@@ -448,15 +447,15 @@ numerical.cov <- function(Y,logT10,N,I,parms,h.val,M) {
 boot.cov <- function(Y,logT10,N,I,k.in,reps.in,B,alpha.inv) {
   # Important -- the inputs Y and logT10 should still include the "NA" values
   # Not one of the "edited" datasets replacing with zeros
-
+  
   n <- dim(Y)[1]
-
+  
   if (missing(B)) {B <- 50}
   if (missing(alpha.inv)) {alpha.inv <- FALSE}
   #  logT10 <- as.matrix(logT10)
-
+  
   boot.parms <- matrix(0,nrow=B,ncol=(4*I+2))
-
+  
   for (b in 1:B) {
     Boot.start <- Sys.time()
     index <- sample(1:n,n,replace=T)
@@ -464,7 +463,7 @@ boot.cov <- function(Y,logT10,N,I,k.in,reps.in,B,alpha.inv) {
     logT10.boot <- logT10[index,]
     MOMboot <- mom(Y.boot,logT10.boot,N,I)
     MCEMboot <- run.mcem(Y.boot,logT10.boot,N,I,k.in,reps.in,ests.in=MOMboot)
-
+    
     boot.parms[b,] <- c(MCEMboot$a,MCEMboot$b,MCEMboot$alpha,
                         MCEMboot$beta,MCEMboot$vartau,MCEMboot$rho)
     if (b%%5==0) {
@@ -479,15 +478,15 @@ boot.cov <- function(Y,logT10,N,I,k.in,reps.in,B,alpha.inv) {
   }
   CV.boot <- cov(boot.parms)
   return(CV.boot)
-
+  
 }
 
 bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
   # Important -- the inputs Y and logT10 should still include the "NA" values
   # Not one of the "edited" datasets replacing with zeros
-
+  
   if (missing(B)) {B <- 50}
-
+  
   n <- dim(Y)[1]
   a <- parms[1:I]
   b <- parms[(I+1):(2*I)]
@@ -495,7 +494,7 @@ bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
   beta <- parms[(3*I+1):(4*I)]
   var_tau <- parms[4*I+1]
   rho <- parms[4*I+2]
-
+  
   Empty <- is.na(Y)
   boot.parms <- matrix(0,nrow=B,ncol=(4*I+2))
   for (bb in 1:B) {
@@ -509,10 +508,10 @@ bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
     boot.parms[bb,] <- c(MCEMboot$a,MCEMboot$b,MCEMboot$alpha,
                          MCEMboot$beta,MCEMboot$vartau,MCEMboot$rho)
   }
-
+  
   CV.boot <- cov(boot.parms)
   return(CV.boot)
-
+  
 }
 
 #' This is run.scoring function.
@@ -547,14 +546,13 @@ bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
 #' @import foreach
 #' @import tidyverse
 #' @import dplyr
-#' @import MultiGHQuad
 #'
 #' @return wcpm list
 run.scoring <- function(object, person.data, task.data, cases, perfect.cases, est="map", lo = -4, hi = 4, q = 100, kappa = 1, external=NULL, type=NULL) {
   # loading logger
   log.initiating()
   flog.info("Begin scoring process", name = "orfrlog")
-
+  
   # Check MCEM object
   if (class(object)[1] == "fit.model") {
     MCEM <- object
@@ -562,14 +560,15 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
     flog.info("Missed fit.model object, end scoring process", name = "orfrlog")
     return(NULL)
   }
-
-
+  
+  
   # get estimator type
   Estimator <- est
   flog.info(paste(paste("Output", est),"estimating score"), name = "orfrlog")
-
-  est.theta.tau <- function(person.data, task.data, case, lo = -4, hi = 4, q = 100, external=NULL, type=NULL) {
-
+  
+  # Old est.theta.tau function
+  old.est.theta.tau <- function(person.data, task.data, case, lo = -4, hi = 4, q = 100, external=NULL, type=NULL) {
+    
     case_split <- unlist(str_split(case, "_"))
     person.dat01 <- person.data %>% filter(person.data$person.id==case_split[1], person.data$occasion==case_split[2])
     if (nrow(person.dat01) == 0) {
@@ -577,26 +576,26 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
       return(NULL)
     }
     task.read <- person.dat01 %>% select(task.id)
-
+    
     # task.id should be included in MCEM object
     task.dat01 <- task.data %>% semi_join(task.read, by = "task.id")
     task.n <- nrow(task.dat01)
-
+    
     max.counts.total <- person.dat01 %>% select(max.counts) %>% c() %>% unlist() %>% sum()
     group <- person.dat01 %>% select(group) %>% c() %>% unlist %>% unique()
-
+    
     obs.counts <- person.dat01 %>% select(obs.counts) %>% c() %>% unlist()
     lgsec <- person.dat01 %>% select(lgsec) %>% c() %>% unlist()
     max.counts <- person.dat01 %>% select(max.counts) %>% c() %>% unlist()
     lgsec10 <- lgsec-log(max.counts) + log(10)
-
+    
     a.par <- task.dat01 %>% select(a) %>% c() %>% unlist()
     b.par <- task.dat01 %>% select(b) %>% c() %>% unlist()
     alpha.par <- task.dat01 %>% select(alpha) %>% c() %>% unlist()
     beta.par <- task.dat01 %>% select(beta) %>% c() %>% unlist()
-
+    
     if (!is.null(external))  { # When external passages
-
+      
       # get a, b, alpha, beta from MCEM with specific task.id
       a.par.external <- task.data %>% filter(task.id %in% external) %>% select(a) %>% c() %>% unlist()
       b.par.external <- task.data %>% filter(task.id %in% external) %>% select(b) %>% c() %>% unlist()
@@ -604,7 +603,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
       beta.par.external <- task.data %>% filter(task.id %in% external) %>% select(beta) %>% c() %>% unlist()
       max.counts.external <- task.data %>% filter(task.id %in% external) %>% select(max.counts) %>% c() %>% unlist()
     }
-
+    
     # Compute task.n.wcpm and max.counts.total.wcpm
     if (is.null(external)) {
       task.n.wcpm <- task.n
@@ -613,16 +612,16 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
       task.n.wcpm <- length(external)
       max.counts.total.wcpm <- sum(max.counts.external)
     }
-
+    
     # Using MCEM to calculate rho and vartau
     rho <- mean(MCEM$hyper.param$rho)
     vartau <- mean(MCEM$hyper.param$vartau)
-
+    
     # Compute observed accuracy (obs.counts), speed (secs), and fluency (wcpm).
     obs.counts.obs <- person.dat01 %>% select(obs.counts) %>% sum()
     secs.obs <- person.dat01 %>% select(time) %>% sum()
     wcpm.obs <- obs.counts.obs/secs.obs*60
-
+    
     mod.pd1 <- function(theta) {
       eta <- a.par*theta - b.par
       #term1 <- sum(a.par*obs.counts*dnorm(eta)/pnorm(eta))
@@ -631,7 +630,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
       term2 <- sum(a.par*(max.counts-obs.counts)*exp(dnorm(eta,log = TRUE)-pnorm(eta, lower.tail = FALSE, log.p = TRUE)))
       pd1 <- term1 - term2
     }
-
+    
     # Following logic will not work on the perfect accurate cases
     # So check it first
     # Initiating the variables
@@ -643,11 +642,11 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
     k.theta0 <- NA
     se.wcpm.mle0 <- NA
     secs.mle0 <- NA
-
+    
     # MLE for tau & theta
     tau.mle <- sum(alpha.par^2*(beta.par - lgsec10))/sum(alpha.par^2)
     se.tau <- sum(alpha.par^2)^(-0.5)
-
+    
     # only for non-perfect occasion case
     if (!(case %in% perfect.cases$perfect.cases)) {
       theta.mle <- uniroot(mod.pd1, c(-12, 12))$root
@@ -655,7 +654,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
       #se.theta.mle <- sum((a.par*max.counts*dnorm(eta))/(pnorm(eta)*(1-pnorm(eta))))^(-0.5)
       I.theta <- sum(a.par^2*max.counts*dnorm(eta)^2/(pnorm(eta)*(1-pnorm(eta))))
       se.theta.mle <- 1/sqrt(I.theta)
-
+      
       if (is.null(external)) { #internal
         #secs.mle0 <- sum(exp(beta.par + log(max.counts) - tau.mle + ((1/alpha.par)^2)/2))
         secs.mle0 <- sum(exp(beta.par - log(10) + log(max.counts) - tau.mle + ((1/alpha.par)^2)/2))
@@ -670,10 +669,10 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
         wcpm.mle0 <- obs.counts.mle0/secs.mle0*60
         k.theta0 <- sum(a.par.external*max.counts.external*dnorm( a.par.external*theta.mle - b.par.external ))/sum(max.counts.external*pnorm( a.par.external*theta.mle - b.par.external ))
         se.wcpm.mle0 <- wcpm.mle0*(k.theta0^2*se.theta.mle^2 + se.tau^2)^0.5
-
+        
       }
     }
-
+    
     if (Estimator == "mle") {
       # flog.info(paste(paste("Output", est),"WCPM score"), name = "orfrlog")
       if (type == "orf") { # with wcpm
@@ -697,7 +696,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
                       se.theta.mle,
                       obs.counts.mle=obs.counts.mle0, secs.mle=secs.mle0)
       }
-
+      
       return(out)
     } else if (Estimator == "map") {
       # flog.info(paste(paste("Output", est),"WCPM score"), name = "orfrlog")
@@ -706,7 +705,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
         theta <- latent.parms[1]
         tau <- latent.parms[2]
         eta <- a.par*theta - b.par
-
+        
         ee1 <- -1/(kappa^2*(1-rho^2))*(theta-rho/sqrt(vartau)*tau) +
           sum(a.par*obs.counts*exp(dnorm(eta,log = TRUE)-pnorm(eta,log.p = TRUE))) -
           sum(a.par*(max.counts-obs.counts)*exp(dnorm(eta,log = TRUE)-pnorm(eta, lower.tail = FALSE, log.p = TRUE)))
@@ -718,7 +717,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
         ee <- c(ee1,ee2)
         return(ee)
       }
-
+      
       # MAP estimation: Updated 6/7/2022
       ests.map <- NA
       in.vals <- c(max(-5,min(5,theta.mle)),max(-5*sqrt(vartau),min(5*sqrt(vartau),tau.mle)))
@@ -776,7 +775,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
       cw <- pnorm(Qh)
       cw2 <- c(0, cw[ - q])
       WQ <- cw - cw2
-
+      
       LQ <- rep(0, q)
       for(i in 1:q) {
         eta <- a.par*Q[i] - b.par
@@ -784,24 +783,24 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
         LQk <- exp(sum(binom.lik))
         LQ[i] <- LQk
       }
-
+      
       theta.eap <- sum(Q * LQ * WQ)/sum(LQ * WQ)
       se.theta.eap <- sqrt(sum((Q - theta.eap)^2 * LQ * WQ)/sum(LQ * WQ))
       #se.theta.eap <- sum((Q - theta.eap)^2 * LQ * WQ)/sum(LQ * WQ)
-
+      
       # Bivariate EAP for theta and tau
       cov <- rho*sqrt(vartau)
       prior <- list(mu = c(0,0), Sigma = matrix(c(1,cov,cov,vartau),2,2))
       #grid <- init.quad(Q = 2, prior, ip = 100, prune = TRUE)
       grid <- MultiGHQuad::init.quad(Q = 2, prior, ip = 500, prune = F)
-
+      
       loglik <- function(z) {
         theta <- z[1]
         tau <- z[2]
         loglik.bi <- sum(dbinom(obs.counts, max.counts, pnorm((a.par*theta)-b.par), log = T)) +
           sum(dnorm(lgsec10, beta.par-tau, 1/alpha.par, log = T))
       }
-
+      
       ests.quad <- MultiGHQuad::eval.quad(loglik, grid)
       varmat <- attr(ests.quad, "variance")
       se.quad <- c(sqrt(varmat[1,1]), sqrt(varmat[2,2]))
@@ -847,29 +846,425 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
       }
       return(out)
     }
-
+    
   }
-
+  # End of -- Old est.theta.tau function
+  
+  # NEW est.theta.tau function
+  est.theta.tau <- function(person.data, task.data, case,q=49, lo = -12, hi = 12, external=NULL, rho = rho, vartau=vartau, type=NULL) {
+    #function(person.data, task.data, case, lo = -4, hi = 4, q = 100, external=NULL, type=NULL) {
+    
+    case_split <- unlist(str_split(case, "_"))
+    person.dat01 <- person.data %>% filter(person.data$person.id==case_split[1], person.data$occasion==case_split[2])
+    
+    if (nrow(person.dat01) == 0) {
+      # flog.info(paste("No data for:", case), name = "orfrlog")
+      return(NULL)
+    }
+    task.read <- person.dat01 %>% dplyr::select(task.id)
+    
+    # task.id should be included in MCEM object
+    task.dat01 <- task.data %>% semi_join(task.read, by = "task.id")
+    task.n <- nrow(task.dat01)
+    
+    max.counts.total <- person.dat01 %>% dplyr::select(max.counts) %>% c() %>% unlist() %>% sum()
+    group <- person.dat01 %>% dplyr::select(group) %>% c() %>% unlist %>% unique()
+    
+    obs.counts <- person.dat01 %>% dplyr::select(obs.counts) %>% c() %>% unlist()
+    lgsec <- person.dat01 %>% dplyr::select(lgsec) %>% c() %>% unlist()
+    max.counts <- person.dat01 %>% dplyr::select(max.counts) %>% c() %>% unlist()
+    lgsec10 <- lgsec-log(max.counts) + log(10)
+    
+    a.par <- task.dat01 %>% dplyr::select(a) %>% c() %>% unlist()
+    b.par <- task.dat01 %>% dplyr::select(b) %>% c() %>% unlist()
+    alpha.par <- task.dat01 %>% dplyr::select(alpha) %>% c() %>% unlist()
+    beta.par <- task.dat01 %>% dplyr::select(beta) %>% c() %>% unlist()
+    
+    if (!is.null(external))  { # When external passages
+      
+      # get a, b, alpha, beta from MCEM with specific task.id
+      a.par.external <- task.data %>% filter(task.id %in% external) %>% dplyr::select(a) %>% c() %>% unlist()
+      b.par.external <- task.data %>% filter(task.id %in% external) %>% dplyr::select(b) %>% c() %>% unlist()
+      alpha.par.external <- task.data %>% filter(task.id %in% external) %>% dplyr::select(alpha) %>% c() %>% unlist()
+      beta.par.external <- task.data %>% filter(task.id %in% external) %>% dplyr::select(beta) %>% c() %>% unlist()
+      max.counts.external <- task.data %>% filter(task.id %in% external) %>% dplyr::select(max.counts) %>% c() %>% unlist()
+    }
+    
+    # Compute task.n.wcpm and max.counts.total.wcpm
+    if (is.null(external)) {
+      task.n.wcpm <- task.n
+      max.counts.total.wcpm <- sum(max.counts)
+    } else {
+      task.n.wcpm <- length(external)
+      max.counts.total.wcpm <- sum(max.counts.external)
+    }
+    
+    # Compute observed accuracy (obs.counts), speed (secs), and fluency (wcpm).
+    obs.counts.obs <- person.dat01 %>% dplyr::select(obs.counts) %>% sum()
+    secs.obs <- person.dat01 %>% dplyr::select(time) %>% sum()
+    wcpm.obs <- obs.counts.obs/secs.obs*60
+    
+    ##### R functions ######
+    score.mle <- function (theta_prior){
+      tol_loglike <- 1e-04
+      tol_NR <- 1e-3
+      max_itr <- 1000
+      theta_grid <- seq(lo, hi, 0.5)
+      l1 <- function(th_try) { sum(a.par*obs.counts*dnorm(a.par*th_try-b.par)/pnorm(a.par*th_try-b.par))-
+          sum(a.par*(max.counts-obs.counts)*dnorm(a.par*th_try-b.par)/(1-pnorm(a.par*th_try-b.par)))}
+      
+      l2<-function(th_try){sum((a.par^2*obs.counts*(ddnorm(a.par*th_try-b.par)*pnorm(a.par*th_try-b.par)-dnorm(a.par*th_try-b.par)^2))/((pnorm(a.par*th_try-b.par))^2))-
+          sum(((max.counts-obs.counts)*a.par^2*(ddnorm(a.par*th_try-b.par)*(1-pnorm(a.par*th_try-b.par))+dnorm(a.par*th_try-b.par)^2))/((1-pnorm(a.par*th_try-b.par))^2))}
+      
+      if (abs(l1(theta_prior)) <= tol_loglike) {
+        theta_hat <- theta_prior
+        SE <- 1 / sqrt(-l2(theta_prior))
+      } else { # start iteration
+        if (theta_prior >= lo && theta_prior <= hi) {
+          theta_curr <- theta_prior
+        } else {
+          theta_curr <- 0
+        }
+        itr <- 0
+        l1_curr <- l1(theta_curr)
+        delta <- 100
+        while ((abs(l1_curr) > tol_loglike) || (abs(delta) > tol_NR)) {
+          if (itr > max_itr) { break }
+          itr <- itr + 1
+          delta <- l1_curr / l2(theta_curr)
+          if ((theta_curr - delta > lo) &&
+              (theta_curr - delta < hi)) {
+            theta_upd <- theta_curr - delta
+          } else if ((theta_curr - delta < lo) ||
+                     (theta_curr - delta > hi)) {
+            if (l1_curr * l1(lo) < 0) {
+              theta_upd <- (theta_curr + lo) / 2
+            }
+            else if (l1_curr * l1(hi) < 0) {
+              theta_upd <- (theta_curr + hi) / 2
+            } else {
+              # if all three derivatives (min, curr, max) have the same
+              # signs, use the grid search
+              l1_grid <- matrix(NA, length(theta_grid), 1)
+              for (g in 1:length(theta_grid)) {
+                l1_grid[g] <- l1(theta_grid[g])
+              }
+              theta_upd <- theta_grid[abs(l1_grid) == min(abs(l1_grid))]
+            }
+          }
+          theta_curr <- theta_upd
+          l1_curr <- l1(theta_curr)
+        }
+        theta_hat <- theta_curr
+        SE <- 1 / sqrt(-l2(theta_curr))
+      }
+      c(theta_hat, SE)
+    }
+    
+    score.map<-function (ppar_init)
+    {
+      th_init  = ppar_init[1]
+      tau_init = ppar_init[2]
+      
+      map<- c(th_init, tau_init)
+      # Newton-Raphson with an initial vector of [th1, th2]
+      N = 1000
+      eps = 1.0e-3
+      nitr = 0 
+      while ( N > 0 ){
+        
+        # [1] Restrain th_try & tau_try within truncate
+        # initial estimates are obtained from previous test set/items
+        if ( lo < th_init && th_init < hi ){
+          th_try = th_init } else if  (th_init <= lo) {
+            th_try = lo} else if (th_init >= hi) {
+              th_try = hi} 
+        
+        if ( lo < tau_init && tau_init < hi ){ 
+          tau_try = tau_init } else if (tau_init <= lo){
+            tau_try = lo }else if (tau_init >= hi){
+              tau_try = hi}
+        
+        # [2] first & second partial derivatives of posterior density
+        # (partial) derivative of the natural log of posterior density
+        l1_binom =sum(a.par*obs.counts*dnorm(a.par*th_try-b.par)/pnorm(a.par*th_try-b.par))-
+          sum(a.par*(max.counts-obs.counts)*dnorm(a.par*th_try-b.par)/(1-pnorm(a.par*th_try-b.par)))-
+          (vartau*th_try-rho*sqrt(vartau)*tau_try)/(vartau-rho^2*vartau)
+        l1_lognorm = -sum(alpha.par^2*(lgsec10 -beta.par+tau_try))-(tau_try-rho*sqrt(vartau)*th_try)/(vartau-rho^2*vartau) 
+        #  Hessian matrix
+        lam11 = -1/(1-rho^2)+sum((a.par^2*obs.counts*(ddnorm(a.par*th_try-b.par)*pnorm(a.par*th_try-b.par)-dnorm(a.par*th_try-b.par)^2))/((pnorm(a.par*th_try-b.par))^2))-
+          sum(((max.counts-obs.counts)*a.par^2*(ddnorm(a.par*th_try-b.par)*(1-pnorm(a.par*th_try-b.par))+dnorm(a.par*th_try-b.par)^2))/((1-pnorm(a.par*th_try-b.par))^2))
+        
+        lam22 = -sum(alpha.par^2)-1/((1-rho^2)*vartau)
+        lam12 = rho/((1-rho^2)*sqrt(vartau))
+        # [3] obtain and evaluate the delta
+        delta = solve(matrix(c(lam11, lam12, lam12, lam22),nrow=2,ncol=2), c(l1_binom, l1_lognorm)) 
+        if ( abs( delta[1] ) < eps &&  abs(delta[2]) < eps )
+        {
+          map[1] = th_try 
+          map[2] = tau_try 
+          nitr = 500 - N
+          break
+        }else{
+          th_init = th_try - delta[1]
+          tau_init = tau_try - delta[2]
+        }
+        N = N - 1;
+      }
+      if (N == 0)
+      { 
+        map = c(th_init, tau_init) 
+        message<-paste('MAP does not converge in replication',rep)
+        model.file.name<-paste("mapnonconvergence",rep,".txt")
+        write(x=message,file=model.file.name,append = FALSE)
+      }
+      # standard error
+      map_se = sqrt(diag(solve( -matrix(c(lam11, lam12, lam12, lam22),nrow=2,ncol=2), diag(2) )))
+      return(rbind(map,map_se))
+    }
+    
+    score.eap<-function (nquad)
+    {
+      # Nodes for numerical integration
+      Q <- seq(-5, 5, length = nquad)
+      eap_step <- Q[2] - Q[1]
+      nnode   = nquad^2 
+      nodes   = matrix(rep(0,nnode*2),nnode,2)
+      for (k in 1 : nquad){
+        nodes[(nquad * (k - 1) + 1) : (nquad * k), 1] = -5 + eap_step * (k - 1) 
+        nodes[(nquad * (k - 1) + 1) : (nquad * k), 2] = seq(-5, 5, length = nquad)
+      }
+      mu_p<-c(-0.5,0)
+      cov_p<- matrix(c(0.55,.16,.16,vartau),2,2)
+      weight <- dmvnorm(nodes, mu_p, cov_p)
+      weight <-  weight/sum(weight)
+      # "pr" : [nnode, nitem]
+      nitem  = length(obs.counts) 
+      rdisc = rep(a.par, each=nnode) #replicate a.par (length = nitem) nnode times
+      rint  = rep(b.par, each=nnode) 
+      rresponse = rep(obs.counts, each=nnode) 
+      rnumwords = rep(max.counts, each=nnode) 
+      rnode_th = rep(nodes[,1], nitem) 
+      
+      pr = matrix(dbinom(rresponse, rnumwords, pnorm(rdisc*rnode_th - rint)),ncol = nitem)
+      like_binom = apply(pr,1,prod) 
+      
+      ralpha = rep(alpha.par, each=nnode)
+      rbeta = rep(beta.par, each=nnode)
+      rnode_tau = rep(nodes[,2], nitem)
+      rlgsec10 = rep(lgsec10, each=nnode)
+      rlgsec = rep(lgsec, each=nnode)
+      rt<-matrix(dnorm(rlgsec10,rbeta-rnode_tau,1/ralpha),ncol = nitem)
+      #rt<-matrix(dnorm(rlgsec,rbeta+log(max.counts) - log(10)-rnode_tau,1/ralpha),ncol = nitem)
+      like_rt = apply(rt, 1,prod)
+      like = like_binom* like_rt
+      
+      numer1 = apply(nodes* cbind( like * weight, like * weight) ,2,sum) 
+      denom1 = apply(cbind( like * weight, like * weight),2,sum ) 
+      eap = numer1 / denom1 
+      
+      numer2 = sum((nodes[,1]-eap[1])^2* like * weight) 
+      denom2 = sum (like * weight) 
+      eap_se_th = sqrt(numer2/ denom2)
+      numer3 = sum((nodes[,2]-eap[2])^2* like * weight) 
+      denom3 = sum (like * weight) 
+      eap_se_tau = sqrt(numer3/ denom3)
+      eap_se<-c(eap_se_th,eap_se_tau)
+      
+      numer4 = sum((nodes[,1]-eap[1])*(nodes[,2]-eap[2])* like * weight) 
+      denom4 = sum (like * weight) 
+      eap_cov = numer4/ denom4
+      return(c(eap,eap_se,eap_cov))
+    }
+    
+    ######Start estimating####
+    theta.mle <- Inf # for perfect case
+    eta <- NA
+    se.theta.mle <- NA
+    obs.counts.mle0 <- NA
+    wcpm.mle0 <- NA
+    k.theta0 <- NA
+    se.wcpm.mle0 <- NA
+    secs.mle0 <- NA
+    
+    # MLE for tau & theta
+    tau.mle <- sum(alpha.par^2*(beta.par - lgsec10))/sum(alpha.par^2)
+    se.tau.mle <- sum(alpha.par^2)^(-0.5)
+    # perfect.cases <- c(t(get.perfectcases(person.data)))
+    # case_split <- matrix(str_split(perfect.cases, "_",simplify = TRUE),ncol = 2)
+    
+    # only for non-perfect occasion case
+    if (!(case %in% perfect.cases$perfect.cases)) {
+      
+      out.mle<-score.mle(0.5)
+      theta.mle <- out.mle[1]
+      se.theta.mle <- out.mle[2]
+      
+      
+      if (is.null(external)) { #internal
+        secs.mle0 <- sum(exp(beta.par - log(10) + log(max.counts) - tau.mle + ((1/alpha.par)^2)/2))
+        obs.counts.mle0 <- sum(max.counts*pnorm(a.par*theta.mle - b.par))
+        wcpm.mle0 <- obs.counts.mle0/secs.mle0*60
+        k.theta0 <- sum(a.par*max.counts*dnorm( a.par*theta.mle - b.par ))/sum(max.counts*pnorm( a.par*theta.mle - b.par ))
+        se.wcpm.mle0 <- wcpm.mle0*(k.theta0^2*se.theta.mle^2 + se.tau.mle^2)^0.5
+      } else {
+        # if external, will calculate with external a, b, alpha, and beta
+        secs.mle0 <- sum(exp(beta.par.external - log(10) + log(max.counts.external) - tau.mle + ((1/alpha.par.external)^2)/2))
+        obs.counts.mle0 <- sum(max.counts.external*pnorm(a.par.external*theta.mle - b.par.external))
+        wcpm.mle0 <- obs.counts.mle0/secs.mle0*60
+        k.theta0 <- sum(a.par.external*max.counts.external*dnorm( a.par.external*theta.mle - b.par.external ))/sum(max.counts.external*pnorm( a.par.external*theta.mle - b.par.external ))
+        se.wcpm.mle0 <- wcpm.mle0*(k.theta0^2*se.theta.mle^2 + se.tau.mle^2)^0.5
+      }
+    }
+    if (Estimator == "mle") {
+      if (type == "orf") { # with wcpm
+        out <- tibble(person.id=case_split[1], occasion=case_split[2], group=group,
+                      task.n=task.n, max.counts.total=max.counts.total,
+                      obs.counts.obs, secs.obs, wcpm.obs,
+                      tau.mle,
+                      theta.mle,
+                      se.tau.mle=se.tau.mle,
+                      se.theta.mle,
+                      obs.counts.mle=obs.counts.mle0, secs.mle=secs.mle0,
+                      task.n.wcpm,max.counts.total.wcpm,
+                      wcpm.mle=wcpm.mle0, se.wcpm.mle=se.wcpm.mle0)
+      } else { #without wcpm
+        out <- tibble(person.id=case_split[1], occasion=case_split[2], group=group,
+                      task.n=task.n, max.counts.total=max.counts.total,
+                      obs.counts.obs, secs.obs,
+                      tau.mle,
+                      theta.mle,
+                      se.tau.mle=se.tau.mle,
+                      se.theta.mle,
+                      obs.counts.mle=obs.counts.mle0, secs.mle=secs.mle0)
+      }
+      
+      return(out)
+    } else if (Estimator == "map") {
+      ests.map <- NA
+      in.vals <- c(max(-5,min(5,theta.mle)),max(-5*sqrt(vartau),min(5*sqrt(vartau),tau.mle)))
+      out.map<- score.map(in.vals)
+      ests.map <- out.map[1,]
+      # MAP Standard Errors for tau and theta
+      se.tau.map <- out.map[2,2]
+      eta <- a.par*ests.map[1] - b.par
+      se.theta.map <-out.map[2,1]
+      # MAP WCPM score
+      if (is.null(external)) { #internal
+        obs.counts.map <- sum(max.counts*pnorm(a.par*ests.map[1] - b.par))
+        secs.map <- sum(exp(beta.par - log(10) + log(max.counts) - ests.map[2] + ((1/alpha.par)^2)/2))
+        wcpm.map <- obs.counts.map/secs.map*60
+        k.theta.map <- sum(a.par*max.counts*dnorm( a.par*ests.map[1] - b.par ))/sum(max.counts*pnorm( a.par*ests.map[1] - b.par ))
+        se.wcpm.map <- wcpm.map*(k.theta.map^2*se.theta.map^2 + se.tau.map^2)^0.5
+      } else {
+        # if external, will calculate with external a, b, alpha, and beta
+        obs.counts.map <- sum(max.counts.external*pnorm(a.par.external*ests.map[1] - b.par.external))
+        secs.map <- sum(exp(beta.par.external - log(10) + log(max.counts.external) - ests.map[2] + ((1/alpha.par.external)^2)/2))
+        wcpm.map <- obs.counts.map/secs.map*60
+        k.theta.map <- sum(a.par.external*max.counts.external*dnorm( a.par.external*ests.map[1] - b.par.external ))/sum(max.counts.external*pnorm( a.par.external*ests.map[1] - b.par.external ))
+        se.wcpm.map <- wcpm.map*(k.theta.map^2*se.theta.map^2 + se.tau.map^2)^0.5
+      }
+      # End of MAP estimation
+      
+      if (type == "orf") { # with wcpm
+        out <- tibble(person.id=case_split[1], occasion=case_split[2], group=group,
+                      task.n=task.n, max.counts.total=max.counts.total,
+                      obs.counts.obs, secs.obs, wcpm.obs,
+                      tau.map=ests.map[2],
+                      theta.map=ests.map[1],
+                      # add these two columns, similar to EAP output
+                      se.tau.map=se.tau.map,
+                      se.theta.map=se.theta.map,
+                      obs.counts.map, secs.map,
+                      task.n.wcpm,max.counts.total.wcpm,
+                      wcpm.map, se.wcpm.map)
+      } else { #without wcpm
+        out <- tibble(person.id=case_split[1], occasion=case_split[2], group=group,
+                      task.n=task.n, max.counts.total=max.counts.total,
+                      obs.counts.obs, secs.obs,
+                      tau.map=ests.map[2],
+                      theta.map=ests.map[1],
+                      se.tau.map=se.tau.map,
+                      se.theta.map=se.theta.map,
+                      obs.counts.map, secs.map)
+      }
+      return(out)
+    } else if (Estimator == "eap") {
+      eap.result<-score.eap(nquad = q)
+      ests.quad <- eap.result[c(1,2)]
+      se.quad <- eap.result[c(3,4)]
+      cov.quad<-eap.result[5]
+      # QUAD WCPM score
+      if (is.null(external)) { #internal
+        obs.counts.quad <- sum(max.counts*pnorm(a.par*ests.quad[1] - b.par))
+        secs.quad <- sum(exp(beta.par - log(10) + log(max.counts) - ests.quad[2] + ((1/alpha.par)^2)/2))
+        wcpm.quad <- obs.counts.quad/secs.quad*60
+        k.theta.quad <- sum(a.par*max.counts*dnorm( a.par*ests.quad[1] - b.par ))/sum(max.counts*pnorm( a.par*ests.quad[1] - b.par ))
+        se.wcpm.quad <- wcpm.quad*(k.theta.quad^2*se.quad[1]^2 + se.quad[2]^2)^0.5
+      } else {
+        # if external, will calculate with external a, b, alpha, and beta
+        obs.counts.quad <- sum(max.counts.external*pnorm(a.par.external*ests.quad[1] - b.par.external))
+        secs.quad <- sum(exp(beta.par.external - log(10) + log(max.counts.external) - ests.quad[2] + ((1/alpha.par.external)^2)/2))
+        wcpm.quad <- obs.counts.quad/secs.quad*60
+        k.theta.quad <- sum(a.par.external*max.counts.external*dnorm( a.par.external*ests.quad[1] - b.par.external ))/sum(max.counts.external*pnorm( a.par.external*ests.quad[1] - b.par.external ))
+        se.wcpm.quad <- wcpm.quad*(k.theta.quad^2*se.quad[1]^2 + se.quad[2]^2)^0.5
+      }
+      # End of EAP
+      
+      if (type == "orf") { # with wcpm
+        out <- tibble(person.id=case_split[1], occasion=case_split[2], group=group,
+                      task.n=task.n, max.counts.total=max.counts.total,
+                      obs.counts.obs, secs.obs, wcpm.obs,
+                      tau.eap = ests.quad[2],
+                      theta.eap = ests.quad[1],
+                      se.tau.eap = se.quad[2],
+                      se.theta.eap = se.quad[1],
+                      obs.counts.eap = obs.counts.quad,
+                      secs.eap = secs.quad,
+                      task.n.wcpm,max.counts.total.wcpm,
+                      wcpm.eap = wcpm.quad,
+                      se.wcpm.eap = se.wcpm.quad)
+      } else { # without wcpm
+        out <- tibble(person.id=case_split[1], occasion=case_split[2], group=group,
+                      task.n=task.n, max.counts.total=max.counts.total,
+                      obs.counts.obs, secs.obs,
+                      tau.eap = ests.quad[2],
+                      theta.eap = ests.quad[1],
+                      se.tau.eap = se.quad[2],
+                      se.theta.eap = se.quad[1],
+                      obs.counts.eap = obs.counts.quad,
+                      secs.eap = secs.quad)
+      }
+      return(out)
+    }
+  }
+  # END of --- NEW Function
+  
+  # Using MCEM to calculate rho and vartau
+  rho <- mean(MCEM$hyper.param$rho)
+  vartau <- mean(MCEM$hyper.param$vartau)
+  
   numCores <- detectCores() - 1
-
-
+  
+  
   cl <- makeCluster(numCores)
   registerDoParallel(cl)
-
+  
   seq_id_all <- nrow(cases)
-
-  theta.tau <- foreach(i=1:seq_id_all, .combine = 'rbind', .packages = c("tidyverse", "MultiGHQuad")) %dopar% #%dopar%
+  
+  theta.tau <- foreach(i=1:seq_id_all, .combine = 'rbind', .packages = c("tidyverse", "miscTools", "mvtnorm")) %dopar% #%dopar%
     { est.theta.tau(person.data,
                     task.data,
                     cases$cases[i],
-                    lo, hi, q, external=external, type=type)
+                    lo=lo, hi=hi, q=q, external=external, rho=rho, vartau=vartau, type=type)
     }
   if (length(theta.tau[1]) != 0) {
     class(theta.tau) <- "scoring" #define wcpm class
   }
-
+  
   on.exit(stopCluster(cl))
-
+  
   flog.info("End scoring process", name = "orfrlog")
-  return(invisible(theta.tau))
+  return(invisible(theta.tau)) # list
+  # return(invisible(as.data.frame(do.call(cbind, theta.tau)))) #data frame
 }

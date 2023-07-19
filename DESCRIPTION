@@ -17,7 +17,7 @@ LazyData: true
 RoxygenNote: 7.2.1
 Imports: 
     tibble,rootSolve,tidyverse,tidyr,magrittr,doParallel,foreach,futile.logger,
-    greekLetters,mvtnorm,
+    mvtnorm,
     nleqslv,tryCatchLog,dplyr,parallel
 Suggests: 
     testthat (>= 3.5.0)
