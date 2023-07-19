@@ -35,12 +35,12 @@ summary.fit.model <- function(object, digits=4,...) {
   
   print(tt, digits = digits, print.gap = 3L) # specific minimum digits
   cat("\n====== Hyper Parameters ======\n")
-  cat(paste(paste0("Variance of ", greek$tau), ":     "))
+  cat(paste(paste0("Variance of ", "tau"), ":     "))
   # cat(paste(format(z$hyper.param$vartau,digits=6,nsmall=digits), "\n"))
   # cat(paste(greek$rho), "            :     ")
   # cat(paste(format(z$hyper.param$rho,digits=6,nsmall=digits), "\n"))
   cat(paste(sprintf(fmt = "%6.6f", z$hyper.param$vartau), "\n"))
-  cat(paste(greek$rho), "            :     ")
+  cat(paste("Rho"), "            :     ")
   cat(paste(sprintf(fmt = "%6.6f", z$hyper.param$rho), "\n"))
 }
 #' summary the information of wcpm class
