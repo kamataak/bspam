@@ -18,7 +18,7 @@ RoxygenNote: 7.2.1
 Imports: 
     tibble,rootSolve,tidyverse,tidyr,magrittr,doParallel,foreach,futile.logger,
     mvtnorm,
-    nleqslv,tryCatchLog,dplyr,parallel
+    nleqslv,tryCatchLog,dplyr,parallel,miscTools
 Suggests: 
     testthat (>= 3.5.0)
 Config/testthat/edition: 3

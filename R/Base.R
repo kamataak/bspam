@@ -546,6 +546,7 @@ bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
 #' @import foreach
 #' @import tidyverse
 #' @import dplyr
+#' @import miscTools
 #'
 #' @return wcpm list
 run.scoring <- function(object, person.data, task.data, cases, perfect.cases, est="map", lo = -4, hi = 4, q = 100, kappa = 1, external=NULL, type=NULL) {
