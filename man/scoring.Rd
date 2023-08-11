@@ -24,7 +24,7 @@ scoring(
 )
 }
 \arguments{
-\item{calib.data}{- fit.model class object}
+\item{calib.data}{- fit.model class object from calibration}
 
 \item{person.data}{- individual reading data}
 
