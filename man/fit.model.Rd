@@ -93,5 +93,5 @@ MCEM_run <- fit.model(person.data = passage2,
 
 }
 \seealso{
-[scoring()] for the next step
+[scoring()] for the next step.
 }
