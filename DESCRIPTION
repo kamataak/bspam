@@ -1,35 +1,33 @@
 Package: bspam
 Type: Package
+Encoding: UTF-8
 Title: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R
 Version: 1.2.2
+Authors@R: c(person("Akihito", "Kamata", role = c("aut", "cre"), email = "akamata@smu.edu", comment = c(ORCID = "0000-0001-9570-1464")),
+    person("Cornelis J.", "Potgieter", role = "aut", email = "c.potgieter@tcu.edu", comment = c(ORCID = "0000-0002-1995-6817")),
+    person("Joseph F. T.", "Nese", role = "aut", email = "jnese@uoregon.edu", comment = c(ORCID = "0000-0002-9878-7395")),
+    person("Yusuf", "Kara", role = "aut", email = "ykara@mail.smu.edu",  comment = c(ORCID = "0000-0003-0691-0630")),
+    person("Sarunya", "Somsong", role = "aut", email = "sarunya.ss@hotmail.com", comment = c(ORCID = "0000-0002-4974-7346")),
+    person("Xin", "Qiao", role = "aut", email = "sarunya.ss@hotmail.com", comment = c(ORCID = "0000-0002-3248-7859")),
+    person("Kuo", "Wang", role = c("aut"), email = "wangkuo@nifty.com", comment = c(ORCID = "0000-0002-4925-0591")))
 Maintainer: Akihito Kamata <akamata@gmail.com>
-Authors@R: c(
-    person("Akihito", "Kamata", email = "akamata@smu.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9570-1464")),
-    person("Cornelis J.", "Potgieter", email = "c.potgieter@tcu.edu", role = "aut"),
-    person("Joseph F. T.", "Nese", email = "jnese@uoregon.edu", role = "aut", comment = c(ORCID = "0000-0002-9878-7395")),
-    person("Yusuf", "Kara", email = "ykara@mail.smu.edu", role = "aut",  comment = c(ORCID = "0000-0003-0691-0630")),
-    person("Sarunya", "Somsong", email = "sarunya.ss@hotmail.com", role = "aut", comment = c(ORCID = "0000-0002-4974-7346")),
-    person("Kuo", "Wang", email = "wangkuo@nifty.com", role = c("aut"), comment = c(ORCID = "0000-0002-4925-0591"))
-    )
 Description: This is an R package that contains functions to fit the speed-accuracy 
     psychometric model for count outcome data (Potgieter, Kamata & Kara, 2017; Kara, 
     Kamata, Potgieter & Nese, 2020), where the accuracy is modeled by a binomial count 
     latent variable model. For example, the use of this modeling technique allows 
     model-based calibration and scoring for oral reading fluency (ORF) assessment data. 
 License: GPL (>= 3)
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.2.3
+Depends: R (>= 3.5.0)
 Imports: 
     tibble, rootSolve, tidyverse, tidyr, magrittr, doParallel, foreach, 
     futile.logger, mvtnorm, nleqslv, tryCatchLog, parallel, miscTools
 Suggests: 
     rjags, rstan, testthat (>= 3.5.0)
-Config/testthat/edition: 3
 URL: https://github.com/kamataak/bspam
 BugReports: https://github.com/kamataak/bspam/issues
-Depends: 
-    R (>= 3.5.0)
+RoxygenNote: 7.2.3
+LazyData: true
+Config/testthat/edition: 3
 Authors: 
     Akihito Kamata [aut, cre] <https://orcid.org/0000-0001-9570-1464>
     Cornelis J. Potgieter [aut] <https://orcid.org/0000-0002-1995-6817>
