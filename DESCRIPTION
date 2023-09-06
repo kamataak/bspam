@@ -20,7 +20,7 @@ License: GPL (>= 3)
 Depends: R (>= 3.5.0)
 Imports: 
     tibble, rootSolve, tidyverse, tidyr, magrittr, doParallel, foreach, 
-    futile.logger, mvtnorm, nleqslv, tryCatchLog, parallel, miscTools
+    futile.logger, mvtnorm, nleqslv, tryCatchLog, parallel, miscTools, psych
 Suggests: 
     rjags, rstan, testthat (>= 3.5.0)
 URL: https://github.com/kamataak/bspam
