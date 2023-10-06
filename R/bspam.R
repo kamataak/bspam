@@ -18,6 +18,7 @@
 #' @author Joseph F. T. Nese <jnese@uoregon.edu>
 #' @author Yusuf Kara <ykara@mail.smu.edu>
 #' @author Sarunya Somsong <sarunya.ss@hotmail.com>
+#' @author Xin Qiao <xqiao@usf.edu>
 #' @author Kuo Wang <wangkuo@nifty.com>
 #'  
 #' @docType package

@@ -6,13 +6,13 @@
 \usage{
 preplong(
   data,
-  person.id,
-  task.id,
-  occasion,
-  group,
-  max.counts,
-  obs.counts,
-  time
+  person.id = "",
+  task.id = "",
+  occasion = "",
+  group = "",
+  max.counts = "",
+  obs.counts = "",
+  time = ""
 )
 }
 \arguments{

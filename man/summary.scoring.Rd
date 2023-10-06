@@ -8,7 +8,7 @@
   object,
   digits = 4,
   verbose = TRUE,
-  factor.scores = FALSE,
+  factor.scores = TRUE,
   show = "short"
 )
 }
@@ -19,7 +19,7 @@
 
 \item{verbose}{- boolean, if TRUE, shows the summary, default is TRUE}
 
-\item{factor.scores}{- theta and tau output flag, default is FALSE}
+\item{factor.scores}{- theta and tau output flag, default is TRUE # before was FALSE}
 
 \item{show}{- output flag, "long" and "short", default "short" only output estimate result. "long" will output estimate result and data.}
 }
