@@ -64,30 +64,31 @@ summary.fit.model <- function(object, digits=4,...) {
 #' @param object = object
 #' @param digits = print out numeric with specific digits
 #' @param verbose - boolean, if TRUE, shows the summary, default is TRUE
-#' @param factor.scores - theta and tau output flag, default is FALSE
+#' @param factor.scores - theta and tau output flag, default is TRUE # before was FALSE
 #' @param show - output flag, "long" and "short", default "short" only output estimate result. "long" will output estimate result and data. 
 #'
 #' @return scoring dataset with task information and estimated score
 #' @method summary scoring
 #' @export
-summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=FALSE, show="short") {
-  z <- object
+summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=TRUE, show="short") {
   
+  z <- object
+  # try dataframe
   tb <- as.data.frame(t(do.call(rbind, z))) # convert list to data frame
   # print(colnames(tb)) for debug
   
   if("wcpm.obs" %in% colnames(tb)) {
     if ("wcpm.jags" %in% colnames(tb)) {  # for bayes object
-      no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs',
+      no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs',
                            'task.n.wcpm', 'max.counts.total.wcpm', 'wcpm.jags', 'se.wcpm.jags', 'low.95.jags.wcpm', 'up.95.jags.wcpm')  
     } else if ("wcpm.stan" %in% colnames(tb)) { # for stan output
-      no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs',
+      no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs',
                            'task.n.wcpm', 'max.counts.total.wcpm', 'wcpm.stan', 'se.wcpm.stan', 'low.95.stan.wcpm', 'up.95.stan.wcpm')  
     } else {
-      no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')
+      no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')
     }
   } else {
-    no_show_columns <- c('person.id', 'occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs')
+    no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs')
   }
   
   # don't output theta and tau, if FALSE
@@ -119,9 +120,13 @@ summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=FALSE, s
     tb <- tb %>% select(-no_show_columns)
   }
   
+  #exclude rownames
+  rownames(tt) <- NULL
+  rownames(tb) <- NULL
+  
   if (verbose == TRUE) {
     # only verbose TRUE will print out on screen
-    print(tt)
+    print(tt, row.names = F)
     return(invisible(tb))
   } else {
     return(invisible(tb))
