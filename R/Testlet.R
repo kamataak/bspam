@@ -99,7 +99,7 @@ fit.model.testlet <- function(data=NULL, id.student="", id.sentence="",wrc="", s
             logT10[i] ~ normal(beta[i]-sigma*(theta2+gamma2*U2[Passage[i]])/sqrt(1+gamma2^2), 1/alpha[i]);
           }
         }"
-      m <- stan_model(model_code = model_code)
+      m <- rstan::stan_model(model_code = model_code)
       
       Ys <- data %>%
         select(id.student, id.sentence, wrc) %>%
@@ -599,7 +599,7 @@ iterate_full_testlet_MCEM <- function(Y,logT10,Passage,N,n.iter,M.iter,par.in,m,
       K.i <- length(unique(Passage[S==1]))
       index.i <- as.integer(factor(Pass.i, levels = unique(Pass.i)))
       
-      fit <- sampling(m,#stan(model_code = model_code, 
+      fit <- rstan::sampling(m,#stan(model_code = model_code, 
                       data = list(N = sum(S), K = K.i,
                                   Count = Y.new,  logT10 = logT10.new,
                                   MaxN = N[S==1], Passage = index.i,
