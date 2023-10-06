@@ -32,9 +32,20 @@ prep <- function(data=data,person.id="",task.id="",occasion="",group="",max.coun
   # loading logger
   log.initiating()
   flog.info("Begin preparing data process", name = "orfrlog")
+  if (occasion == "") {
+    # add default occasion
+    data["occasion"] <- 1
+    occasion = "occasion"
+  } 
+  if (group == "") {
+    # add default occasion
+    data["group"] <- 1
+    group = "group"
+  } 
+  
   #  col.names = c(studentid,passageid,numwords.p,season,grade,wrc,time)
   col.labels <- c("person.id","task.id","max.counts","occasion","group","obs.counts","time","lgsec")
-
+  
   dat <- data
   tryCatch (
     expr = {
@@ -47,13 +58,13 @@ prep <- function(data=data,person.id="",task.id="",occasion="",group="",max.coun
       c6 <- dat[obs.counts] # obs.counts
       c7 <- dat[time] # time
       lgsec <- log(c7) # lgsec
-
+      
       dat <- data.frame(c1,c2,c3,c4,c5,c6,c7,lgsec)
       colnames(dat) <- col.labels
-
+      
       tp <- as.data.frame(dat %>% select(person.id, task.id, obs.counts) %>%
                             pivot_wider(names_from = task.id, values_from = obs.counts))
-
+      
       rownames(tp) <- as.character(tp$person.id)
       Y <- tp %>% select(-person.id)
       Y <- Y[ , order(names(Y))] # sort by passage.id
@@ -80,12 +91,12 @@ prep <- function(data=data,person.id="",task.id="",occasion="",group="",max.coun
       logT10 <- logT10[ , order(names(logT10))]
       # data.in <- list(Y = Y, logT10 = logT10, N = N, I = I)
       data.in <- list(Y = Y, logT10 = logT10, N = N, I = I)
-
-
+      
+      
       output <- list(data.long=dat,
                      data.wide=data.in)
       flog.info("End preparing data process", name = "orfrlog")
-
+      
       return(output)
     },
     warning = function(w) {
@@ -136,13 +147,24 @@ get.perfectcases <- function(data) {
 #' @return data frame
 #'
 preplong <- function(data,
-                     person.id,
-                     task.id,
-                     occasion,
-                     group,
-                     max.counts,
-                     obs.counts,
-                     time){
+                     person.id="",
+                     task.id="",
+                     occasion="",
+                     group="",
+                     max.counts="",
+                     obs.counts="",
+                     time=""){
+  
+  if (occasion == "") {
+    # add default occasion
+    data["occasion"] <- 1
+    occasion = "occasion"
+  } 
+  if (group == "") {
+    # add default occasion
+    data["group"] <- 1
+    group = "group"
+  } 
   vars <- c(person.id,
             task.id,
             occasion,
@@ -223,7 +245,7 @@ prepwide <- function(data,
 exclude_passages <- function(passage) {
   err_list <- get_errlist(passage)
   return (passage %>% filter(!(id.passage %in% err_list)))
-
+  
 }
 
 #' To get a string of error passages that have no at least two readers
@@ -234,7 +256,7 @@ exclude_passages <- function(passage) {
 get_errlist <- function(passage) {
   # get unique passage list
   passage_ids <- as.matrix(passage %>% select(id.passage) %>% unique())
-
+  
   flag <- 0
   err_list <- c()
   for (i in 1:length(passage_ids)) {
@@ -256,7 +278,7 @@ get_errlist <- function(passage) {
       ll <- length(err_list)+1
       err_list[ll] <- passage_ids[i]
     }
-
+    
   }
   return (err_list)
 }
