@@ -75,4 +75,21 @@
 #' @source \url{https://jnese.github.io/core-blog/}
 "passage.calib.bayes"
 
+#' @title Sentence-level student data set
+#'
+#' @description A data set consisted of reading time data for 4 passages and 23 sentences from 58 students.
+#'
+#' @format 1334 rows and 8 variables:
+#' \describe{
+#'   \item{id.student}{unique student identifier}
+#'   \item{grade}{student grade level}
+#'   \item{id.passage}{unique passage identifier}
+#'   \item{ind.passage}{passage index}
+#'   \item{id.sentence}{sentence identifier}   
+#'   \item{numwords.sent}{total number of words in the sentence}
+#'   \item{wrc}{words read correct}
+#'   \item{sec}{seconds to read the sentence}
+#' }
+#' @source \url{https://jnese.github.io/core-blog/}
+"sentence.data"
 
