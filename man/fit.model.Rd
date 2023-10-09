@@ -73,23 +73,13 @@ Default is \code{FALSE}.}
 MCEM list, bayes list
 }
 \description{
-This is an interface function to estimate the model parameters by implementing 
+This is an interface function to estimate the model parameters 
+based on the task-level (i.e., passage-level in ORF assessment 
+context) accuracy and speed data by implementing 
 the Monte Carlo EM algorithm described in Potgieter et al. (2017) or
 fully Bayesian method described in Kara et al. (2020).
 }
 \details{
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/
-
-
 Additional details...
 }
 \note{
@@ -107,6 +97,16 @@ MCEM_run <- fit.model(person.data = passage2,
                       reps.in = 50,
                       est = "mcem")
 
+}
+\references{
+Potgieter, N., Kamata, A., & Kara, Y. (2018). An EM algorithm for 
+  estimating an oral reading speed and accuracy model. Manuscript submitted 
+  for publication.  
+  
+  Kara, Y., Kamata, A., Potgieter, C., & Nese, J. F. (2020). Estimating 
+  model-based oral reading fluency: A bayesian approach with a 
+  binomial-lognormal joint latent model. 
+  *Educational and Psychological Measurement*, 1–25.
 }
 \seealso{
 [scoring()] for the next step.
