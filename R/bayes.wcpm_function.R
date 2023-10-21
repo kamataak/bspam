@@ -60,6 +60,17 @@ bayes.wcpm <- function(
       select(-lgsec)
     colnames(person.data) <- c("person.id", "task.id", "max.counts", "occasion", "group", "obs.counts", "time")
   }else{
+    # check columns
+    if (occasion == "") {
+      # add default occasion
+      person.data["occasion"] <- 1
+      occasion = "occasion"
+    } 
+    if (group == "") {
+      # add default group
+      person.data["group"] <- 1
+      group = "group"
+    } 
     person.data <- person.data[,c(person.id, task.id, occasion, group, max.counts, obs.counts, time)]
     colnames(person.data) <- c("person.id", "task.id", "occasion", "group", "max.counts", "obs.counts", "time")
   }
