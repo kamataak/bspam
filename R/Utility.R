@@ -38,7 +38,7 @@ prep <- function(data=data,person.id="",task.id="",occasion="",group="",max.coun
     occasion = "occasion"
   } 
   if (group == "") {
-    # add default occasion
+    # add default group
     data["group"] <- 1
     group = "group"
   } 
