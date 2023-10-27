@@ -49,5 +49,13 @@ BugReports: https://github.com/kamataak/bspam/issues
 RoxygenNote: 7.2.3
 LazyData: yes
 Config/testthat/edition: 3
-
+NeedsCompilation: no
+Packaged: 2023-10-27 20:19:32 UTC; kuowang
+Author: Akihito Kamata [aut, cre] (<https://orcid.org/0000-0001-9570-1464>),
+  Cornelis J. Potgieter [aut] (<https://orcid.org/0000-0002-1995-6817>),
+  Joseph F. T. Nese [aut] (<https://orcid.org/0000-0002-9878-7395>),
+  Yusuf Kara [aut] (<https://orcid.org/0000-0003-0691-0630>),
+  Sarunya Somsong [aut] (<https://orcid.org/0000-0002-4974-7346>),
+  Xin Qiao [aut] (<https://orcid.org/0000-0002-3248-7859>),
+  Kuo Wang [aut] (<https://orcid.org/0000-0002-4925-0591>)
     
