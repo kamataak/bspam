@@ -50,7 +50,7 @@
 #' @note
 #' Additional note...
 #' 
-#' @seealso [scoring()] for the next step.
+#' @seealso \code{\link{scoring}} for the scoring step.
 #'
 #' @references 
 #'   Potgieter, N., Kamata, A., & Kara, Y. (2017). An EM algorithm for 
