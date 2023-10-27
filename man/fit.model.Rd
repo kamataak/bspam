@@ -83,7 +83,7 @@ fully Bayesian method described in Kara et al. (2020).
 Additional details...
 }
 \note{
-Additional note...
+More & more additional note...
 }
 \examples{
 # example code
@@ -99,15 +99,15 @@ MCEM_run <- fit.model(person.data = passage2,
 
 }
 \references{
-Potgieter, N., Kamata, A., & Kara, Y. (2018). An EM algorithm for 
+Potgieter, N., Kamata, A., & Kara, Y. (2017). An EM algorithm for 
   estimating an oral reading speed and accuracy model. Manuscript submitted 
   for publication.  
   
   Kara, Y., Kamata, A., Potgieter, C., & Nese, J. F. (2020). Estimating 
   model-based oral reading fluency: A bayesian approach with a 
   binomial-lognormal joint latent model. 
-  *Educational and Psychological Measurement*, 1–25.
+  Educational and Psychological Measurement, 1–25.
 }
 \seealso{
-[scoring()] for the next step.
+\code{\link{scoring}} for scoring.
 }

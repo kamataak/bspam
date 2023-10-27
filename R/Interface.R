@@ -48,9 +48,9 @@
 #' Additional details...
 #' 
 #' @note
-#' Additional note...
+#' More & more additional note...
 #' 
-#' @seealso \code{\link{scoring}} for the scoring step.
+#' @seealso \code{\link{scoring}} for scoring.
 #'
 #' @references 
 #'   Potgieter, N., Kamata, A., & Kara, Y. (2017). An EM algorithm for 
