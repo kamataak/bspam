@@ -25,7 +25,7 @@ remotes::install_github("kamataak/bspam")
 ### Optional:
 `bspam` can implement Bayesian estimation by using JAGS and Stan. If you desire to use the Bayesian estimation, please download JAGS and Stan software on your computer. 
 
-To download and install JAGS, download the installation file from https://sourceforge.net/projects/mcmc-jags/files/JAGS/ as per operating system requirements and follow the installation steps. `bspam` internally uses `runjags` package as an interface to JAGS. `runjags` will be automatically installed along with other R packages that `bspam` depends on.
+To download and install JAGS, download the installation file from https://sourceforge.net/projects/mcmc-jags/files/JAGS/ as per operating system requirements and follow the installation steps. `bspam` internally uses `runjags` package as an interface to JAGS. `runjags` package needs to be installed separately once JAGS is installed.
 
 Stan can be installed by following the steps explained here: https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started. Note that these steps show the installation of `RStan`, which `bspam` uses as an internal package to run Stan code. Please follow the installation steps carefully along with recommended versions of R and RStudio to prevent any issues releated to running Stan with `bspam`. 
 

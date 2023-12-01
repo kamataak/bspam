@@ -39,8 +39,7 @@ To download and install JAGS, download the installation file from
 <https://sourceforge.net/projects/mcmc-jags/files/JAGS/> as per
 operating system requirements and follow the installation steps. `bspam`
 internally uses `runjags` package as an interface to JAGS. `runjags`
-will be automatically installed along with other R packages that `bspam`
-depends on.
+package needs to be installed separately once JAGS is installed.
 
 Stan can be installed by following the steps explained here:
 <https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>. Note
