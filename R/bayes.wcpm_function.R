@@ -13,6 +13,7 @@
 #' @param time The column name in the data that represents the time, in seconds, for each case.
 #' @param cases - student id vectors, will directly use passage data if no calib.data provided
 #' @param external - if not NULL, will use not student read passages for estimating
+#' @param type - output type, "general" and "orf", default "general" only output tau & theta. "orf" will output wcpm
 #' @param parallel parallel=T, #logical, run in parallel? "T" or "F"
 #' @param n.chains int., number of the chains
 #' @param iter int., number of the iterations after the burn-in period
@@ -33,6 +34,7 @@ bayes.wcpm <- function(
     time = NULL,
     cases = NULL,
     external=NULL,
+    type=NULL,
     parallel=T, #logical, run in parallel? "T" or "F"
     n.chains=NA, # pos. int., number of the chains
     iter=NA,  # pos. int., number of the iterations after the burn-in period
@@ -167,6 +169,11 @@ bayes.wcpm <- function(
   I <- ncol(time.data)
   K <- nrow(pas_param_est)
   
+  if (type == "general") {
+    print(type)
+  } else { # for orf
+    print(type)
+  }
   #Estimate count, time and wcpm.
   param_est <- c("exp_cnt", "exp_tim", "wcpm")
   

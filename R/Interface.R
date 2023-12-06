@@ -267,6 +267,7 @@ scoring <- function(calib.data=NA, person.data=NA, person.id="",task.id="",occas
           person.data = person.data,
           cases = cases,
           external=external,
+          type=type,
           parallel=T, #logical, run in parallel? "T" or "F"
           n.chains=NA, # pos. int., number of the chains
           iter=NA,  # pos. int., number of the iterations after the burn-in period
@@ -286,6 +287,7 @@ scoring <- function(calib.data=NA, person.data=NA, person.id="",task.id="",occas
           time = time,
           cases = cases,
           external=external,
+          type=type,
           parallel=T, #logical, run in parallel? "T" or "F"
           n.chains=NA, # pos. int., number of the chains
           iter=NA,  # pos. int., number of the iterations after the burn-in period
