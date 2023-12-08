@@ -16,6 +16,7 @@ bayes.wcpm(
   time = NULL,
   cases = NULL,
   external = NULL,
+  type = NULL,
   parallel = T,
   n.chains = NA,
   iter = NA,
@@ -45,6 +46,8 @@ bayes.wcpm(
 \item{cases}{- student id vectors, will directly use passage data if no calib.data provided}
 
 \item{external}{- if not NULL, will use not student read passages for estimating}
+
+\item{type}{- output type, "general" and "orf", default "general" only output tau & theta. "orf" will output wcpm}
 
 \item{parallel}{parallel=T, #logical, run in parallel? "T" or "F"}
 
