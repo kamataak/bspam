@@ -39,9 +39,9 @@ summary.fit.model <- function(object, digits=4,...) {
   # cat(paste(format(z$hyper.param$vartau,digits=6,nsmall=digits), "\n"))
   # cat(paste(greek$rho), "            :     ")
   # cat(paste(format(z$hyper.param$rho,digits=6,nsmall=digits), "\n"))
-  cat(paste(sprintf(fmt = "%6.6f", z$hyper.param$vartau), "\n"))
+  cat(paste(sprintf(fmt = "%6.3f", z$hyper.param$vartau), "\n")) # CHANGE TO .3f
   cat(paste("Rho"), "            :     ")
-  cat(paste(sprintf(fmt = "%6.6f", z$hyper.param$rho), "\n"))
+  cat(paste(sprintf(fmt = "%6.3f", z$hyper.param$rho), "\n")) # CHANGE TO .3f
 }
 #' summary the information of wcpm class
 #'
