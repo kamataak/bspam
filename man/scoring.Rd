@@ -2,7 +2,7 @@
 % Please edit documentation in R/Interface.R
 \name{scoring}
 \alias{scoring}
-\title{This is an interface function to call and run scoring or bootstrap.}
+\title{Estimate factor scores with task-level model}
 \usage{
 scoring(
   calib.data = NA,
@@ -24,19 +24,25 @@ scoring(
 )
 }
 \arguments{
-\item{calib.data}{- fit.model class object from calibration}
+\item{calib.data}{A class object. Output from calibration phase 
+by \code{\link{fit.model}} function}
 
-\item{person.data}{- individual reading data}
+\item{person.data}{A data frame. A long-format response data object.}
 
-\item{person.id}{The column name in the data that represents the unique individual identifier.}
+\item{person.id}{Quoted variable name in \code{person.data} that 
+indicates the unique individual identifier.}
 
-\item{task.id}{The column name in the data that represents the unique task identifier.}
+\item{task.id}{Quoted variable name in \code{person.data} that 
+represents the unique task identifier. In the ORF assessment
+context, it is the passage identifier.}
 
 \item{occasion}{The column name in the data that represents the unique occasion.}
 
 \item{group}{The column name in the data that represents the unique group.}
 
-\item{max.counts}{The column name in the data that represents the number of words in a task.}
+\item{max.counts}{Quoted variable name in \code{person.data} that 
+represents the number of attempts in the task. In the ORF assessment
+context, it is the number of words in the passage.}
 
 \item{obs.counts}{The column name in the data that represents the words read correctly for each case.}
 
@@ -60,17 +66,44 @@ scoring(
 scoring list or Bootstrap dataset
 }
 \description{
-Copyright (C) 2021-2023 The ORF Project Team
+This is an interface function to estimated factor scores based on the 
+task-level (i.e., passage-level in ORF assessment context) accuracy 
+and speed data. It implements likelihood-based approaches (MLE, MAP,
+or EAP) described in Qiao et al. (under review) or fully Bayesian 
+method described in Kara et al. (2020).
 }
 \details{
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/
+Additional details...
+}
+\note{
+More & more additional note...
+}
+\examples{
+# example code
+WCPM_all <- scoring(calib.data=MCEM_run, 
+                   person.data = passage2,
+                   person.id = "id.student",
+                   occasion = "occasion",
+                   group = "grade",
+                   task.id = "id.passage",
+                   max.counts = "numwords.pass",
+                   obs.counts = "wrc",
+                   time = "sec",
+                   est = "map", 
+                   se = "analytic",
+                   type="general")
+
+}
+\references{
+Qiao, X, Potgieter, N., & Kamata, A. (2023). Likelihood Estimation of 
+  Model-based Oral Reading Fluency. Manuscript submitted 
+  for publication.  
+  
+  Kara, Y., Kamata, A., Potgieter, C., & Nese, J. F. (2020). Estimating 
+  model-based oral reading fluency: A bayesian approach with a 
+  binomial-lognormal joint latent model. 
+  Educational and Psychological Measurement, 1–25.
+}
+\seealso{
+\code{\link{fit.model}} for model parameter estimation.
 }
