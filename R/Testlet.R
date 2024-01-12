@@ -12,11 +12,13 @@
 #' http://www.gnu.org/licenses/
 #'
 #'
-#' @param data A data frame. It has the information of student, passage, sentence, wrcm and sec.  
-#' @param id.student each student's id.
-#' @param id.sentence each sentence's id.
-#' @param wrc The column name in the data that represents the words read correctly for each sentence
-#' @param sec The column name in the data that represents the reading time for the sentence.
+#' @param data A data frame. It has the information of student, passage, sentence, obs.count and time.  
+#' @param person.id each student's id.
+#' @param sub.task.id each sentence's id.
+#' @param obs.count The column name in the data that represents the words read correctly for each sentence
+#' @param time The column name in the data that represents the reading time for the sentence.
+#' @param task.id The column name in the data that represents the unique passage identifier.
+#' @param max.counts The column name in the data that represents the number of words in a sentence.
 #'
 #' @details
 #' Additional details...
@@ -27,21 +29,36 @@
 #' 
 #' @examples
 #' # example code
-#' fit.testlet <- fit.model.testlet(data=sentence_data, id.student="id.student", id.sentence="id.stntence", wrc="wrc",sec="sec")
+#' fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count="", time="", task.id="", max.counts="")
 #' 
 #' @return list
 #' @export
-fit.model.testlet <- function(data=NULL, id.student="", id.sentence="",wrc="", sec="") {
+fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count="", time="", task.id="", max.counts="") {
   # loading logger
   log.initiating()
   if (is.null(data)) {
     flog.info("Dataset cannot be NULL!", name = "orfrlog")
     return
   } else {
-    if (id.student == "" | id.sentence == "" | wrc == ""  | sec == "") {
-      flog.info("Missed columns! Make sure id.student, id.sentence, or wrc are set.", name = "orfrlog")
-      return
+    if (person.id == "" | sub.task.id == "" | obs.count == ""  | time == "" | task.id == ""  | max.counts == "") {
+      flog.info("Missed columns! Make sure person.id, sub.task.id, obs.count, time, task.id, and max.counts are set.", name = "orfrlog")
+      return(NA)
     } else {
+      # get specific columns only
+      data <- data %>% select(person.id, sub.task.id, obs.count,time,task.id,max.counts)
+      colnames(data) <- c("person.id", "sub.task.id", "obs.count", "time", "task.id", "max.counts")
+
+      # Add a column to manage unique passage_sentence id
+      # data$taskid_subid <- paste(data$task.id, data$sub.task.id, sep="_")
+      
+      # check the data consistency
+      # passage need to be read by at least two students
+      count_number <- data %>% select(task.id, person.id) %>% unique() %>% group_by(task.id) %>% count() %>% filter(n < 2) %>% select(task.id)
+      if (dim(count_number)[1]) {# any row exists?
+        flog.info("Any passage should be read by at least two students.", name = "orfrlog")
+        flog.info(paste("The following passages are only read by one student:", paste(as.character(unlist(count_number)), collapse = " ")), name = "orfrlog")
+        return(NA)
+      }
       flog.info("Begin testlet process", name = "orfrlog")
       
       # stan model
@@ -102,36 +119,45 @@ fit.model.testlet <- function(data=NULL, id.student="", id.sentence="",wrc="", s
       m <- rstan::stan_model(model_code = model_code)
       
       Ys <- data %>%
-        select(id.student, id.sentence, wrc) %>%
-        spread(key = id.sentence, value = wrc) %>%
-        select(-id.student)
+        select(person.id, sub.task.id, obs.count) %>%
+        spread(key = sub.task.id, value = obs.count) %>%
+        select(-person.id)
       Y <- as.matrix(Ys)
       for (i in 1:ncol(Y)) {
         Y[,i]<-ifelse(is.na(Y[,i]),NaN,Y[,i])
       }
       
       logT <- data %>%
-        mutate(logsecs=log(sec)) %>%
-        select(id.student, id.sentence, logsecs) %>%
-        # spread(key = id.sentence, value = logsecs) %>%
-        pivot_wider(names_from = id.sentence, values_from = logsecs) %>%
-        select(-id.student)
+        mutate(logsecs=log(time)) %>%
+        select(person.id, sub.task.id, logsecs) %>%
+        # spread(key = sub.task.id, value = logsecs) %>%
+        pivot_wider(names_from = sub.task.id, values_from = logsecs) %>%
+        select(-person.id)
       # N <- sentence_data %>% 
       #   group_by_at(5) %>% summarise_at(6,max) %>% 
-      #   select(wrc)
-      Ns <- data %>% 
-        select(id.student, id.sentence, wrc) %>% 
-        group_by(id.sentence) %>%  
-        summarize(max(wrc))
+      #   select(obs.count)x
+      
+      # Maybe this is incorrect
+      # Ns <- data %>% 
+      #   select(person.id, sub.task.id, obs.count) %>% 
+      #   group_by(sub.task.id) %>%  
+      #   summarize(max(obs.count))
+      Ns <- data %>% select(sub.task.id, max.counts) %>% 
+        group_by(sub.task.id) %>% summarize(max.counts=max(max.counts))
       
       N <- pull(Ns) # the number of words in each sentence
       
       N.matrix <- matrix(rep(as.matrix(N),dim(Y)[1]),nrow = dim(Y)[1], byrow = TRUE)
       logT10 <- logT - log(N.matrix) + log(10)
-      getPassage <- as.numeric(substr(names(logT10),1,5))
+      
+      # getPassage <- as.numeric(substr(names(logT10),1,5))
+      getPassage <-
+        as.numeric(unlist((data %>% select(task.id, sub.task.id) %>% 
+                             group_by(sub.task.id) %>% unique())[,1]))
       
       # get Passage orders
       unique_id <- getPassage %>% unique()
+      
       Passage <- c()
       i <- 1
       for (j in 1:length(getPassage)) {
@@ -143,7 +169,7 @@ fit.model.testlet <- function(data=NULL, id.student="", id.sentence="",wrc="", s
         }
       }
       
-      n.It <- length(Passage)
+      n.It <- length(Passage) # the number of sentences 
       
       # as matrix
       logT10 <- as.matrix(logT10)
@@ -159,6 +185,13 @@ fit.model.testlet <- function(data=NULL, id.student="", id.sentence="",wrc="", s
       n.iter <- c(10,2)
       M.iter <- c(2,20)
       parms.mcem <- iterate_full_testlet_MCEM(Y,logT10,Passage,N,c(10,2),c(2,20),parms.in,m,n.It)
+      
+      # add task.id and sub.task.id to the output
+      taskID <-  list(as.vector(getPassage))
+      subtaskID <- as.vector(Ns[,1])
+      parms.mcem <- append(parms.mcem,taskID,after=0)
+      parms.mcem <- append(parms.mcem,subtaskID,after=1)
+      names(parms.mcem) <- c("task.id","sub.task.id", names(parms.mcem)[3:11])
       
       flog.info("End testlet process", name = "orfrlog")
       
