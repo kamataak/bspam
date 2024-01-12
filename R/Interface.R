@@ -279,7 +279,13 @@ scoring <- function(calib.data=NA, person.data=NA, person.id="",task.id="",occas
       if (length(cases) == 0) {
         # print("Cases: ")
         cases <- get.cases(person.data)
+      } else { # check if cases is with "_"
+        colnames(cases) <- c("cases")
+        if (!grepl("_", cases[1,1], fixed = TRUE)) { # if task.id only
+          cases <- cases %>% mutate(across(cases, ~ paste0(.,'_1')))
+        } 
       }
+      
       # Check if there is a perfect accurate case
       perfect.cases <<- get.perfectcases(person.data)
 
