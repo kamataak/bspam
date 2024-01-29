@@ -48,19 +48,27 @@ context, it is the number of words in the passage.}
 
 \item{time}{The column name in the data that represents the time, in seconds, for each case.}
 
-\item{cases}{- individual id vectors, will directly use task data if no calib.data provided}
+\item{cases}{A vector of individual id for which scoring is desired. If no information is 
+is specified, it will estimate scores for all cases in the \code{person.data}.}
 
-\item{est}{- estimator keyword / c("mle", "map", "eap", "bayes"), default is bayes}
+\item{est}{Quoted string, indicating the choice of the estimator. It has to be one of 
+code/{"mle", "map", "eap", "bayes"}. Default is \code{"map"}.}
 
-\item{se}{- standard error keyword / c("analytic", "bootstrap"), default is analytic}
+\item{se}{Quoted string, indication the choice of the standard errors. It has to be one of
+code/{"analytic", "bootstrap"}. Default is \code{"analytic"}.}
 
-\item{failsafe}{- retry time for bootstrap / default 0, can set to 5 ~ 50}
+\item{failsafe}{Numeric, indicating the number of retries for bootstrap, which can be set between
+0 and 50. Default is 0.}
 
-\item{external}{- if not NULL, will use not student read passages for estimating}
+\item{external}{An optional vector of task ID's in strings. If \code{NULL} (default), 
+the wcpm scores are derived with the tasks the individuals were assigned to. 
+If not \code{NULL}, wcpm scores are derived with the tasks provided in the vector, rather
+than the tasks the individuals were assigned.}
 
-\item{type}{- output type, "general" and "orf", default "general" only output tau & theta. "orf" will output wcpm}
+\item{type}{Quoted string, indication of the choice of output. If \code{"general"} (default),
+wcpm scores are not reported. If \code{"orf"}, wcpm scores will be reported.}
 
-\item{bootstrp}{- set K number of bootstrap / default 100}
+\item{bootstrp}{Numeric, indicating the number of bootstrap iterations. Default is 100.}
 }
 \value{
 scoring list or Bootstrap dataset
@@ -76,7 +84,7 @@ method described in Kara et al. (2020).
 Additional details...
 }
 \note{
-More & more additional note...
+More additional note...
 }
 \examples{
 # example code
