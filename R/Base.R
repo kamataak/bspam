@@ -1,46 +1,49 @@
-#' This file includes the Base functions of bspam package.
+#' Base function for fitting the speed-accuracy model by MCEM
 #'
-#' Copyright (C) 2021-2023 The ORF Project Team
+#' This is a base function for fitting the speed-accuracy model to 
+#' estimate the model parameters by the Monte Carlo EM algorithm 
+#' described in Potgieter et al. (2017). This function is used by the
+#' \code{\link{fit.model}} function, which is recommended for the users to use. 
 #'
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
-#
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
-#
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
-#'
-#'
-#' This is run.mcem function.
-#' Update Memo:
-#' 04/29/2021 Modified the mcem function
-#'            based on Nelis's updated.
-#' 10/28/2021 Modified the mcem output
-#'
-#' @param Y       = n x I matrix of reading scores -- missingness allowed
-#' @param logT10  = n x I matrix of log10(reading times) -- missingness allowed
-#' @param N       = vector of passage lengths
-#' @param I       = number of passages
-#' @param k.in    = number of imputations, default is 5
-#' @param reps.in = number of Monte-Carlo iterations, default is 2
-#' @param ests.in = if not give, mom function will be called and get est.in output
-#' @param verbose - boolean, if shows the summary, default is FALSE
+#' @param Y       Numeric data matrix of accuracy scores in the size of n x I, 
+#'      where n is the number of tasks and I is the number of persons. 
+#'      Missing data are allowed.
+#' @param logT10  Numeric data matrix of time in the size of n x I matrix, where
+#'      n and I are defined above. The time data should be in the scale of 
+#'      log10(times). Missing data are allowed.
+#' @param N       Numeric vector of passage lengths in the length of n.
+#' @param I       Numeric, indicating the number of tasks.
+#' @param k.in    Numeric, indicating the number of imputations. Default is 5.
+#' @param reps.in Numeric, indicating the number of Monte-Carlo iterations. Default is 2.
+#' @param ests.in An optional list of numeric vectors, indicating initial values of 
+#'      the model param- eters. If this argument is not given, \code{mom} function will 
+#'      be called to generate the initial values.
+#' @param verbose Boolean. If TRUE, the summary will be output. Default is FALSE.
 #'
 #' @import mvtnorm
 #' @import tidyverse
 #' @import nleqslv
 #'
+#' @details
+#' If the user is desired to use this function, note that the response
+#' data file needs to be in the wide format, which can be reshaped from
+#' a long-format response data by the \code{\link{prep.wide}} function.
+#' 
+#' @note
+#' Update Memo:
+#' 04/29/2021 Modified the mcem function
+#'            based on Nelis's updated.
+#' 10/28/2021 Modified the mcem output
+#' 
+#' @references 
+#'   Potgieter, N., Kamata, A., & Kara, Y. (2017). An EM algorithm for 
+#'   estimating an oral reading speed and accuracy model. Manuscript submitted 
+#'   for publication.  
+
+#' @seealso \code{\link{prep.wide}} \code{\link{fit.model}}.
 #'
 #' @return mcem list
-#' a,b = parameters controlling binomial success probabilities, each length I
-#' alpha,beta = parameters controlling reading times, each length I
-#' var_tau = variance of latent reading ability tau
-#' rho = correlation between two latent variables
+#' @export
 run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=2,ests.in=NA,verbose=FALSE) {
   
   # loading logger
