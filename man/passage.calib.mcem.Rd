@@ -3,30 +3,32 @@
 \docType{data}
 \name{passage.calib.mcem}
 \alias{passage.calib.mcem}
-\title{Passage calibration data with MCEM}
+\title{Task calibration example output object by MCEM}
 \format{
-two lists: $pass.param with 150 rows and $hyper.param with 4 variables
+A list of two elements: \code{$pass.param} is a dataframe with 
+150 rows and 10 variables, and \code{$hyper.param} is a dataframe with
+1 row and 4 variables
 
-$pass.param
+\code{$pass.param}
 \describe{
-  \item{a}{parameter controlling binomial success probabilities}
-  \item{b}{parameter controlling binomial success probabilities}
-  \item{alpha}{parameter controlling reading times}
-  \item{beta}{parameter controlling reading times}
-  \item{se_a}{standard error of a}
-  \item{se_b}{standard error of b}
-  \item{se_alpha}{standard error of alpha}
-  \item{se_beta}{standard error of beta}
-  \item{passage.id}{passage ID}
-  \item{nwords.p}{the total }
+  \item{\code{a}}{parameter controlling binomial success probabilities}
+  \item{\code{b}}{parameter controlling binomial success probabilities}
+  \item{\code{alpha}}{parameter controlling reading times}
+  \item{\code{beta}}{parameter controlling reading times}
+  \item{\code{se_a}}{standard error of a}
+  \item{\code{se_b}}{standard error of b}
+  \item{\code{se_alpha}}{standard error of alpha}
+  \item{\code{se_beta}}{standard error of beta}
+  \item{\code{passage.id}}{passage ID}
+  \item{\code{nwords.p}}{the total number of words in the passage}
 }
 
-$hyper.param
+\code{$hyper.param}
 \describe{
-  \item{vartau}{variance of latent reading ability tau}
-  \item{rho}{correlation between two latent variables}
-  \item{se_vartau}{standard error of vartar}
-  \item{se_rho}{standard error of rho}
+  \item{\code{vartau}}{variance of latent reading ability tau}
+  \item{\code{rho}}{correlation between two latent variables}
+  \item{\code{se_vartau}}{standard error of vartar}
+  \item{\code{se_rho}}{standard error of rho}
 }
 }
 \source{
@@ -36,6 +38,9 @@ $hyper.param
 passage.calib.mcem
 }
 \description{
-A data set calibrated with MCEM.
+This is an example output object from running the \code{fit.model}
+function by using the MCEM estimator. It is a result of calibrating 
+an oral reading fluency data set from Nese and Kamata (2014-2018) with 
+xxxx students on 150 passages.
 }
 \keyword{datasets}

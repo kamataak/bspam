@@ -3,27 +3,36 @@
 \docType{data}
 \name{passage2}
 \alias{passage2}
-\title{Passage-level student data set}
+\title{Passage-level Oral Reading Fluency assessment data set}
 \format{
-847 rows and 7 variables:
+A data frame with 847 rows and 7 variables.
 \describe{
-  \item{id.student}{unique student identifier}
-  \item{occasion}{identifier for longitudinal assessment occasions;
+  \item{\code{id.student}}{unique student identifier}
+  \item{\code{occasion}}{identifier for longitudinal assessment occasions;
   here a triannual assessment administered in the fall, winter, and spring of a school year}
-  \item{grade}{student grade level}
-  \item{id.passage}{unique passage identifier}
-  \item{numwords.pass}{total number of words in the passage}
-  \item{wrc}{words read correct}
-  \item{sec}{seconds to read the passage}
+  \item{\code{grade}}{student grade level}
+  \item{\code{id.passage}}{unique passage identifier}
+  \item{\code{numwords.pass}}{total number of words in the passage}
+  \item{\code{wrc}}{words read correct}
+  \item{\code{sec}}{seconds to read the passage}
 }
 }
 \source{
 \url{https://jnese.github.io/core-blog/}
 }
 \usage{
-passage2
+\code{data(passage2)}
 }
 \description{
-A data set consisted of reading accuracy and time data for 12 passages from 85 students.
+This is an example data set. It is a passage-level Oral Reading Fluency 
+assessment data set for 85 students who were assigned to read 2 to 12 passages 
+among the same 12 passages.
+The data is a small subset of the data collected by Nese and Kamata (2014-2018).
+}
+\references{
+Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 
+     Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. 
+     Institute of Education Sciences, U.S. Department of Education. 
+     \url{https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492}
 }
 \keyword{datasets}

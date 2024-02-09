@@ -38,4 +38,10 @@ passage.calib.bayes
 \description{
 A data set calibrated with bayes.
 }
+\references{
+Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 
+     Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. 
+     Institute of Education Sciences, U.S. Department of Education. 
+     \url{https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492}
+}
 \keyword{datasets}
