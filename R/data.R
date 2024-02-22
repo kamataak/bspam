@@ -1,6 +1,3 @@
-#' @title Passage calibration data set
-"MCEM"
-
 #' @title Passage-level Oral Reading Fluency assessment data set
 #'
 #' @description This is an example data set. It is a passage-level Oral Reading Fluency 
@@ -31,7 +28,7 @@
 #' @title Task calibration example output object by MCEM
 #'
 #' @description This is an example output object from running the \code{fit.model}
-#' function by using the MCEM estimator. It is a result of calibrating 
+#' function by using the MCEM estimator option. It is a result of calibrating 
 #' an oral reading fluency data set from Nese and Kamata (2014-2018) with 
 #' xxxx students on 150 passages. 
 #'
@@ -59,11 +56,19 @@
 #'   \item{\code{se_rho}}{standard error of rho}
 #' }
 #' @source \url{https://jnese.github.io/core-blog/}
+#' Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 
+#'      Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. 
+#'      Institute of Education Sciences, U.S. Department of Education. 
+#'      \url{https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492}
 "passage.calib.mcem"
 
-#' @title Passage calibration data with bayes
+#' @title Task calibration example output object by Bayes
 #'
-#' @description A data set calibrated with bayes.
+#' @description This is an example output object from running the 
+#' \code{fit.model.byaes}
+#' function by using the Bayesian estimator option. It is a result of calibrating 
+#' an oral reading fluency data set from Nese and Kamata (2014-2018) with 
+#' xxxx students on 150 passages. 
 #'
 #' @format two lists: $pass.param with 150 rows and $hyper.param with 4 variables
 #' @format $pass.param
@@ -94,21 +99,29 @@
 #'      \url{https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492}
 "passage.calib.bayes"
 
-#' @title Sentence-level student data set
+#' @title Sentence-level Oral Reading Fluency assessment data set
 #'
-#' @description A data set consisted of reading time data for 4 passages and 23 sentences from 58 students.
+#' @description This is an example data set. It is a sentence-level Oral Reading Fluency 
+#' assessment data set for 58 students who were assigned to read 4 passages 
+#' with a total of 23 sentences.
+#' The data is a small subset of the data collected by Nese and Kamata (2014-2018).
 #'
 #' @format 1334 rows and 8 variables:
 #' \describe{
-#'   \item{id.student}{unique student identifier}
-#'   \item{grade}{student grade level}
-#'   \item{id.passage}{unique passage identifier}
-#'   \item{ind.passage}{passage index}
-#'   \item{id.sentence}{sentence identifier}   
-#'   \item{numwords.sent}{total number of words in the sentence}
-#'   \item{wrc}{words read correct}
-#'   \item{sec}{seconds to read the sentence}
+#'   \item{\code{id.student}}{unique student identifier}
+#'   \item{\code{grade}}{student grade level}
+#'   \item{\code{id.passage}}{unique passage identifier}
+#'   \item{\code{ind.passage}}{passage index}
+#'   \item{\code{id.sentence}}{unique sentence identifier}   
+#'   \item{\code{numwords.sent}}{the total number of words in the sentence}
+#'   \item{\code{wrc}}{the number of words read correct}
+#'   \item{\code{sec}}{time to read the sentence in seconds}
 #' }
+#' @references 
+#' Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 
+#'      Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. 
+#'      Institute of Education Sciences, U.S. Department of Education. 
+#'      \url{https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492}
 #' @source \url{https://jnese.github.io/core-blog/}
 "sentence.data"
 

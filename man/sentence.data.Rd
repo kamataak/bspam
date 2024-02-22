@@ -3,18 +3,18 @@
 \docType{data}
 \name{sentence.data}
 \alias{sentence.data}
-\title{Sentence-level student data set}
+\title{Sentence-level Oral Reading Fluency assessment data set}
 \format{
 1334 rows and 8 variables:
 \describe{
-  \item{id.student}{unique student identifier}
-  \item{grade}{student grade level}
-  \item{id.passage}{unique passage identifier}
-  \item{ind.passage}{passage index}
-  \item{id.sentence}{sentence identifier}   
-  \item{numwords.sent}{total number of words in the sentence}
-  \item{wrc}{words read correct}
-  \item{sec}{seconds to read the sentence}
+  \item{\code{id.student}}{unique student identifier}
+  \item{\code{grade}}{student grade level}
+  \item{\code{id.passage}}{unique passage identifier}
+  \item{\code{ind.passage}}{passage index}
+  \item{\code{id.sentence}}{unique sentence identifier}   
+  \item{\code{numwords.sent}}{the total number of words in the sentence}
+  \item{\code{wrc}}{the number of words read correct}
+  \item{\code{sec}}{time to read the sentence in seconds}
 }
 }
 \source{
@@ -24,6 +24,15 @@
 sentence.data
 }
 \description{
-A data set consisted of reading time data for 4 passages and 23 sentences from 58 students.
+This is an example data set. It is a sentence-level Oral Reading Fluency 
+assessment data set for 58 students who were assigned to read 4 passages 
+with a total of 23 sentences.
+The data is a small subset of the data collected by Nese and Kamata (2014-2018).
+}
+\references{
+Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 
+     Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. 
+     Institute of Education Sciences, U.S. Department of Education. 
+     \url{https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492}
 }
 \keyword{datasets}

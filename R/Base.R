@@ -517,7 +517,11 @@ bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
   
 }
 
-#' This is run.scoring function.
+#' Base function for scoring by likelihood-based approaches 
+#' 
+#' This is a base function for estimating factor scores by likelihood-based 
+#' approaches described in Potgieter et al. (2024). This function is used by 
+#' the \code{\link{scoring}} function, which is recommended for the users to use.
 #'
 #' Update Memo:
 #' 04/29/2021 Modified the wcpm function
@@ -530,19 +534,30 @@ bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
 #' 07/13/2021 Added Map function for bootstrap.
 #' 07/30/2021 Modified wcpm function based on Sarunya's update
 #'
-#' @param object = fit.model object, if not be given will occur error and stop running
-#' @param person.data = individual response task data
-#' @param task.data = estimate parameters data
-#' @param cases = individual occasion id vector
-#' @param est = estimator, c("mle", "map", "eap", "bayes"), default "map"
-#' @param perfect.cases = perfect accurate case
-#' @param lo = default -4
-#' @param hi = default 4
-#' @param q  = default 100
-#' @param kappa  = default 1
-#' @param external = if not NULL, will use not student read passages for estimating
-#' @param type - output type, "general" and "orf", default "general" only output tau & theta. "orf" will output wcpm
-#'
+#' @param object A class object. Output from calibration phase 
+#'     by \code{\link{fit.model}} function.
+#' @param person.data A data frame. A long-format response data object.
+#' @param task.data A data frame? Estimated task parameter values?
+#' @param cases A vector of individual id for which scoring is desired. If no information is 
+#'      is specified, it will estimate scores for all cases in the \code{person.data}.
+#' @param est Quoted string, indicating the choice of the estimator. It has to be one of 
+#'      code/{"mle", "map", "eap", "bayes"}. Default is \code{"map"}.
+#' @param perfect.cases A list? A list of perfect cases.
+#' @param lo Numeric, indicating the lower bound of the quadratures. Default is -4.
+#' @param hi Numeric, indicating the upper bound of the quadratures. Default is 4.
+#' @param q  Numeric, indicating the number of quadratures. Default is 100.
+#' @param kappa  Numeric, indicating ?? Default is 1.
+#' @param external An optional vector of task ID's in strings. If \code{NULL} (default), 
+#'      the wcpm scores are derived with the tasks the individuals were assigned to. 
+#'      If not \code{NULL}, wcpm scores are derived with the tasks provided in the vector, rather
+#'      than the tasks the individuals were assigned.
+#' @param type Quoted string, indication of the choice of output. If \code{"general"} (default),
+#'      wcpm scores are not reported. If \code{"orf"}, wcpm scores will be reported.
+#' @references 
+#'   Qiao, X, Potgieter, N., & Kamata, A. (2023). Likelihood Estimation of 
+#'   Model-based Oral Reading Fluency. Manuscript submitted 
+#'   for publication.
+#'    
 #' @import rootSolve
 #' @import doParallel
 #' @import parallel

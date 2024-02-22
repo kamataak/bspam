@@ -3,7 +3,7 @@
 \docType{data}
 \name{passage.calib.bayes}
 \alias{passage.calib.bayes}
-\title{Passage calibration data with bayes}
+\title{Task calibration example output object by Bayes}
 \format{
 two lists: $pass.param with 150 rows and $hyper.param with 4 variables
 
@@ -36,7 +36,11 @@ $hyper.param
 passage.calib.bayes
 }
 \description{
-A data set calibrated with bayes.
+This is an example output object from running the 
+\code{fit.model.byaes}
+function by using the Bayesian estimator option. It is a result of calibrating 
+an oral reading fluency data set from Nese and Kamata (2014-2018) with 
+xxxx students on 150 passages.
 }
 \references{
 Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 

@@ -33,13 +33,17 @@ A list of two elements: \code{$pass.param} is a dataframe with
 }
 \source{
 \url{https://jnese.github.io/core-blog/}
+Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 
+     Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. 
+     Institute of Education Sciences, U.S. Department of Education. 
+     \url{https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492}
 }
 \usage{
 passage.calib.mcem
 }
 \description{
 This is an example output object from running the \code{fit.model}
-function by using the MCEM estimator. It is a result of calibrating 
+function by using the MCEM estimator option. It is a result of calibrating 
 an oral reading fluency data set from Nese and Kamata (2014-2018) with 
 xxxx students on 150 passages.
 }
