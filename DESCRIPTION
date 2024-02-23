@@ -2,7 +2,14 @@ Package: bspam
 Type: Package
 Encoding: UTF-8
 Title: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R
-Version: 1.2.2
+Version: 1.2.3
+Author: Akihito Kamata [aut, cre] (<https://orcid.org/0000-0001-9570-1464>),
+  Cornelis J. Potgieter [aut] (<https://orcid.org/0000-0002-1995-6817>),
+  Joseph F. T. Nese [aut] (<https://orcid.org/0000-0002-9878-7395>),
+  Yusuf Kara [aut] (<https://orcid.org/0000-0003-0691-0630>),
+  Sarunya Somsong [aut] (<https://orcid.org/0000-0002-4974-7346>),
+  Xin Qiao [aut] (<https://orcid.org/0000-0002-3248-7859>),
+  Kuo Wang [aut] (<https://orcid.org/0000-0002-4925-0591>)
 Authors@R: c(person(given = "Akihito", family = "Kamata", 
                     role = c("aut", "cre"), 
                     email = "akamata@smu.edu", 
@@ -41,9 +48,9 @@ License: GPL (>= 3)
 Depends: R (>= 3.5.0)
 Imports: 
     tibble, rootSolve, tidyverse, tidyr, magrittr, doParallel, foreach, 
-    futile.logger, mvtnorm, nleqslv, tryCatchLog, parallel, miscTools, psych
+    futile.logger, mvtnorm, nleqslv, tryCatchLog, parallel, miscTools, psych, rstan
 Suggests: 
-    rjags, rstan, testthat (>= 3.5.0)
+    rjags, testthat (>= 3.5.0)
 URL: https://github.com/kamataak/bspam
 BugReports: https://github.com/kamataak/bspam/issues
 RoxygenNote: 7.2.3
@@ -51,11 +58,5 @@ LazyData: yes
 Config/testthat/edition: 3
 NeedsCompilation: no
 Packaged: 2023-10-27 20:19:32 UTC; kuowang
-Author: Akihito Kamata [aut, cre] (<https://orcid.org/0000-0001-9570-1464>),
-  Cornelis J. Potgieter [aut] (<https://orcid.org/0000-0002-1995-6817>),
-  Joseph F. T. Nese [aut] (<https://orcid.org/0000-0002-9878-7395>),
-  Yusuf Kara [aut] (<https://orcid.org/0000-0003-0691-0630>),
-  Sarunya Somsong [aut] (<https://orcid.org/0000-0002-4974-7346>),
-  Xin Qiao [aut] (<https://orcid.org/0000-0002-3248-7859>),
-  Kuo Wang [aut] (<https://orcid.org/0000-0002-4925-0591>)
+
     
