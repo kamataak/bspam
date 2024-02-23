@@ -15,22 +15,28 @@ http://www.gnu.org/licenses/}
 \usage{
 fit.model.testlet(
   data = NULL,
-  id.student = "",
-  id.sentence = "",
-  wrc = "",
-  sec = ""
+  person.id = "",
+  sub.task.id = "",
+  obs.count = "",
+  time = "",
+  task.id = "",
+  max.counts = ""
 )
 }
 \arguments{
-\item{data}{A data frame. It has the information of student, passage, sentence, wrcm and sec.}
+\item{data}{A data frame. It has the information of student, passage, sentence, obs.count and time.}
 
-\item{id.student}{each student's id.}
+\item{person.id}{each student's id.}
 
-\item{id.sentence}{each sentence's id.}
+\item{sub.task.id}{each sentence's id.}
 
-\item{wrc}{The column name in the data that represents the words read correctly for each sentence}
+\item{obs.count}{The column name in the data that represents the words read correctly for each sentence}
 
-\item{sec}{The column name in the data that represents the reading time for the sentence.}
+\item{time}{The column name in the data that represents the reading time for the sentence.}
+
+\item{task.id}{The column name in the data that represents the unique passage identifier.}
+
+\item{max.counts}{The column name in the data that represents the number of words in a sentence.}
 }
 \value{
 list
@@ -55,6 +61,6 @@ Additional note...
 }
 \examples{
 # example code
-fit.testlet <- fit.model.testlet(data=sentence_data, id.student="id.student", id.sentence="id.stntence", wrc="wrc",sec="sec")
+fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count="", time="", task.id="", max.counts="")
 
 }
