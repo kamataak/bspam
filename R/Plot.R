@@ -25,7 +25,7 @@
 #' @import plotly
 #' 
 #' @export
-plot.fit.model <- function(object, task=NULL, parameter, sort=F){
+plot.task <- function(object, task=NULL, parameter, sort=F){
   
   if(class(object)!="fit.model")
     stop("Error: It seems like your object is not obtained through bspam. Make sure you use the calibration output from the `fit.model()` function!")
@@ -118,7 +118,7 @@ plot.fit.model <- function(object, task=NULL, parameter, sort=F){
 #' @import plotly
 #' 
 #' @export
-plot.scoring <- function(object, person=NULL, parameter, show.se=T, sort=F){
+plot.person <- function(object, person=NULL, parameter, show.se=T, sort=F){
   
   if(class(object)!="scoring")
     stop("Error: It seems like your object is not obtained through bspam. Make sure you use the scoring output from the `scoring()` function!")
