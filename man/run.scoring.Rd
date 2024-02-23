@@ -2,7 +2,7 @@
 % Please edit documentation in R/Base.R
 \name{run.scoring}
 \alias{run.scoring}
-\title{This is run.scoring function.}
+\title{Base function for scoring by likelihood-based approaches}
 \usage{
 run.scoring(
   object,
@@ -20,34 +20,46 @@ run.scoring(
 )
 }
 \arguments{
-\item{object}{= fit.model object, if not be given will occur error and stop running}
+\item{object}{A class object. Output from calibration phase 
+by \code{\link{fit.model}} function.}
 
-\item{person.data}{= individual response task data}
+\item{person.data}{A data frame. A long-format response data object.}
 
-\item{task.data}{= estimate parameters data}
+\item{task.data}{A data frame? Estimated task parameter values?}
 
-\item{cases}{= individual occasion id vector}
+\item{cases}{A vector of individual id for which scoring is desired. If no information is 
+is specified, it will estimate scores for all cases in the \code{person.data}.}
 
-\item{perfect.cases}{= perfect accurate case}
+\item{perfect.cases}{A list? A list of perfect cases.}
 
-\item{est}{= estimator, c("mle", "map", "eap", "bayes"), default "map"}
+\item{est}{Quoted string, indicating the choice of the estimator. It has to be one of 
+code/{"mle", "map", "eap", "bayes"}. Default is \code{"map"}.}
 
-\item{lo}{= default -4}
+\item{lo}{Numeric, indicating the lower bound of the quadratures. Default is -4.}
 
-\item{hi}{= default 4}
+\item{hi}{Numeric, indicating the upper bound of the quadratures. Default is 4.}
 
-\item{q}{= default 100}
+\item{q}{Numeric, indicating the number of quadratures. Default is 100.}
 
-\item{kappa}{= default 1}
+\item{kappa}{Numeric, indicating ?? Default is 1.}
 
-\item{external}{= if not NULL, will use not student read passages for estimating}
+\item{external}{An optional vector of task ID's in strings. If \code{NULL} (default), 
+the wcpm scores are derived with the tasks the individuals were assigned to. 
+If not \code{NULL}, wcpm scores are derived with the tasks provided in the vector, rather
+than the tasks the individuals were assigned.}
 
-\item{type}{- output type, "general" and "orf", default "general" only output tau & theta. "orf" will output wcpm}
+\item{type}{Quoted string, indication of the choice of output. If \code{"general"} (default),
+wcpm scores are not reported. If \code{"orf"}, wcpm scores will be reported.}
 }
 \value{
 wcpm list
 }
 \description{
+This is a base function for estimating factor scores by likelihood-based 
+approaches described in Potgieter et al. (2024). This function is used by 
+the \code{\link{scoring}} function, which is recommended for the users to use.
+}
+\details{
 Update Memo:
 04/29/2021 Modified the wcpm function
            based on Nelis's updated.
@@ -58,4 +70,9 @@ Update Memo:
 07/12/2021 Modified est.eqs function based on Nelis's code.
 07/13/2021 Added Map function for bootstrap.
 07/30/2021 Modified wcpm function based on Sarunya's update
+}
+\references{
+Qiao, X, Potgieter, N., & Kamata, A. (2023). Likelihood Estimation of 
+  Model-based Oral Reading Fluency. Manuscript submitted 
+  for publication.
 }

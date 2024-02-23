@@ -8,7 +8,7 @@
 \strong{Purpose of this package} 
 
 `bspam` is an R package that contains functions to fit the speed-accuracy 
-psychometric model for count outcome data (Potgieter, Kamata & Kara, 2017; 
+psychometric model for repeatedly measured count outcome data (Potgieter, Kamata & Kara, 2017; 
 Kara, Kamata, Potgieter & Nese, 2020), where the accuracy is modeled by a binomial 
 count latent variable model. For example, the use of this modeling technique 
 allows model-based calibration and scoring for oral reading fluency (ORF) assessment data. 

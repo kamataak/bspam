@@ -206,19 +206,27 @@ fit.model <- function(data=NA, person.data=NA, person.id="",task.id="",max.count
 #' @param group The column name in the data that represents the unique group.
 #' @param obs.counts The column name in the data that represents the words read correctly for each case.
 #' @param time The column name in the data that represents the time, in seconds, for each case.
-#' @param cases - individual id vectors, will directly use task data if no calib.data provided
-#' @param est - estimator keyword / c("mle", "map", "eap", "bayes"), default is bayes
-#' @param se - standard error keyword / c("analytic", "bootstrap"), default is analytic
-#' @param failsafe - retry time for bootstrap / default 0, can set to 5 ~ 50
-#' @param bootstrp - set K number of bootstrap / default 100
-#' @param external - if not NULL, will use not student read passages for estimating
-#' @param type - output type, "general" and "orf", default "general" only output tau & theta. "orf" will output wcpm
+#' @param cases A vector of individual id for which scoring is desired. If no information is 
+#'      is specified, it will estimate scores for all cases in the \code{person.data}.
+#' @param est Quoted string, indicating the choice of the estimator. It has to be one of 
+#'      code/{"mle", "map", "eap", "bayes"}. Default is \code{"map"}.
+#' @param se Quoted string, indication the choice of the standard errors. It has to be one of
+#'      code/{"analytic", "bootstrap"}. Default is \code{"analytic"}.
+#' @param failsafe Numeric, indicating the number of retries for bootstrap, which can be set between
+#'      0 and 50. Default is 0.
+#' @param bootstrp Numeric, indicating the number of bootstrap iterations. Default is 100.
+#' @param external An optional vector of task ID's in strings. If \code{NULL} (default), 
+#'      the wcpm scores are derived with the tasks the individuals were assigned to. 
+#'      If not \code{NULL}, wcpm scores are derived with the tasks provided in the vector, rather
+#'      than the tasks the individuals were assigned.
+#' @param type Quoted string, indication of the choice of output. If \code{"general"} (default),
+#'      wcpm scores are not reported. If \code{"orf"}, wcpm scores will be reported.
 #'
 #' @details
 #' Additional details...
 #' 
 #' @note
-#' More & more additional note...
+#' More additional note...
 #' 
 #' @seealso \code{\link{fit.model}} for model parameter estimation.
 #'

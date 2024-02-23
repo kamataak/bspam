@@ -123,12 +123,7 @@ get.cases <- function(data) {
   #print(cases)
   return(invisible(cases))
 }
-#' Returns perfect cases (student and occasion) in which every word was read correctly.
-#'
-#' @param data  = person response data
-#'
-#' @return perfect accurate case vector
-#' @export
+
 #'
 get.perfectcases <- function(data) {
   perfect.cases <- data %>% group_by(person.id,occasion) %>%
@@ -236,23 +231,14 @@ prepwide <- function(data,
   data.in <- list(Y = Y, logT10 = logT10, N = N, I = I)
   return(data.in)
 }
-#' To exclude error passages
-#'
-#' @param passage
-#'
-#' @return passage data set without error passages
-#' @export
+
 exclude_passages <- function(passage) {
   err_list <- get_errlist(passage)
   return (passage %>% filter(!(id.passage %in% err_list)))
   
 }
 
-#' To get a string of error passages that have no at least two readers
-#'
-#' @param passage
-#'
-#' @return a string of error passages
+#' 
 get_errlist <- function(passage) {
   # get unique passage list
   passage_ids <- as.matrix(passage %>% select(id.passage) %>% unique())
