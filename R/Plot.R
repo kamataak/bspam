@@ -24,7 +24,6 @@
 #'
 #' @import plotly
 #' 
-#' @method plot.fit.model
 #' @export
 plot.fit.model <- function(object, task=NULL, parameter, sort=F){
   
@@ -118,7 +117,6 @@ plot.fit.model <- function(object, task=NULL, parameter, sort=F){
 #'
 #' @import plotly
 #' 
-#' @method plot.scoring
 #' @export
 plot.scoring <- function(object, person=NULL, parameter, show.se=T, sort=F){
   
