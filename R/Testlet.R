@@ -118,9 +118,18 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count=
         }"
       m <- rstan::stan_model(model_code = model_code)
       
+      # create unique sentence id
+      # Determine the maximum number of characters in sub.task.id
+      max_length <- max(nchar(as.character(data$sub.task.id)))  
+      
+      # Create new unique ID code with leading zeros for padding
+      temp <- data %>% select(task.id, sub.task.id) %>% 
+        mutate(unique.id = as.numeric(paste(task.id, sprintf("%0*s", max_length, as.numeric(sub.task.id)), sep="")))  
+      data$unique.id <- temp$unique.id
+      
       Ys <- data %>%
-        select(person.id, sub.task.id, obs.count) %>%
-        spread(key = sub.task.id, value = obs.count) %>%
+        select(person.id, unique.id, obs.count) %>%
+        spread(key = unique.id, value = obs.count) %>%
         select(-person.id)
       Y <- as.matrix(Ys)
       for (i in 1:ncol(Y)) {
@@ -129,9 +138,9 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count=
       
       logT <- data %>%
         mutate(logsecs=log(time)) %>%
-        select(person.id, sub.task.id, logsecs) %>%
+        select(person.id, unique.id, logsecs) %>%
         # spread(key = sub.task.id, value = logsecs) %>%
-        pivot_wider(names_from = sub.task.id, values_from = logsecs) %>%
+        pivot_wider(names_from = unique.id, values_from = logsecs) %>%
         select(-person.id)
       # N <- sentence_data %>% 
       #   group_by_at(5) %>% summarise_at(6,max) %>% 
@@ -142,8 +151,8 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count=
       #   select(person.id, sub.task.id, obs.count) %>% 
       #   group_by(sub.task.id) %>%  
       #   summarize(max(obs.count))
-      Ns <- data %>% select(sub.task.id, max.counts) %>% 
-        group_by(sub.task.id) %>% summarize(max.counts=max(max.counts))
+      Ns <- data %>% select(unique.id, max.counts) %>% 
+        group_by(unique.id) %>% summarize(max.counts=max(max.counts))
       
       N <- pull(Ns) # the number of words in each sentence
       
@@ -152,22 +161,27 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count=
       
       # getPassage <- as.numeric(substr(names(logT10),1,5))
       getPassage <-
-        as.numeric(unlist((data %>% select(task.id, sub.task.id) %>% 
-                             group_by(sub.task.id) %>% unique())[,1]))
+        as.numeric(unlist((data %>% select(task.id, unique.id) %>% 
+                             group_by(unique.id) %>% unique())[,1]))
       
       # get Passage orders
       unique_id <- getPassage %>% unique()
       
-      Passage <- c()
-      i <- 1
-      for (j in 1:length(getPassage)) {
-        if (getPassage[j] == unique_id[i]) {
-          Passage <- append(Passage,i)
-        } else {
-          i <- i + 1
-          Passage <- append(Passage,i)
-        }
+      Passage <- getPassage
+      for (i in 1:length(unique_id)) {
+        Passage[Passage == unique_id[i]] <- i
       }
+      
+      # Passage <- c()
+      # i <- 1
+      # for (j in 1:length(getPassage)) {
+      #   if (getPassage[j] == unique_id[i]) {
+      #     Passage <- append(Passage,i)
+      #   } else {
+      #     i <- i + 1
+      #     Passage <- append(Passage,i)
+      #   }
+      # }
       
       n.It <- length(Passage) # the number of sentences 
       
@@ -191,7 +205,14 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count=
       subtaskID <- as.vector(Ns[,1])
       parms.mcem <- append(parms.mcem,taskID,after=0)
       parms.mcem <- append(parms.mcem,subtaskID,after=1)
-      names(parms.mcem) <- c("task.id","sub.task.id", names(parms.mcem)[3:11])
+      
+      # add Y, logT10, N for scoring
+      parms.mcem <- append(parms.mcem,list(Y),after=2)
+      parms.mcem <- append(parms.mcem,list(logT10),after=3)
+      parms.mcem <- append(parms.mcem,list(N),after=4)
+      
+      # names(parms.mcem) <- c("task.id","sub.task.id", names(parms.mcem)[3:11])
+      names(parms.mcem) <- c("task.id","sub.task.id", "Y", "logT10", "N", names(parms.mcem)[6:14])
       
       flog.info("End testlet process", name = "orfrlog")
       

@@ -67,7 +67,7 @@ scoring.passage <- function(Count=NULL, logT10=NULL, N=NULL,
   for (k in 1:n) {
     
     # for debug
-    print(paste(" k= ", k))
+    # print(paste(" k= ", k))
     
     index <- which(!is.na(Y[k,]))
     

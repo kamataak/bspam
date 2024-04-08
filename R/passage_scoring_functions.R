@@ -39,8 +39,8 @@ create_data_list <- function(Count, logT10, MaxN,
                              a, b, alpha,beta, 
                              sigma, rho, C) {
   # Calculate the number of observed and censored passages
-  N_obs <- sum(C == 1)
-  N_cens <- sum(C == 0)
+  N_obs <- sum(C == 1, na.rm = TRUE) # try na.rm = T, 04/07/24 by Kuo
+  N_cens <- sum(C == 0, na.rm = TRUE) # try na.rm = T, 04/07/24 by Kuo
   
   # Create a list containing subsets of input data
   data_list <- list(
