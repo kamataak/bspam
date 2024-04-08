@@ -44,7 +44,6 @@ scoring.passage <- function(Count=NULL, logT10=NULL, N=NULL,
   # loading logger
   log.initiating()
   
-  
   flog.info("Begin scoring passage process", name = "orfrlog")
   
   suppress_output <- function(expr) {
@@ -67,18 +66,18 @@ scoring.passage <- function(Count=NULL, logT10=NULL, N=NULL,
   for (k in 1:n) {
     
     # for debug
-    # print(paste(" k= ", k))
+    print(paste(" k= ", k))
     
     index <- which(!is.na(Y[k,]))
     
-    data_list <- create_data_list(Y[k,index], logT10[k,index], N[index], 
+    tempdata_list <- create_data_list(Y[k,index], logT10[k,index], N[index], 
                                   a[index], b[index], 
                                   alpha[index], beta[index], 
                                   sigma, rho, 
                                   Cens[k,index])
 
     suppress_output({
-      score_object <- score_testlet(data_list)
+      score_object <- score_testlet(tempdata_list)
     })
     
     theta_acc_est[k] <- score_object$theta_acc
