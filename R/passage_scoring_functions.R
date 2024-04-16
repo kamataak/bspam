@@ -46,20 +46,20 @@ create_data_list <- function(Count, logT10, MaxN,
   data_list <- list(
     N_obs = N_obs,
     N_cens = N_cens,
-    Count_obs = Count[C == 1],
-    Count_cens = Count[C == 0],
-    logT10_obs = logT10[C == 1],
-    logT10_cens = logT10[C == 0],
-    MaxN_obs = MaxN[C == 1],
-    MaxN_cens = MaxN[C == 0],
-    a_obs = a[C == 1],
-    a_cens = a[C == 0],
-    b_obs = b[C == 1],
-    b_cens = b[C == 0],
-    alpha_obs = alpha[C == 1],
-    alpha_cens = alpha[C == 0],
-    beta_obs = beta[C == 1],
-    beta_cens = beta[C == 0],
+    Count_obs = na.omit(Count[C == 1]),
+    Count_cens = na.omit(Count[C == 0]),
+    logT10_obs = na.omit(logT10[C == 1]),
+    logT10_cens = na.omit(logT10[C == 0]),
+    MaxN_obs = na.omit(MaxN[C == 1]),
+    MaxN_cens = na.omit(MaxN[C == 0]),
+    a_obs = na.omit(a[C == 1]),
+    a_cens = na.omit(a[C == 0]),
+    b_obs = na.omit(b[C == 1]),
+    b_cens = na.omit(b[C == 0]),
+    alpha_obs = na.omit(alpha[C == 1]),
+    alpha_cens = na.omit(alpha[C == 0]),
+    beta_obs = na.omit(beta[C == 1]),
+    beta_cens = na.omit(beta[C == 0]),
     sigma = sigma,
     rho = rho
   )
@@ -76,12 +76,17 @@ score_testlet <- function(data_list) {
   C0 <- data_list$N_cens
   C1 <- data_list$N_obs
   
+  print(data_list)
   # Below if statements determine which version of the Stan model to use
   if (C0 >= 2 && C1 >= 2) {
     fit <- sampling(model_multi_obs_multi_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- summary(fit)
+    
+    #debug
+    print(summary_info)
+    
     # Extract posterior means
     posterior_means <- summary_info$summary[, "mean"]
     # Extract the means for theta1 and theta2
