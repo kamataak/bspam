@@ -66,18 +66,18 @@ scoring.passage <- function(Count=NULL, logT10=NULL, N=NULL,
   for (k in 1:n) {
     
     # for debug
-    print(paste(" k= ", k))
+    # print(paste(" k= ", k))
     
     index <- which(!is.na(Y[k,]))
     
-    tempdata_list <- create_data_list(Y[k,index], logT10[k,index], N[index], 
+    data_list <- create_data_list(Y[k,index], logT10[k,index], N[index], 
                                   a[index], b[index], 
                                   alpha[index], beta[index], 
                                   sigma, rho, 
                                   Cens[k,index])
 
     suppress_output({
-      score_object <- score_testlet(tempdata_list)
+      score_object <- score_testlet(data_list)
     })
     
     theta_acc_est[k] <- score_object$theta_acc

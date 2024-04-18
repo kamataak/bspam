@@ -76,16 +76,12 @@ score_testlet <- function(data_list) {
   C0 <- data_list$N_cens
   C1 <- data_list$N_obs
   
-  print(data_list)
   # Below if statements determine which version of the Stan model to use
   if (C0 >= 2 && C1 >= 2) {
-    fit <- sampling(model_multi_obs_multi_cens, 
+    fit <- rstan::sampling(model_multi_obs_multi_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
-    summary_info <- summary(fit)
-    
-    #debug
-    print(summary_info)
+    summary_info <- rstan::summary(fit)
     
     # Extract posterior means
     posterior_means <- summary_info$summary[, "mean"]
@@ -97,10 +93,10 @@ score_testlet <- function(data_list) {
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
   } else if (C0 >= 2 && C1 == 1) {
-    fit <- sampling(model_one_obs_multi_cens, 
+    fit <- rstan::sampling(model_one_obs_multi_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
-    summary_info <- summary(fit)
+    summary_info <- rstan::summary(fit)
     # Extract posterior means
     posterior_means <- summary_info$summary[, "mean"]
     # Extract the means for theta1 and theta2
@@ -111,10 +107,10 @@ score_testlet <- function(data_list) {
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
   } else if (C0 >= 2 && C1 == 0) {
-    fit <- sampling(model_no_obs_multi_cens, 
+    fit <- rstan::sampling(model_no_obs_multi_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
-    summary_info <- summary(fit)
+    summary_info <- rstan::summary(fit)
     # Extract posterior means
     posterior_means <- summary_info$summary[, "mean"]
     # Extract the means for theta1 and theta2
@@ -125,10 +121,10 @@ score_testlet <- function(data_list) {
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
   } else if (C0 == 1 && C1 >= 2) {
-    fit <- sampling(model_multi_obs_one_cens, 
+    fit <- rstan::sampling(model_multi_obs_one_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
-    summary_info <- summary(fit)
+    summary_info <- rstan::summary(fit)
     # Extract posterior means
     posterior_means <- summary_info$summary[, "mean"]
     # Extract the means for theta1 and theta2
@@ -139,10 +135,10 @@ score_testlet <- function(data_list) {
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
   } else if (C0 == 0 && C1 >= 2) {
-    fit <- sampling(model_multi_obs_no_cens, 
+    fit <- rstan::sampling(model_multi_obs_no_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
-    summary_info <- summary(fit)
+    summary_info <- rstan::summary(fit)
     # Extract posterior means
     posterior_means <- summary_info$summary[, "mean"]
     # Extract the means for theta1 and theta2
@@ -153,10 +149,10 @@ score_testlet <- function(data_list) {
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
   } else if (C0 == 1 && C1 == 1) {
-    fit <- sampling(model_one_obs_one_cens, 
+    fit <- rstan::sampling(model_one_obs_one_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
-    summary_info <- summary(fit)
+    summary_info <- rstan::summary(fit)
     # Extract posterior means
     posterior_means <- summary_info$summary[, "mean"]
     # Extract the means for theta1 and theta2
