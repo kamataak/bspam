@@ -24,6 +24,7 @@
 #'
 #' @import plotly
 #' 
+#' @export plot.task
 #' @export
 plot.task <- function(object, task=NULL, parameter, sort=F){
   
@@ -117,6 +118,7 @@ plot.task <- function(object, task=NULL, parameter, sort=F){
 #'
 #' @import plotly
 #' 
+#' @export plot.person
 #' @export
 plot.person <- function(object, person=NULL, parameter, show.se=T, sort=F){
   

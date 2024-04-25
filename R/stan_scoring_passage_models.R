@@ -20,8 +20,6 @@
 #' and fully observed passages. The goal is to estimate latent variables
 #' such as accuracy (theta_acc) and speed (theta_spd) for the student's
 #' reading performance.
-
-
 # Stan Models for Different Scenarios
 # Scenario 1: Multiple Observed and Multiple Censored Passages
 testlet_scoring_multi_obs_multi_cens <- "

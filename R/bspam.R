@@ -20,7 +20,7 @@
 #' @author Sarunya Somsong <sarunya.ss@hotmail.com>
 #' @author Xin Qiao <xqiao@usf.edu>
 #' @author Kuo Wang <wangkuo@nifty.com>
-#'  
-#' @docType package
+#' 
+#' @aliases bspam-package
 #' @name bspam-package
 NULL
