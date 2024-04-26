@@ -20,7 +20,7 @@
 #' @param burn int., number of the burn-in iteration
 #' @param thin int, thinning interval, a.k.a, period of saving samples
 #'
-#'
+#' @import tibble
 #' @return list
 bayes.wcpm <- function(
     calib.data=NA,
@@ -93,11 +93,11 @@ bayes.wcpm <- function(
                                                         everything())
   time.data <- person.data %>% select(person.id, task.id, time) %>% 
     pivot_wider(names_from = task.id, values_from = time) %>% 
-    column_to_rownames("person.id") %>% select(sort(colnames(.))) %>% 
+    tibble::column_to_rownames("person.id") %>% select(sort(colnames(.))) %>% 
     as.matrix()
   count.data <- person.data %>% select(person.id, task.id, 
                                        obs.counts) %>% pivot_wider(names_from = task.id, values_from = obs.counts) %>% 
-    column_to_rownames("person.id") %>% select(sort(colnames(.))) %>% 
+    tibble::column_to_rownames("person.id") %>% select(sort(colnames(.))) %>% 
     as.matrix()
   n.words <- person.data %>% select(task.id, max.counts) %>% 
     arrange(task.id) %>% distinct() %>% deframe()
@@ -241,7 +241,8 @@ bayes.wcpm <- function(
   if(type=="orf"){
     final_out <- desc_out %>% 
       left_join(par_est_wide) %>% 
-      select(person.id, occasion, group, tau.est=Mean_tau, theta.est=Mean_theta, se.tau.est=SD_tau, se.theta.est=SD_theta,
+      select(person.id, occasion, group, task.n, max.counts.total, obs.counts.obs, secs.obs, wcpm.obs,
+             tau.est=Mean_tau, theta.est=Mean_theta, se.tau.est=SD_tau, se.theta.est=SD_theta,
              low.95.est.theta=Lower95_theta, up.95.est.theta=Upper95_theta,
              low.95.est.tau=Lower95_tau, up.95.est.tau=Upper95_tau, 
              obs.counts.est = Mean_exp_cnt, secs.est = Mean_exp_tim, 
@@ -251,7 +252,8 @@ bayes.wcpm <- function(
   }else{
     final_out <- desc_out %>% 
       left_join(par_est_wide) %>% 
-      select(person.id, occasion, group, tau.est=Mean_tau, theta.est=Mean_theta, se.tau.est=SD_tau, se.theta.est=SD_theta,
+      select(person.id, occasion, group, task.n, max.counts.total, obs.counts.obs, secs.obs, wcpm.obs,
+             tau.est=Mean_tau, theta.est=Mean_theta, se.tau.est=SD_tau, se.theta.est=SD_theta,
              low.95.est.theta=Lower95_theta, up.95.est.theta=Upper95_theta,
              low.95.est.tau=Lower95_tau, up.95.est.tau=Upper95_tau, 
              obs.counts.est = Mean_exp_cnt, secs.est = Mean_exp_tim)

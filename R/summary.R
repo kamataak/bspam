@@ -100,10 +100,10 @@ summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=TRUE, sh
   
   cols_num <- ncol(tb)
   #set screen print out to be short decimal
-  tt <- as.matrix(unlist(lapply(as.double(unlist((tb[,c(6:cols_num)]))),
+  tt <- as.matrix(unlist(lapply(as.double(unlist((tb[,c(7:cols_num)]))),
                                 sprintf, fmt = "%6.3f")))
-  dim(tt) <- c(dim(tb)[1],(cols_num-5))
-  tt <- cbind(tb[,c(1:5)], tt)
+  dim(tt) <- c(dim(tb)[1],(cols_num-6))
+  tt <- cbind(tb[,c(1:6)], tt)
   colnames(tt) <- getNames
   # prepare for data output
   if (nrow(tb) == 1) {
