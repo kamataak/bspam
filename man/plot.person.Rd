@@ -4,7 +4,7 @@
 \alias{plot.person}
 \title{Plot function to show graph of scoring class}
 \usage{
-plot.person(object, person = NULL, parameter, show.se = T, sort = F)
+\method{plot}{person}(object, person = NULL, parameter, show.se = T, sort = F)
 }
 \arguments{
 \item{object}{scoring object}

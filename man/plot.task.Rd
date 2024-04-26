@@ -4,7 +4,7 @@
 \alias{plot.task}
 \title{Plot function to show graph of fit.model class}
 \usage{
-plot.task(object, task = NULL, parameter, sort = F)
+\method{plot}{task}(object, task = NULL, parameter, sort = F)
 }
 \arguments{
 \item{object}{fit.model object}

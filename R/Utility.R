@@ -135,12 +135,7 @@ get.perfectcases <- function(data) {
   return(invisible(perfect.cases))
 }
 
-#' Prepares data in a long format for [wcpm]
-#'
-#' @param data = person response data
-#'
-#' @return data frame
-#'
+
 preplong <- function(data,
                      person.id="",
                      task.id="",
@@ -177,22 +172,8 @@ preplong <- function(data,
   #           stu_season_id2=paste(.[[1]],.[[3]],sep="_"))
   return(dat)
 }
-#' Prepares data in a wide format for [mcem].
-#'
-#' This function will return a list with 5 elements:
-#' Y: a matrix of words read correctly, where rows represent cases (student and occasion) and columns represent passages
-#' logt10: a [tibble::tibble()] of words read correctly
-#' N: the number of cases per passage
-#' I: the number of passages
-#'
-#' @param data A data frame.
-#' @param studentid The column name in the data that represents the unique student identifier.
-#' @param passageid The column name in the data that represents the unique passage identifier.
-#' @param numwords.p The column name in the data that represents the number of words in a passage.
-#' @param wrc The column name in the data that represents the words read correctly for each case.
-#' @param time The column name in the data that represents the time, in seconds, for each case.
-#'
-#'
+
+
 prepwide <- function(data,
                      person.id,
                      task.id,
