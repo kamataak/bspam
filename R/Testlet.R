@@ -213,10 +213,29 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count=
       
       # names(parms.mcem) <- c("task.id","sub.task.id", names(parms.mcem)[3:11])
       names(parms.mcem) <- c("task.id","sub.task.id", "Y", "logT10", "N", names(parms.mcem)[6:14])
+     
+      output.list <- list(task.param = tibble(a = parms.mcem$a,
+                                            b = parms.mcem$b,
+                                            alpha = parms.mcem$alpha,
+                                            beta = parms.mcem$beta,
+                                            task.id = parms.mcem$task.id,
+                                            sub.task.id = parms.mcem$sub.task.id),
+                          hyper.param = tibble(sigma = parms.mcem$sigma,
+                                             gamma1 = parms.mcem$gamma1,
+                                             gamma2 = parms.mcem$gamma2,
+                                             rho.theta = parms.mcem$rho.theta,
+                                             rho.testlet = parms.mcem$rho.testlet
+                                             ),
+                          Y = parms.mcem$Y,
+                          logT10 = parms.mcem$logT10,
+                          N = parms.mcem$N)
+                          
+                          
+      class(output.list) <- "fit.model.testlet" # define class
       
       flog.info("End testlet process", name = "orfrlog")
       
-      return (parms.mcem)
+      return (output.list)
       
     }   
     

@@ -28,7 +28,7 @@
 #' @export
 plot.task <- function(object, task=NULL, parameter, sort=F){
   
-  if(class(object)!="fit.model")
+  if(class(object)!="fit.model" & class(object)!="fit.model.testlet")
     stop("Error: It seems like your object is not obtained through bspam. Make sure you use the calibration output from the `fit.model()` function!")
   
   if(F %in% (parameter %in% c("a", "b", "alpha", "beta")))
