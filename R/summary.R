@@ -79,11 +79,9 @@ summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=TRUE, sh
   
   if("wcpm.obs" %in% colnames(tb)) {
     if ("wcpm.jags" %in% colnames(tb)) {  # for bayes object
-      no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs',
-                           'task.n.wcpm', 'max.counts.total.wcpm', 'wcpm.jags', 'se.wcpm.jags', 'low.95.jags.wcpm', 'up.95.jags.wcpm')  
+      no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')  
     } else if ("wcpm.stan" %in% colnames(tb)) { # for stan output
-      no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs',
-                           'task.n.wcpm', 'max.counts.total.wcpm', 'wcpm.stan', 'se.wcpm.stan', 'low.95.stan.wcpm', 'up.95.stan.wcpm')  
+      no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')  
     } else {
       no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')
     }
@@ -116,8 +114,8 @@ summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=TRUE, sh
   tb <- cbind(tm1, tm2)[,c(1,cols_num,2:(cols_num-1))]
   
   if (show == "short") {
-    tt <- tt %>% select(-no_show_columns)
-    tb <- tb %>% select(-no_show_columns)
+    tt <- tt %>% select(-all_of(c(no_show_columns)))
+    tb <- tb %>% select(-all_of(c(no_show_columns)))
   }
   
   #exclude rownames
