@@ -11,8 +11,8 @@ run.scoring(
   cases,
   perfect.cases,
   est = "map",
-  lo = -4,
-  hi = 4,
+  lo = -12,
+  hi = 12,
   q = 100,
   kappa = 1,
   external = NULL,
@@ -35,9 +35,9 @@ is specified, it will estimate scores for all cases in the \code{person.data}.}
 \item{est}{Quoted string, indicating the choice of the estimator. It has to be one of 
 code/{"mle", "map", "eap", "bayes"}. Default is \code{"map"}.}
 
-\item{lo}{Numeric, indicating the lower bound of the quadratures. Default is -4.}
+\item{lo}{Numeric, indicating the lower bound of the quadratures. Default is -12.}
 
-\item{hi}{Numeric, indicating the upper bound of the quadratures. Default is 4.}
+\item{hi}{Numeric, indicating the upper bound of the quadratures. Default is 12.}
 
 \item{q}{Numeric, indicating the number of quadratures. Default is 100.}
 
