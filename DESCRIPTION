@@ -2,7 +2,7 @@ Package: bspam
 Type: Package
 Encoding: UTF-8
 Title: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R
-Version: 1.2.4
+Version: 1.2.5
 Author: Akihito Kamata [aut, cre] (<https://orcid.org/0000-0001-9570-1464>),
   Cornelis J. Potgieter [aut] (<https://orcid.org/0000-0002-1995-6817>),
   Joseph F. T. Nese [aut] (<https://orcid.org/0000-0002-9878-7395>),
