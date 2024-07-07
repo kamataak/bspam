@@ -47,7 +47,7 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count=
       # get specific columns only
       data <- data %>% select(person.id, sub.task.id, obs.count,time,task.id,max.counts)
       colnames(data) <- c("person.id", "sub.task.id", "obs.count", "time", "task.id", "max.counts")
-
+      
       # Add a column to manage unique passage_sentence id
       # data$taskid_subid <- paste(data$task.id, data$sub.task.id, sep="_")
       
@@ -213,24 +213,24 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count=
       
       # names(parms.mcem) <- c("task.id","sub.task.id", names(parms.mcem)[3:11])
       names(parms.mcem) <- c("task.id","sub.task.id", "Y", "logT10", "N", names(parms.mcem)[6:14])
-     
+      
       output.list <- list(task.param = tibble(a = parms.mcem$a,
-                                            b = parms.mcem$b,
-                                            alpha = parms.mcem$alpha,
-                                            beta = parms.mcem$beta,
-                                            task.id = parms.mcem$task.id,
-                                            sub.task.id = parms.mcem$sub.task.id),
+                                              b = parms.mcem$b,
+                                              alpha = parms.mcem$alpha,
+                                              beta = parms.mcem$beta,
+                                              task.id = parms.mcem$task.id,
+                                              sub.task.id = parms.mcem$sub.task.id),
                           hyper.param = tibble(sigma = parms.mcem$sigma,
-                                             gamma1 = parms.mcem$gamma1,
-                                             gamma2 = parms.mcem$gamma2,
-                                             rho.theta = parms.mcem$rho.theta,
-                                             rho.testlet = parms.mcem$rho.testlet
-                                             ),
+                                               gamma1 = parms.mcem$gamma1,
+                                               gamma2 = parms.mcem$gamma2,
+                                               rho.theta = parms.mcem$rho.theta,
+                                               rho.testlet = parms.mcem$rho.testlet
+                          ),
                           Y = parms.mcem$Y,
                           logT10 = parms.mcem$logT10,
                           N = parms.mcem$N)
-                          
-                          
+      
+      
       class(output.list) <- "fit.model.testlet" # define class
       
       flog.info("End testlet process", name = "orfrlog")
@@ -240,7 +240,7 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count=
     }   
     
   }
-
+  
 }
 
 
@@ -673,17 +673,17 @@ iterate_full_testlet_MCEM <- function(Y,logT10,Passage,N,n.iter,M.iter,par.in,m,
       index.i <- as.integer(factor(Pass.i, levels = unique(Pass.i)))
       
       fit <- rstan::sampling(m,#stan(model_code = model_code, 
-                      data = list(N = sum(S), K = K.i,
-                                  Count = Y.new,  logT10 = logT10.new,
-                                  MaxN = N[S==1], Passage = index.i,
-                                  a = a.run[S==1], b = b.run[S==1],
-                                  alpha = alpha.run[S==1], beta = beta.run[S==1],
-                                  gamma1 = gamma1.run,
-                                  gamma2 = gamma2.run,
-                                  sigma = sigma.run,
-                                  rho = rho.run,
-                                  rhoTestlet = rhoTestlet.run),
-                      chains = 1, warmup = 1000, iter = (2000+M), cores = 1, refresh = 0)
+                             data = list(N = sum(S), K = K.i,
+                                         Count = Y.new,  logT10 = logT10.new,
+                                         MaxN = N[S==1], Passage = index.i,
+                                         a = a.run[S==1], b = b.run[S==1],
+                                         alpha = alpha.run[S==1], beta = beta.run[S==1],
+                                         gamma1 = gamma1.run,
+                                         gamma2 = gamma2.run,
+                                         sigma = sigma.run,
+                                         rho = rho.run,
+                                         rhoTestlet = rhoTestlet.run),
+                             chains = 1, warmup = 1000, iter = (2000+M), cores = 1, refresh = 0)
       
       fit_ss <- rstan::extract(fit, permuted = TRUE) # Kuo memo: specifying rstan, otherwise, when load tidyverse, it will occur an error
       theta1[,i] <- fit_ss$theta1[1:M]
