@@ -36,7 +36,7 @@
 #' @param rho: The correlation between count and time latent components
 #' @param rhoTestlet: The testlet-based reliability  
 #' @param C: A vector of indicators whether a specific sentence was 
-#' censored (0) or fully observed (1) -- K-dim
+#' censored (1) or fully observed (0) -- K-dim
 #' 
 #' @return  list
 #' @export

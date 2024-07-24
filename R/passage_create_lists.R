@@ -33,33 +33,33 @@
 #' @param sigma: The latent standard deviation of the time latent component
 #' @param rho: The correlation between count and time latent components
 #' @param C: A vector of indicators whether a specific passage was 
-#' censored (0) or fully observed (1) -- K-dim
+#' censored (1) or fully observed (0) -- K-dim
 #'  
 create_data_list <- function(Count, logT10, MaxN, 
                              a, b, alpha,beta, 
                              sigma, rho, C) {
   # Calculate the number of observed and censored passages
-  N_obs <- sum(C == 1, na.rm = TRUE) # try na.rm = T, 04/07/24 by Kuo
-  N_cens <- sum(C == 0, na.rm = TRUE) # try na.rm = T, 04/07/24 by Kuo
+  N_obs <- sum(C == 0, na.rm = TRUE) # try na.rm = T, 04/07/24 by Kuo
+  N_cens <- sum(C == 1, na.rm = TRUE) # try na.rm = T, 04/07/24 by Kuo
   
   # Create a list containing subsets of input data
   data_list <- list(
     N_obs = N_obs,
     N_cens = N_cens,
-    Count_obs = na.omit(Count[C == 1]),
-    Count_cens = na.omit(Count[C == 0]),
-    logT10_obs = na.omit(logT10[C == 1]),
-    logT10_cens = na.omit(logT10[C == 0]),
-    MaxN_obs = na.omit(MaxN[C == 1]),
-    MaxN_cens = na.omit(MaxN[C == 0]),
-    a_obs = na.omit(a[C == 1]),
-    a_cens = na.omit(a[C == 0]),
-    b_obs = na.omit(b[C == 1]),
-    b_cens = na.omit(b[C == 0]),
-    alpha_obs = na.omit(alpha[C == 1]),
-    alpha_cens = na.omit(alpha[C == 0]),
-    beta_obs = na.omit(beta[C == 1]),
-    beta_cens = na.omit(beta[C == 0]),
+    Count_obs = na.omit(Count[C == 0]),
+    Count_cens = na.omit(Count[C == 1]),
+    logT10_obs = na.omit(logT10[C == 0]),
+    logT10_cens = na.omit(logT10[C == 1]),
+    MaxN_obs = na.omit(MaxN[C == 0]),
+    MaxN_cens = na.omit(MaxN[C == 1]),
+    a_obs = na.omit(a[C == 0]),
+    a_cens = na.omit(a[C == 1]),
+    b_obs = na.omit(b[C == 0]),
+    b_cens = na.omit(b[C == 1]),
+    alpha_obs = na.omit(alpha[C == 0]),
+    alpha_cens = na.omit(alpha[C == 1]),
+    beta_obs = na.omit(beta[C == 0]),
+    beta_cens = na.omit(beta[C == 1]),
     sigma = sigma,
     rho = rho
   )
