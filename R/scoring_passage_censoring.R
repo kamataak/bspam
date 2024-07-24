@@ -33,7 +33,7 @@
 #' @param sigma: The latent standard deviation of the time latent component
 #' @param rho: The correlation between count and time latent components
 #' @param C: A vector of indicators whether a specific passage was 
-#' censored (0) or fully observed (1) -- K-dim
+#' censored (1) or fully observed (0) -- K-dim
 #' 
 #' @return  list
 #' @export
