@@ -64,6 +64,7 @@ create_data_list <- function(Count, logT10, MaxN,
     rho = rho
   )
   
+  # print(data_list)
   return(data_list)
 }
 
@@ -73,11 +74,11 @@ score_testlet <- function(data_list) {
   # Enter processed passage-level (no testlet) data with censoring indicator
   
   # Extract number of censored and fully observed passages
-  C0 <- data_list$N_cens
-  C1 <- data_list$N_obs
+  C1 <- data_list$N_cens
+  C0 <- data_list$N_obs
   
   # Below if statements determine which version of the Stan model to use
-  if (C0 >= 2 && C1 >= 2) {
+  if (C0 >= 2 && C1 >= 2) { # C0 is obs, C1 is cens
     fit <- rstan::sampling(model_multi_obs_multi_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
@@ -92,8 +93,8 @@ score_testlet <- function(data_list) {
     posterior_sd <- summary_info$summary[, "sd"]
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
-  } else if (C0 >= 2 && C1 == 1) {
-    fit <- rstan::sampling(model_one_obs_multi_cens, 
+  } else if (C0 >= 2 && C1 == 1) { # C0 is obs, C1 is cens
+    fit <- rstan::sampling(model_multi_obs_one_cens, # model_one_obs_multi_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -106,8 +107,8 @@ score_testlet <- function(data_list) {
     posterior_sd <- summary_info$summary[, "sd"]
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
-  } else if (C0 >= 2 && C1 == 0) {
-    fit <- rstan::sampling(model_no_obs_multi_cens, 
+  } else if (C0 >= 2 && C1 == 0) { # C0 is obs, C1 is cens
+    fit <- rstan::sampling(model_multi_obs_no_cens, #model_no_obs_multi_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -120,8 +121,8 @@ score_testlet <- function(data_list) {
     posterior_sd <- summary_info$summary[, "sd"]
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
-  } else if (C0 == 1 && C1 >= 2) {
-    fit <- rstan::sampling(model_multi_obs_one_cens, 
+  } else if (C0 == 1 && C1 >= 2) { # C0 is obs, C1 is cens
+    fit <- rstan::sampling(model_one_obs_multi_cens, #model_multi_obs_one_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -134,8 +135,8 @@ score_testlet <- function(data_list) {
     posterior_sd <- summary_info$summary[, "sd"]
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
-  } else if (C0 == 0 && C1 >= 2) {
-    fit <- rstan::sampling(model_multi_obs_no_cens, 
+  } else if (C0 == 0 && C1 >= 2) { # C0 is obs, C1 is cens
+    fit <- rstan::sampling(model_no_obs_multi_cens, #model_multi_obs_no_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -148,7 +149,7 @@ score_testlet <- function(data_list) {
     posterior_sd <- summary_info$summary[, "sd"]
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
-  } else if (C0 == 1 && C1 == 1) {
+  } else if (C0 == 1 && C1 == 1) { # C0 is obs, C1 is cens
     fit <- rstan::sampling(model_one_obs_one_cens, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)

@@ -49,18 +49,44 @@ create_data_list_sentence <- function(Count, logT10, MaxN,
   N_obs <- sum(C == 0, na.rm = TRUE)
   N_cens <- sum(C == 1, na.rm = TRUE)
   
+  # Ensure that even single-row outputs are treated as vectors
+  safe_na_omit <- function(x) {
+    result <- na.omit(x)
+    # print(result)
+    if (length(result) > 0) {
+      if (!is.null(dim(result)) && dim(result)[1] == 1) {
+        # If result is a 1-row matrix or data frame, convert to vector
+        return(as.vector(unlist(result)))
+      } else {
+        # If result has more than 1 row, return as is
+        return(result)  
+      }
+    } else {
+      # If result is empty, return it
+      return(result)  
+    }
+    # if (length(result) > 0) {
+    #   if(dim(result)[1] == 1) {
+    #     return(as.vector(unlist(result)))
+    #   } else {
+    #     return(result)  
+    #   }
+    # } else {
+    #   return(result)  
+    # }
+  }
   data_list <- list(
     N_obs = N_obs,
     N_cens = N_cens,
     K = max(Passage),
-    Passage_obs = na.omit(Passage[C == 0]),
-    Passage_cens = na.omit(Passage[C == 1]),
+    Passage_obs = safe_na_omit(Passage[C == 0]),
+    Passage_cens = safe_na_omit(Passage[C == 1]),
     Count_obs = na.omit(Count[C == 0]),
     Count_cens = na.omit(Count[C == 1]),
     logT10_obs = na.omit(logT10[C == 0]),
     logT10_cens = na.omit(logT10[C == 1]),
-    MaxN_obs = na.omit(MaxN[C == 0]),
-    MaxN_cens = na.omit(MaxN[C == 1]),
+    MaxN_obs = safe_na_omit(MaxN[C == 0]),
+    MaxN_cens = safe_na_omit(MaxN[C == 1]),
     a_obs = na.omit(a[C == 0]),
     a_cens = na.omit(a[C == 1]),
     b_obs = na.omit(b[C == 0]),
@@ -76,14 +102,15 @@ create_data_list_sentence <- function(Count, logT10, MaxN,
     rhoTestlet = rhoTestlet
   )
   
+  # print(data_list)
   return(data_list)
 }
 
 # Performs EAP scoring for a single student
 # Testlet model with/without censoring
 score_testlet_sentence <- function(data_list) {
-  C0 <- data_list$N_cens
-  C1 <- data_list$N_obs
+  C1 <- data_list$N_cens
+  C0 <- data_list$N_obs
   
   if (C0 >= 2 && C1 >= 2) {
     fit <- rstan::sampling(model_multi_obs_multi_cens_sentence, 
@@ -99,8 +126,8 @@ score_testlet_sentence <- function(data_list) {
     posterior_sd <- summary_info$summary[, "sd"]
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
-  } else if (C0 >= 2 && C1 == 1) {
-    fit <- rstan::sampling(model_one_obs_multi_cens_sentence, 
+  } else if (C0 >= 2 && C1 == 1) { # C1 is cens, C0 is obs
+    fit <- rstan::sampling(model_multi_obs_one_cens_sentence, #model_one_obs_multi_cens_sentence, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -114,7 +141,7 @@ score_testlet_sentence <- function(data_list) {
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
   } else if (C0 >= 2 && C1 == 0) {
-    fit <- rstan::sampling(model_no_obs_multi_cens_sentence, 
+    fit <- rstan::sampling(model_multi_obs_no_cens_sentence, #model_no_obs_multi_cens_sentence, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -127,8 +154,8 @@ score_testlet_sentence <- function(data_list) {
     posterior_sd <- summary_info$summary[, "sd"]
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
-  } else if (C0 == 1 && C1 >= 2) {
-    fit <- rstan::sampling(model_multi_obs_one_cens_sentence, 
+  } else if (C0 == 1 && C1 >= 2) { # C1 is cens, C0 is obs
+    fit <- rstan::sampling(model_one_obs_multi_cens_sentence, #model_multi_obs_one_cens_sentence, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -142,7 +169,7 @@ score_testlet_sentence <- function(data_list) {
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
   } else if (C0 == 0 && C1 >= 2) {
-    fit <- rstan::sampling(model_multi_obs_no_cens_sentence, 
+    fit <- rstan::sampling(model_no_obs_multi_cens_sentence, #model_multi_obs_no_cens_sentence, 
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
