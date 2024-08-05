@@ -19,7 +19,24 @@
 #' prep function prepares input data for fit.model function
 #'
 #' @param data = student response data
-#'
+#' @param person.id Quoted variable name in \code{person.data} that indicates 
+#'     the unique person identifier.
+#' @param task.id Quoted variable name in \code{person.data} that indicates 
+#'     the unique task identifier. In the ORF assessment context, it is the
+#'     passage identifier.
+#' @param occasion The column name in the data that represents the unique occasion.
+#' @param group The column name in the data that represents the unique group.
+#' @param max.counts Quoted variable name in \code{person.data} that indicates 
+#'     the number of attempts in the task. In the ORF assessment context,
+#'     it is the number of words in the passage. 
+#' @param obs.counts Quoted variable name in \code{person.data} that indicates 
+#'     the number of successful attempts in each task. In the ORF assessment
+#'     context, it is the number of words read correctly for the passage.
+#' @param time Quoted variable name in \code{person.data} that indicates 
+#'     the time in seconds took to complete the task. In the ORF context, 
+#'     it is the time took to complete reading the passage.
+#' @param sentence_level flag for sentence or passage level data, default is FALSE
+#'      
 #' @import tidyr
 #' @import dplyr
 #' @import tidyverse
@@ -28,7 +45,7 @@
 #'                    data.wide: list of Y, logT10, N, I)
 #'
 #' @export
-prep <- function(data=data,person.id="",task.id="",occasion="",group="",max.counts="",obs.counts="",time="") {
+prep <- function(data=data,person.id="",task.id="",occasion="",group="",max.counts="",obs.counts="",time="", sentence_level = FALSE) {
   # loading logger
   log.initiating()
   flog.info("Begin preparing data process", name = "orfrlog")
@@ -49,7 +66,7 @@ prep <- function(data=data,person.id="",task.id="",occasion="",group="",max.coun
   dat <- data
   tryCatch (
     expr = {
-      # create_data
+
       c1 <- dat[person.id] # person.id
       c2 <- dat[task.id] # task.id
       c3 <- dat[max.counts] # max.counts
@@ -62,36 +79,84 @@ prep <- function(data=data,person.id="",task.id="",occasion="",group="",max.coun
       dat <- data.frame(c1,c2,c3,c4,c5,c6,c7,lgsec)
       colnames(dat) <- col.labels
       
-      tp <- as.data.frame(dat %>% select(person.id, task.id, obs.counts) %>%
-                            pivot_wider(names_from = task.id, values_from = obs.counts))
-      
-      rownames(tp) <- as.character(tp$person.id)
-      Y <- tp %>% select(-person.id)
-      Y <- Y[ , order(names(Y))] # sort by passage.id
-      Y <- as.matrix(Y)
-      for (i in 1:ncol(Y)) {
-        Y[,i]<-ifelse(is.na(Y[,i]),NA,Y[,i]) #NaN
+      if (sentence_level == FALSE) { # for passage level data
+        tp <- as.data.frame(dat %>% select(person.id, task.id, obs.counts) %>%
+                              pivot_wider(names_from = task.id, values_from = obs.counts))
+        
+        rownames(tp) <- as.character(tp$person.id)
+        Y <- tp %>% select(-person.id)
+        Y <- Y[ , order(names(Y))] # sort by passage.id
+        Y <- as.matrix(Y)
+        for (i in 1:ncol(Y)) {
+          Y[,i]<-ifelse(is.na(Y[,i]),NA,Y[,i]) #NaN
+        }
+        logT <-  as.data.frame(dat %>%
+                                 mutate(lgsec=log(time)) %>%
+                                 select(person.id, task.id, lgsec) %>%
+                                 pivot_wider(names_from = task.id, values_from = lgsec) %>%
+                                 select(-person.id))
+        rownames(logT) <- as.character(tp$person.id)
+        logT <- logT[ , order(names(logT))] # sort by person.id
+        N <- as.data.frame(dat %>%
+                             group_by(task.id) %>% arrange(task.id) %>% # sort by person.id
+                             summarise(max.counts=max(max.counts)) %>% # numwords.pass
+                             select(-task.id))
+        rownames(N) <- colnames(Y)
+        N <- pull(N)
+        I <- length(N)
+        N.matrix <- matrix(rep(as.matrix(N),dim(Y)[1]),nrow = dim(Y)[1], byrow = TRUE)
+        logT10 <- logT - log(N.matrix) + log(10)
+        
+        data.in <- list(Y = Y, logT10 = logT10, N = N, I = I)
+      } else { # for sentence level data
+        df <- dat %>%
+          group_by(person.id) %>%
+          mutate(obs_sequence = row_number()) %>% # Create a sequence for each task.id within person.id
+          ungroup()
+        tp <- as.data.frame(df %>% select(person.id, obs_sequence, obs.counts) %>%
+                              pivot_wider(names_from = obs_sequence, 
+                                          values_from = obs.counts,
+                                          names_prefix = "obs_"))
+        
+        Y <- tp %>% select(-person.id)
+        
+        # Extract the numeric part from the column names and use it for ordering
+        numeric_order <- order(as.numeric(gsub("obs_", "", colnames(Y))))
+        
+        # Order the data frame by the numeric order
+        Y <- Y[, numeric_order]
+        
+        # Convert to a matrix
+        Y <- as.matrix(Y)
+        
+        for (i in 1:ncol(Y)) {
+          Y[,i]<-ifelse(is.na(Y[,i]),NA,Y[,i]) #NaN
+        }
+        logT <-  as.data.frame(df %>%
+                                 mutate(lgsec=log(time)) %>%
+                                 select(person.id, obs_sequence, lgsec) %>%
+                                 pivot_wider(names_from = obs_sequence, 
+                                             values_from = lgsec,
+                                             names_prefix = "obs_") %>%
+                                 select(-person.id))
+        
+        # Order the data frame by the numeric order
+        logT <- logT[, numeric_order]
+        
+        N <- as.data.frame(df %>% select(person.id, obs_sequence, max.counts) %>%
+                             pivot_wider(names_from = obs_sequence, 
+                                         values_from = max.counts,
+                                         names_prefix = "obs_") %>%
+                             select(-person.id))
+        
+        I <- length(N)
+        N.matrix <- matrix(rep(as.matrix(N),dim(Y)[1]),nrow = dim(Y)[1], byrow = TRUE)
+        logT10 <- logT - log(N.matrix) + log(10)
+        
+        logT10 <- logT10[, numeric_order]
+        
+        data.in <- list(Y = Y, logT10 = logT10, N = N.matrix, I = I)
       }
-      logT <-  as.data.frame(dat %>%
-                               mutate(lgsec=log(time)) %>%
-                               select(person.id, task.id, lgsec) %>%
-                               pivot_wider(names_from = task.id, values_from = lgsec) %>%
-                               select(-person.id))
-      rownames(logT) <- as.character(tp$person.id)
-      logT <- logT[ , order(names(logT))] # sort by person.id
-      N <- as.data.frame(dat %>%
-                           group_by(task.id) %>% arrange(task.id) %>% # sort by person.id
-                           summarise(max.counts=max(max.counts)) %>% # numwords.pass
-                           select(-task.id))
-      rownames(N) <- colnames(Y)
-      N <- pull(N)
-      I <- length(N)
-      N.matrix <- matrix(rep(as.matrix(N),dim(Y)[1]),nrow = dim(Y)[1], byrow = TRUE)
-      logT10 <- logT - log(N.matrix) + log(10)
-      logT10 <- logT10[ , order(names(logT10))]
-      # data.in <- list(Y = Y, logT10 = logT10, N = N, I = I)
-      data.in <- list(Y = Y, logT10 = logT10, N = N, I = I)
-      
       
       output <- list(data.long=dat,
                      data.wide=data.in)
