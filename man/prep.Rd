@@ -12,11 +12,37 @@ prep(
   group = "",
   max.counts = "",
   obs.counts = "",
-  time = ""
+  time = "",
+  sentence_level = FALSE
 )
 }
 \arguments{
 \item{data}{= student response data}
+
+\item{person.id}{Quoted variable name in \code{person.data} that indicates 
+the unique person identifier.}
+
+\item{task.id}{Quoted variable name in \code{person.data} that indicates 
+the unique task identifier. In the ORF assessment context, it is the
+passage identifier.}
+
+\item{occasion}{The column name in the data that represents the unique occasion.}
+
+\item{group}{The column name in the data that represents the unique group.}
+
+\item{max.counts}{Quoted variable name in \code{person.data} that indicates 
+the number of attempts in the task. In the ORF assessment context,
+it is the number of words in the passage.}
+
+\item{obs.counts}{Quoted variable name in \code{person.data} that indicates 
+the number of successful attempts in each task. In the ORF assessment
+context, it is the number of words read correctly for the passage.}
+
+\item{time}{Quoted variable name in \code{person.data} that indicates 
+the time in seconds took to complete the task. In the ORF context, 
+it is the time took to complete reading the passage.}
+
+\item{sentence_level}{flag for sentence or passage level data, default is FALSE}
 }
 \value{
 data list (data.long: data frame,

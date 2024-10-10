@@ -53,7 +53,7 @@ Suggests:
     rjags, testthat (>= 3.5.0)
 URL: https://github.com/kamataak/bspam
 BugReports: https://github.com/kamataak/bspam/issues
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 LazyData: yes
 Config/testthat/edition: 3
 NeedsCompilation: no
