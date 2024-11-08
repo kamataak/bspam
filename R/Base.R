@@ -706,7 +706,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
       # Newton-Raphson with an initial vector of [th1, th2]
       N = 1000
       eps = 1.0e-3
-      nitr = 0 
+      nitr = 0
       while ( N > 0 ){
         
         # [1] Restrain th_try & tau_try within truncate
@@ -714,31 +714,46 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
         if ( lo < th_init && th_init < hi ){
           th_try = th_init } else if  (th_init <= lo) {
             th_try = lo} else if (th_init >= hi) {
-              th_try = hi} 
+              th_try = hi}
         
-        if ( lo < tau_init && tau_init < hi ){ 
+        if ( lo < tau_init && tau_init < hi ){
           tau_try = tau_init } else if (tau_init <= lo){
             tau_try = lo }else if (tau_init >= hi){
               tau_try = hi}
         
         # [2] first & second partial derivatives of posterior density
         # (partial) derivative of the natural log of posterior density
-        l1_binom =sum(a.par*obs.counts*dnorm(a.par*th_try-b.par)/pnorm(a.par*th_try-b.par))-
-          sum(a.par*(max.counts-obs.counts)*dnorm(a.par*th_try-b.par)/(1-pnorm(a.par*th_try-b.par)))-
-          (vartau*th_try-rho*sqrt(vartau)*tau_try)/(vartau-rho^2*vartau)
-        l1_lognorm = -sum(alpha.par^2*(lgsec10 -beta.par+tau_try))-(tau_try-rho*sqrt(vartau)*th_try)/(vartau-rho^2*vartau) 
-        #  Hessian matrix
-        lam11 = -1/(1-rho^2)+sum((a.par^2*obs.counts*(ddnorm(a.par*th_try-b.par)*pnorm(a.par*th_try-b.par)-dnorm(a.par*th_try-b.par)^2))/((pnorm(a.par*th_try-b.par))^2))-
-          sum(((max.counts-obs.counts)*a.par^2*(ddnorm(a.par*th_try-b.par)*(1-pnorm(a.par*th_try-b.par))+dnorm(a.par*th_try-b.par)^2))/((1-pnorm(a.par*th_try-b.par))^2))
+        if (sum(abs(max.counts-obs.counts)) < 0.01) { # for case of perfect situation
+          l1_binom =sum(a.par*obs.counts*dnorm(a.par*th_try-b.par)/pnorm(a.par*th_try-b.par))
+          # sum(a.par*(max.counts-obs.counts)*dnorm(a.par*th_try-b.par)/(1-pnorm(a.par*th_try-b.par)))-
+          (vartau*th_try-rho*sqrt(vartau)*tau_try)/(vartau-rho^2*vartau)  
+        } else {
+          l1_binom =sum(a.par*obs.counts*dnorm(a.par*th_try-b.par)/pnorm(a.par*th_try-b.par))-
+            sum(a.par*(max.counts-obs.counts)*dnorm(a.par*th_try-b.par)/(1-pnorm(a.par*th_try-b.par)))-
+            (vartau*th_try-rho*sqrt(vartau)*tau_try)/(vartau-rho^2*vartau)          
+        }
+        
+        l1_lognorm = -sum(alpha.par^2*(lgsec10 -beta.par+tau_try))-(tau_try-rho*sqrt(vartau)*th_try)/(vartau-rho^2*vartau)
+        
+        #  Hessian matrix        
+        if (sum(abs(max.counts-obs.counts)) < 0.01) { # for case of perfect situation
+          lam11 = -1/(1-rho^2)+sum((a.par^2*obs.counts*(ddnorm(a.par*th_try-b.par)*pnorm(a.par*th_try-b.par)-dnorm(a.par*th_try-b.par)^2))/((pnorm(a.par*th_try-b.par))^2))
+          # sum(((max.counts-obs.counts)*a.par^2*(ddnorm(a.par*th_try-b.par)*(1-pnorm(a.par*th_try-b.par))+dnorm(a.par*th_try-b.par)^2))/((1-pnorm(a.par*th_try-b.par))^2))
+          
+        } else {
+          lam11 = -1/(1-rho^2)+sum((a.par^2*obs.counts*(ddnorm(a.par*th_try-b.par)*pnorm(a.par*th_try-b.par)-dnorm(a.par*th_try-b.par)^2))/((pnorm(a.par*th_try-b.par))^2))-
+            sum(((max.counts-obs.counts)*a.par^2*(ddnorm(a.par*th_try-b.par)*(1-pnorm(a.par*th_try-b.par))+dnorm(a.par*th_try-b.par)^2))/((1-pnorm(a.par*th_try-b.par))^2))
+          
+        }
         
         lam22 = -sum(alpha.par^2)-1/((1-rho^2)*vartau)
         lam12 = rho/((1-rho^2)*sqrt(vartau))
         # [3] obtain and evaluate the delta
-        delta = solve(matrix(c(lam11, lam12, lam12, lam22),nrow=2,ncol=2), c(l1_binom, l1_lognorm)) 
+        delta = solve(matrix(c(lam11, lam12, lam12, lam22),nrow=2,ncol=2), c(l1_binom, l1_lognorm))
         if ( abs( delta[1] ) < eps &&  abs(delta[2]) < eps )
         {
-          map[1] = th_try 
-          map[2] = tau_try 
+          map[1] = th_try
+          map[2] = tau_try
           nitr = 500 - N
           break
         }else{
@@ -748,8 +763,8 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
         N = N - 1;
       }
       if (N == 0)
-      { 
-        map = c(th_init, tau_init) 
+      {
+        map = c(th_init, tau_init)
         message<-paste('MAP does not converge in replication',rep)
         model.file.name<-paste("mapnonconvergence",rep,".txt")
         write(x=message,file=model.file.name,append = FALSE)
@@ -831,7 +846,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
     
     # only for non-perfect occasion case
     if (!(case %in% perfect.cases$perfect.cases)) {
-      
+      # print("not perfect!")
       out.mle<-score.mle(0.5)
       theta.mle <- out.mle[1]
       se.theta.mle <- out.mle[2]
@@ -989,7 +1004,9 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
   seq_id_all <- nrow(cases)
   
   theta.tau <- foreach(i=1:seq_id_all, .combine = 'rbind', .packages = c("tidyverse", "miscTools", "mvtnorm")) %dopar% #%dopar%
-    { est.theta.tau(person.data,
+    { 
+      # print(paste("i=", i)) # for debug
+      est.theta.tau(person.data,
                     task.data,
                     cases$cases[i],
                     lo=lo, hi=hi, q=q, external=external, rho=rho, vartau=vartau, type=type)
