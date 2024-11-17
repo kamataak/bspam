@@ -568,7 +568,7 @@ bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
 #' @import miscTools
 #'
 #' @return wcpm list
-run.scoring <- function(object, person.data, task.data, cases, perfect.cases, est="map", lo = -12, hi = 12, q = 100, kappa = 1, external=NULL, type=NULL) {
+run.scoring <- function(object, person.data, task.data, cases, perfect.cases, zero.cases, est="map", lo = -12, hi = 12, q = 100, kappa = 1, external=NULL, type=NULL) {
   # loading logger
   log.initiating()
   flog.info("Begin scoring process", name = "orfrlog")
@@ -845,7 +845,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
     # case_split <- matrix(str_split(perfect.cases, "_",simplify = TRUE),ncol = 2)
     
     # only for non-perfect occasion case
-    if (!(case %in% perfect.cases$perfect.cases)) {
+    if (!(case %in% perfect.cases$perfect.cases | case %in% zero.cases$zero.cases)) {
       # print("not perfect!")
       out.mle<-score.mle(0.5)
       theta.mle <- out.mle[1]
@@ -893,13 +893,21 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
       return(out)
     } else if (Estimator == "map") {
       ests.map <- NA
-      in.vals <- c(max(-5,min(5,theta.mle)),max(-5*sqrt(vartau),min(5*sqrt(vartau),tau.mle)))
-      out.map<- score.map(in.vals)
-      ests.map <- out.map[1,]
-      # MAP Standard Errors for tau and theta
-      se.tau.map <- out.map[2,2]
-      eta <- a.par*ests.map[1] - b.par
-      se.theta.map <-out.map[2,1]
+      se.theta.map <- NA
+      se.tau.map <- NA
+      
+      # only for non-perfect occasion case
+      if (!(case %in% perfect.cases$perfect.cases | case %in% zero.cases$zero.cases)) {
+        # print("map, not perfect!")
+        in.vals <- c(max(-5,min(5,theta.mle)),max(-5*sqrt(vartau),min(5*sqrt(vartau),tau.mle)))
+        out.map<- score.map(in.vals)
+        ests.map <- out.map[1,]
+        # MAP Standard Errors for tau and theta
+        se.tau.map <- out.map[2,2]
+        eta <- a.par*ests.map[1] - b.par
+        se.theta.map <-out.map[2,1]
+      }
+      
       # MAP WCPM score
       if (is.null(external)) { #internal
         obs.counts.map <- sum(max.counts*pnorm(a.par*ests.map[1] - b.par))
@@ -941,10 +949,19 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
       }
       return(out)
     } else if (Estimator == "eap") {
-      eap.result<-score.eap(nquad = q)
-      ests.quad <- eap.result[c(1,2)]
-      se.quad <- eap.result[c(3,4)]
-      cov.quad<-eap.result[5]
+      ests.quad <- NA
+      se.quad <- NA
+      cov.quad <- NA
+      
+      # only for non-perfect occasion case
+      if (!(case %in% perfect.cases$perfect.cases | case %in% zero.cases$zero.cases)) {
+        # print("eap, not perfect!")
+        eap.result<-score.eap(nquad = q)
+        ests.quad <- eap.result[c(1,2)]
+        se.quad <- eap.result[c(3,4)]
+        cov.quad<-eap.result[5]
+      } 
+
       # QUAD WCPM score
       if (is.null(external)) { #internal
         obs.counts.quad <- sum(max.counts*pnorm(a.par*ests.quad[1] - b.par))
@@ -1002,7 +1019,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
   registerDoParallel(cl)
   
   seq_id_all <- nrow(cases)
-  
+ 
   theta.tau <- foreach(i=1:seq_id_all, .combine = 'rbind', .packages = c("tidyverse", "miscTools", "mvtnorm")) %dopar% #%dopar%
     { 
       # print(paste("i=", i)) # for debug
@@ -1010,6 +1027,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, es
                     task.data,
                     cases$cases[i],
                     lo=lo, hi=hi, q=q, external=external, rho=rho, vartau=vartau, type=type)
+
     }
   if (length(theta.tau[1]) != 0) {
     class(theta.tau) <- "scoring" #define wcpm class

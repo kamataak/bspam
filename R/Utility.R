@@ -189,7 +189,6 @@ get.cases <- function(data) {
   return(invisible(cases))
 }
 
-#'
 get.perfectcases <- function(data) {
   perfect.cases <- data %>% group_by(person.id,occasion) %>%
     summarise(obs.counts.sum=sum(obs.counts),
@@ -200,6 +199,15 @@ get.perfectcases <- function(data) {
   return(invisible(perfect.cases))
 }
 
+get.zerocases <- function(data) {
+  zero.cases <- data %>% group_by(person.id,occasion) %>%
+    summarise(obs.counts.sum=sum(obs.counts),
+              .groups = "drop") %>%
+    filter(obs.counts.sum == 0) %>%
+    unite("zero.cases", person.id:occasion, sep = "_", remove = TRUE, na.rm = FALSE) %>%
+    select(zero.cases)
+  return(invisible(zero.cases))
+}
 
 preplong <- function(data,
                      person.id="",

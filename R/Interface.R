@@ -303,7 +303,16 @@ scoring <- function(calib.data=NA, person.data=NA, person.id="",task.id="",occas
         flog.info("There is no perfect accurate case.", name="orfrlog")
       }
 
-      result.list <- run.scoring(calib.data, person.data, task.data, cases, perfect.cases, est, lo = -12, hi = 12, q = 100, kappa = 1, external=external,type=type)
+      # Check if there is a zero accurate case
+      zero.cases <<- get.zerocases(person.data)
+      
+      if (count(zero.cases) != 0) {
+        flog.info(paste("The zero accurate case: ", paste(zero.cases$zero.cases, collapse = ", ")), name="orfrlog")
+      } else {
+        flog.info("There is no zero accurate case.", name="orfrlog")
+      }            
+
+      result.list <- run.scoring(calib.data, person.data, task.data, cases, perfect.cases, zero.cases, est, lo = -12, hi = 12, q = 100, kappa = 1, external=external,type=type)
     } else  { # bayes
       if (person.id == "") { # if without columns' names
         result.list <- bayes.wcpm(
