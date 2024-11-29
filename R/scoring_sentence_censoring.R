@@ -39,7 +39,6 @@
 #' censored (1) or fully observed (0) -- K-dim
 #' 
 #' @return  list
-#' @export
 scoring.sentence.censoring <- function(Count=NULL, logT10=NULL, N=NULL, 
                                         Passage=NULL, a=NULL, b=NULL, alpha=NULL,beta=NULL, 
                                         gamma1=NULL, gamma2=NULL,
@@ -56,7 +55,7 @@ scoring.sentence.censoring <- function(Count=NULL, logT10=NULL, N=NULL,
     sink()
   }
   
-  Y <- data.matrix(Count) # [r:58,c:23], r->person, c->sentence
+  Y <- data.matrix(Count) # e.g., [r:58,c:23], r->person, c->sentence
   logT10 <- data.matrix(logT10) # [r,c]
   Cens <- data.matrix(C)
   

@@ -595,7 +595,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, ze
     
     if (nrow(person.dat01) == 0) {
       # flog.info(paste("No data for:", case), name = "orfrlog")
-      return(NULL)
+      return(paste("No data for:", case))
     }
     task.read <- person.dat01 %>% dplyr::select(task.id)
     
@@ -617,7 +617,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, ze
     beta.par <- task.dat01 %>% dplyr::select(beta) %>% c() %>% unlist()
     
     if (!is.null(external))  { # When external passages
-      
+
       # get a, b, alpha, beta from MCEM with specific task.id
       a.par.external <- task.data %>% filter(task.id %in% external) %>% dplyr::select(a) %>% c() %>% unlist()
       b.par.external <- task.data %>% filter(task.id %in% external) %>% dplyr::select(b) %>% c() %>% unlist()

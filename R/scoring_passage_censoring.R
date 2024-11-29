@@ -36,7 +36,6 @@
 #' censored (1) or fully observed (0) -- K-dim
 #' 
 #' @return  list
-#' @export
 scoring.passage.censoring <- function(Count=NULL, logT10=NULL, N=NULL, 
                             a=NULL, b=NULL, alpha=NULL,beta=NULL, 
                             sigma=NULL, rho=NULL, C=NULL) {

@@ -12,10 +12,10 @@
 #' http://www.gnu.org/licenses/
 #'
 #'
-#' @param data A data frame. It has the information of student, passage, sentence, obs.count and time.  
+#' @param data A data frame. It has the information of student, passage, sentence, obs.counts and time.  
 #' @param person.id each student's id.
 #' @param sub.task.id each sentence's id.
-#' @param obs.count The column name in the data that represents the words read correctly for each sentence
+#' @param obs.counts The column name in the data that represents the words read correctly for each sentence
 #' @param time The column name in the data that represents the reading time for the sentence.
 #' @param task.id The column name in the data that represents the unique passage identifier.
 #' @param max.counts The column name in the data that represents the number of words in a sentence.
@@ -29,24 +29,29 @@
 #' 
 #' @examples
 #' # example code
-#' fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count="", time="", task.id="", max.counts="")
+#' fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts="", time="", task.id="", max.counts="")
 #' 
 #' @return list
-#' @export
-fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count="", time="", task.id="", max.counts="") {
+fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts="", time="", task.id="", max.counts="") {
   # loading logger
   log.initiating()
   if (is.null(data)) {
     flog.info("Dataset cannot be NULL!", name = "orfrlog")
     return
   } else {
-    if (person.id == "" | sub.task.id == "" | obs.count == ""  | time == "" | task.id == ""  | max.counts == "") {
-      flog.info("Missed columns! Make sure person.id, sub.task.id, obs.count, time, task.id, and max.counts are set.", name = "orfrlog")
+    if (person.id == "" | sub.task.id == "" | obs.counts == ""  | time == "" | task.id == ""  | max.counts == "") {
+      flog.info("Missed columns! Make sure person.id, sub.task.id, obs.counts, time, task.id, and max.counts are set.", name = "orfrlog")
       return(NA)
     } else {
+      vars <- c(person.id,
+                sub.task.id,
+                obs.counts,
+                time,
+                task.id,
+                max.counts)
       # get specific columns only
-      data <- data %>% select(person.id, sub.task.id, obs.count,time,task.id,max.counts)
-      colnames(data) <- c("person.id", "sub.task.id", "obs.count", "time", "task.id", "max.counts")
+      data <- data %>% select(all_of(vars))
+      colnames(data) <- c("person.id", "sub.task.id", "obs.counts", "time", "task.id", "max.counts")
       
       # Add a column to manage unique passage_sentence id
       # data$taskid_subid <- paste(data$task.id, data$sub.task.id, sep="_")
@@ -128,8 +133,8 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count=
       data$unique.id <- temp$unique.id
       
       Ys <- data %>%
-        select(person.id, unique.id, obs.count) %>%
-        spread(key = unique.id, value = obs.count) %>%
+        select(person.id, unique.id, obs.counts) %>%
+        spread(key = unique.id, value = obs.counts) %>%
         select(-person.id)
       Y <- as.matrix(Ys)
       for (i in 1:ncol(Y)) {
@@ -144,13 +149,13 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count=
         select(-person.id)
       # N <- sentence_data %>% 
       #   group_by_at(5) %>% summarise_at(6,max) %>% 
-      #   select(obs.count)x
+      #   select(obs.counts)x
       
       # Maybe this is incorrect
       # Ns <- data %>% 
-      #   select(person.id, sub.task.id, obs.count) %>% 
+      #   select(person.id, sub.task.id, obs.counts) %>% 
       #   group_by(sub.task.id) %>%  
-      #   summarize(max(obs.count))
+      #   summarize(max(obs.counts))
       Ns <- data %>% select(unique.id, max.counts) %>% 
         group_by(unique.id) %>% summarize(max.counts=max(max.counts))
       
