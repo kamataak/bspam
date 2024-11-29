@@ -31,7 +31,8 @@ summary.fit.model <- function(object, digits=4,...) {
   tb <- as.data.frame(t(do.call(rbind, z[[1]])))
   tb <- tb[,(1:4)]
   
-  tt <- as.data.frame(sapply(lapply(tb, sprintf, fmt = "%6.3f"), as.numeric))
+  tb_numeric <- as.data.frame(lapply(tb, function(x) as.numeric(as.character(x))))
+  tt <- as.data.frame(sapply(lapply(tb_numeric, sprintf, fmt = "%6.3f"), as.numeric))
   
   print(tt, digits = digits, print.gap = 3L) # specific minimum digits
   cat("\n====== Hyper Parameters ======\n")
