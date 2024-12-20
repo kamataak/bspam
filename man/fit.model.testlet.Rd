@@ -17,20 +17,20 @@ fit.model.testlet(
   data = NULL,
   person.id = "",
   sub.task.id = "",
-  obs.count = "",
+  obs.counts = "",
   time = "",
   task.id = "",
   max.counts = ""
 )
 }
 \arguments{
-\item{data}{A data frame. It has the information of student, passage, sentence, obs.count and time.}
+\item{data}{A data frame. It has the information of student, passage, sentence, obs.counts and time.}
 
 \item{person.id}{each student's id.}
 
 \item{sub.task.id}{each sentence's id.}
 
-\item{obs.count}{The column name in the data that represents the words read correctly for each sentence}
+\item{obs.counts}{The column name in the data that represents the words read correctly for each sentence}
 
 \item{time}{The column name in the data that represents the reading time for the sentence.}
 
@@ -61,6 +61,6 @@ Additional note...
 }
 \examples{
 # example code
-fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.count="", time="", task.id="", max.counts="")
+fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts="", time="", task.id="", max.counts="")
 
 }
