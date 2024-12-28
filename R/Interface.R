@@ -19,7 +19,7 @@
 #'     passage identifier.
 #' @param sub.task.id Quoted variable name in \code{data} that indicates 
 #'     the unique sub task identifier. In the ORF assessment context, it is the
-#'     sentence identifier.
+#'     sentence identifier. It is required when testlet is TRUE.
 #' @param max.counts Quoted variable name in \code{data} that indicates 
 #'     the number of attempts in the task. In the ORF assessment context,
 #'     it is the number of words in the passage. 
@@ -88,6 +88,9 @@ fit.model <- function(data=NA, person.id="",task.id="",sub.task.id="",max.counts
 
       # call fit.model.testlet
       output <- fit.model.testlet(data,person.id,sub.task.id,obs.counts,time,task.id,max.counts)
+      if (verbose == TRUE) {
+        summary.fit.model.testlet(output)
+      }
       return(invisible(output))
     } else { # task level 
       #create wide data
@@ -96,7 +99,15 @@ fit.model <- function(data=NA, person.id="",task.id="",sub.task.id="",max.counts
       }
     }
   } else { # prepared data
-    data <- data$data.wide
+    if (testlet) { # for sub task level 
+      output <- fit.model.testlet(data$data.long,person.id="person.id",sub.task.id="sub.task.id",obs.counts="obs.counts",time="time",task.id="task.id",max.counts="max.counts")
+      if (verbose == TRUE) {
+        summary.fit.model.testlet(output)
+      }
+      return(invisible(output))
+    } else {
+      data <- data$data.wide      
+    }
   }
   
 
@@ -217,7 +228,7 @@ fit.model <- function(data=NA, person.id="",task.id="",sub.task.id="",max.counts
 #'     context, it is the passage identifier.
 #' @param sub.task.id Quoted variable name in \code{data} that indicates 
 #'     the unique sub task identifier. In the ORF assessment context, it is the
-#'     sentence identifier.
+#'     sentence identifier. It is required when testlet is TRUE.
 #' @param max.counts Quoted variable name in \code{data} that 
 #'     represents the number of attempts in the task. In the ORF assessment
 #'     context, it is the number of words in the passage.
@@ -294,17 +305,22 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
   
   # with censoring
   if (censoring) { # when censoring
-    if (cens != "" & person.id != "") {
+    if (person.id != "") {
       if (testlet) {
-        prep_data <- prep(data,person.id,task.id,occasion,group,max.counts,obs.counts,time, sentence_level = TRUE)
+        prep_data <- prep(data,person.id,task.id,occasion,group,max.counts,obs.counts,time, cens,sentence_level = TRUE)
       } else {
-        prep_data <- prep(data,person.id,task.id,occasion,group,max.counts,obs.counts,time)        
+        prep_data <- prep(data,person.id,task.id,occasion,group,max.counts,obs.counts,time,cens)        
       }
 
     } else {
-      flog.info("cens, person.id, and the other column names are necessary.", name="orfrlog")
+      flog.info("person.id, and the other column names are necessary.", name="orfrlog")
       return(NULL)
     }   
+    
+    if (cens == "") { # in case cens == ""
+      data$cens <- 0 # all are observed
+      cens = "cens"
+    }
     
     if (testlet) { # sub task level
       vars <- c(person.id,
