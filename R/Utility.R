@@ -24,6 +24,9 @@
 #' @param task.id Quoted variable name in \code{person.data} that indicates 
 #'     the unique task identifier. In the ORF assessment context, it is the
 #'     passage identifier.
+#' @param sub.task.id Quoted variable name in \code{person.data} that indicates 
+#'     the unique sub task identifier. In the ORF assessment context, it is the
+#'     sentence identifier. It is required when sentence_level is TRUE.
 #' @param occasion The column name in the data that represents the unique occasion.
 #' @param group The column name in the data that represents the unique group.
 #' @param max.counts Quoted variable name in \code{person.data} that indicates 
@@ -34,7 +37,9 @@
 #'     context, it is the number of words read correctly for the passage.
 #' @param time Quoted variable name in \code{person.data} that indicates 
 #'     the time in seconds took to complete the task. In the ORF context, 
-#'     it is the time took to complete reading the passage.
+#'     it is the time took to complete reading the passage. 
+#' @param cens The column name in the data that represents the censoring indicators 
+#'      whether a specific task or sub task was censored (1) or fully observed (0).
 #' @param sentence_level flag for sentence or passage level data, default is FALSE
 #'      
 #' @import tidyr
@@ -45,7 +50,7 @@
 #'                    data.wide: list of Y, logT10, N, I)
 #'
 #' @export
-prep <- function(data=data,person.id="",task.id="",occasion="",group="",max.counts="",obs.counts="",time="", sentence_level = FALSE) {
+prep <- function(data=data,person.id="",task.id="",sub.task.id="",occasion="",group="",max.counts="",obs.counts="",time="", cens="",sentence_level = FALSE) {
   # loading logger
   log.initiating()
   flog.info("Begin preparing data process", name = "orfrlog")
@@ -59,27 +64,48 @@ prep <- function(data=data,person.id="",task.id="",occasion="",group="",max.coun
     data["group"] <- 1
     group = "group"
   } 
+  if (cens == "") {
+    # add default censoring
+    data["cens"] <- 0 # which mean all data are observation not censoring
+    cens = "cens"
+  } 
   
-  #  col.names = c(studentid,passageid,numwords.p,season,grade,wrc,time)
-  col.labels <- c("person.id","task.id","max.counts","occasion","group","obs.counts","time","lgsec")
   
   dat <- data
   tryCatch (
     expr = {
 
-      c1 <- dat[person.id] # person.id
-      c2 <- dat[task.id] # task.id
-      c3 <- dat[max.counts] # max.counts
-      c4 <- dat[occasion] # occasion
-      c5 <- dat[group] # group
-      c6 <- dat[obs.counts] # obs.counts
-      c7 <- dat[time] # time
-      lgsec <- log(c7) # lgsec
-      
-      dat <- data.frame(c1,c2,c3,c4,c5,c6,c7,lgsec)
-      colnames(dat) <- col.labels
+      # c1 <- dat[person.id] # person.id
+      # c2 <- dat[task.id] # task.id
+      # c3 <- dat[max.counts] # max.counts
+      # c4 <- dat[occasion] # occasion
+      # c5 <- dat[group] # group
+      # c6 <- dat[obs.counts] # obs.counts
+      # c7 <- dat[time] # time
+      # c8 <- dat[cens] # censoring
+      # c9 <- dat[sub.task.id] # censoring
+      # lgsec <- log(c7) # lgsec
+      # 
+      # dat <- data.frame(c1,c2,c9,c3,c4,c5,c6,c7,c8,lgsec)
+      # colnames(dat) <- col.labels
       
       if (sentence_level == FALSE) { # for passage level data
+        #  col.names = c(studentid,passageid,numwords.p,season,grade,wrc,time)
+        col.labels <- c("person.id","task.id","max.counts","occasion","group","obs.counts","time","cens","lgsec")
+        
+        c1 <- dat[person.id] # person.id
+        c2 <- dat[task.id] # task.id
+        c3 <- dat[max.counts] # max.counts
+        c4 <- dat[occasion] # occasion
+        c5 <- dat[group] # group
+        c6 <- dat[obs.counts] # obs.counts
+        c7 <- dat[time] # time
+        c8 <- dat[cens] # censoring
+        lgsec <- log(c7) # lgsec
+        
+        dat <- data.frame(c1,c2,c3,c4,c5,c6,c7,c8,lgsec)
+        colnames(dat) <- col.labels
+        
         tp <- as.data.frame(dat %>% select(person.id, task.id, obs.counts) %>%
                               pivot_wider(names_from = task.id, values_from = obs.counts))
         
@@ -109,6 +135,23 @@ prep <- function(data=data,person.id="",task.id="",occasion="",group="",max.coun
         
         data.in <- list(Y = Y, logT10 = logT10, N = N, I = I)
       } else { # for sentence level data
+        #  col.names = c(studentid,passageid,numwords.p,season,grade,wrc,time)
+        col.labels <- c("person.id","task.id","sub.task.id","max.counts","occasion","group","obs.counts","time","cens","lgsec")
+        
+        c1 <- dat[person.id] # person.id
+        c2 <- dat[task.id] # task.id
+        c3 <- dat[max.counts] # max.counts
+        c4 <- dat[occasion] # occasion
+        c5 <- dat[group] # group
+        c6 <- dat[obs.counts] # obs.counts
+        c7 <- dat[time] # time
+        c8 <- dat[cens] # censoring
+        c9 <- dat[sub.task.id] # censoring
+        lgsec <- log(c7) # lgsec
+        
+        dat <- data.frame(c1,c2,c9,c3,c4,c5,c6,c7,c8,lgsec)
+        colnames(dat) <- col.labels
+        
         df <- dat %>%
           group_by(person.id) %>%
           mutate(obs_sequence = row_number()) %>% # Create a sequence for each task.id within person.id
