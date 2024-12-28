@@ -6,41 +6,51 @@
 \usage{
 scoring(
   calib.data = NA,
-  person.data = NA,
+  data = NA,
   person.id = "",
   task.id = "",
+  sub.task.id = "",
   occasion = "",
   group = "",
   max.counts = "",
   obs.counts = "",
   time = "",
+  cens = "",
   cases = NULL,
   est = "map",
   se = "analytic",
   failsafe = 0,
   bootstrap = 100,
   external = NULL,
-  type = "general"
+  type = "general",
+  censoring = FALSE,
+  testlet = FALSE
 )
 }
 \arguments{
 \item{calib.data}{A class object. Output from calibration phase 
 by \code{\link{fit.model}} function}
 
-\item{person.data}{A data frame. A long-format response data object.}
+\item{data}{A data frame. It is necessary when with 
+ the next five arguments \code{person.id, task.id, 
+max. counts, obs. counts, time}.}
 
-\item{person.id}{Quoted variable name in \code{person.data} that 
+\item{person.id}{Quoted variable name in \code{data} that 
 indicates the unique individual identifier.}
 
-\item{task.id}{Quoted variable name in \code{person.data} that 
+\item{task.id}{Quoted variable name in \code{data} that 
 represents the unique task identifier. In the ORF assessment
 context, it is the passage identifier.}
+
+\item{sub.task.id}{Quoted variable name in \code{data} that indicates 
+the unique sub task identifier. In the ORF assessment context, it is the
+sentence identifier.}
 
 \item{occasion}{The column name in the data that represents the unique occasion.}
 
 \item{group}{The column name in the data that represents the unique group.}
 
-\item{max.counts}{Quoted variable name in \code{person.data} that 
+\item{max.counts}{Quoted variable name in \code{data} that 
 represents the number of attempts in the task. In the ORF assessment
 context, it is the number of words in the passage.}
 
@@ -48,8 +58,12 @@ context, it is the number of words in the passage.}
 
 \item{time}{The column name in the data that represents the time, in seconds, for each case.}
 
+\item{cens}{The column name in the data that represents the censoring indicators 
+whether a specific task or sub task was censored (1) or fully observed (0).
+This column is necessary when censoring argument is TRUE.}
+
 \item{cases}{A vector of individual id for which scoring is desired. If no information is 
-is specified, it will estimate scores for all cases in the \code{person.data}.}
+is specified, it will estimate scores for all cases in the \code{data}.}
 
 \item{est}{Quoted string, indicating the choice of the estimator. It has to be one of 
 code/{"mle", "map", "eap", "bayes"}. Default is \code{"map"}.}
@@ -68,10 +82,16 @@ than the tasks the individuals were assigned.}
 \item{type}{Quoted string, indication of the choice of output. If \code{"general"} (default),
 wcpm scores are not reported. If \code{"orf"}, wcpm scores will be reported.}
 
+\item{censoring}{Boolean. If \code{TRUE}, interface will call task or sub task censoring.
+Default is \code{FALSE}.}
+
+\item{testlet}{Boolean. If \code{TRUE}, runs with sub task level, otherwise, with task level.
+This argument is necessary when censoring is TRUE. Default is \code{FALSE}.}
+
 \item{bootstrp}{Numeric, indicating the number of bootstrap iterations. Default is 100.}
 }
 \value{
-scoring list or Bootstrap dataset
+scoring list or Bootstrap dataset or censoring list
 }
 \description{
 This is an interface function to estimated factor scores based on the 
@@ -89,7 +109,7 @@ More additional note...
 \examples{
 # example code
 WCPM_all <- scoring(calib.data=MCEM_run, 
-                   person.data = passage2,
+                   data = passage2,
                    person.id = "id.student",
                    occasion = "occasion",
                    group = "grade",

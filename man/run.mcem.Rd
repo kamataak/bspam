@@ -45,6 +45,7 @@ a long-format response data by the \code{\link{prep.wide}} function.
 }
 \note{
 Update Memo:
+10/24/2024 For test
 04/29/2021 Modified the mcem function
            based on Nelis's updated.
 10/28/2021 Modified the mcem output

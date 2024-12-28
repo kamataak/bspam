@@ -10,6 +10,7 @@ run.scoring(
   task.data,
   cases,
   perfect.cases,
+  zero.cases,
   est = "map",
   lo = -12,
   hi = 12,
