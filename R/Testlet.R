@@ -32,6 +32,7 @@
 #' fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts="", time="", task.id="", max.counts="")
 #' 
 #' @return list
+#' @export
 fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts="", time="", task.id="", max.counts="") {
   # loading logger
   log.initiating()
@@ -43,13 +44,14 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts
       flog.info("Missed columns! Make sure person.id, sub.task.id, obs.counts, time, task.id, and max.counts are set.", name = "orfrlog")
       return(NA)
     } else {
+      # get specific columns only
       vars <- c(person.id,
                 sub.task.id,
                 obs.counts,
                 time,
                 task.id,
                 max.counts)
-      # get specific columns only
+      # data <- data %>% select(person.id, sub.task.id, obs.counts,time,task.id,max.counts)
       data <- data %>% select(all_of(vars))
       colnames(data) <- c("person.id", "sub.task.id", "obs.counts", "time", "task.id", "max.counts")
       

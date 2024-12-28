@@ -24,6 +24,58 @@
 #' @import tidyverse
 #' @return printing information
 #'
+#' @method summary fit.model.testlet
+#' @export
+summary.fit.model.testlet <- function(object, digits=4,...) {
+  z <- object
+  tb <- as.data.frame(t(do.call(rbind, z[[1]])))
+  tb <- tb[,(1:4)]
+  
+  tb_numeric <- as.data.frame(lapply(tb, function(x) as.numeric(as.character(x))))
+  tt <- as.data.frame(sapply(lapply(tb_numeric, sprintf, fmt = "%6.3f"), as.numeric))
+  
+  print(tt, digits = digits, print.gap = 3L) # specific minimum digits
+  cat("\n====== Hyper Parameters ======\n")
+  cat("sigma      :")
+  # cat(paste(format(z$hyper.param$vartau,digits=6,nsmall=digits), "\n"))
+  # cat(paste(greek$rho), "            :     ")
+  # cat(paste(format(z$hyper.param$rho,digits=6,nsmall=digits), "\n"))
+  cat(paste(sprintf(fmt = "%6.3f", z$hyper.param$sigma), "\n")) # CHANGE TO .3f
+  cat("gamma1     :")
+  cat(paste(sprintf(fmt = "%6.3f", z$hyper.param$gamma1), "\n")) # CHANGE TO .3f
+  cat("gamma2     :")
+  cat(paste(sprintf(fmt = "%6.3f", z$hyper.param$gamma2), "\n")) # CHANGE TO .3f
+  cat("rho.theta  :")
+  cat(paste(sprintf(fmt = "%6.3f", z$hyper.param$rho.theta), "\n")) # CHANGE TO .3f
+  cat("rho.testlet:")
+  cat(paste(sprintf(fmt = "%6.3f", z$hyper.param$rho.testlet), "\n")) # CHANGE TO .3f
+}
+#' summary the information of fit.model class
+#'
+#'
+#' Copyright (C) 2021-2023 The ORF Project Team
+#'
+#' This program is free software; you can redistribute it and/or modify
+#' it under the terms of the GNU General Public License as published by
+#' the Free Software Foundation; either version 3 of the License, or
+#' (at your option) any later version.
+#
+#' This program is distributed in the hope that it will be useful,
+#' but WITHOUT ANY WARRANTY; without even the implied warranty of
+#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#' GNU General Public License for more details.
+#
+#' A copy of the GNU General Public License is available at
+#' http://www.gnu.org/licenses/
+#'
+#' @param object = object
+#' @param digits = print out numeric with specific digits
+#' @param ... = parameter
+#'
+#' @import mvtnorm
+#' @import tidyverse
+#' @return printing information
+#'
 #' @method summary fit.model
 #' @export
 summary.fit.model <- function(object, digits=4,...) {
