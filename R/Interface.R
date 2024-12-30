@@ -311,17 +311,55 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
       } else {
         prep_data <- prep(data=data,person.id=person.id,task.id=task.id,occasion=occasion,group=group,max.counts=max.counts,obs.counts=obs.counts,time=time,cens=cens)        
       }
+      
+      if (cens == "") { # in case cens == ""
+        data$cens <- 0 # all are observed
+        cens <- "cens"
+      }
+    } else { # if already with prep_data
+      # flog.info("person.id, and the other column names are necessary.", name="orfrlog")
+      # return(NULL)
+      # set items from prepared data
+      tryCatch (
+        expr = {
+          prep_data <- data
+          data <- data$data.long
+          
+          person.id <- "person.id"
+          task.id <- "task.id"
+          
+          if (testlet) {
+            sub.task.id <- "sub.task.id"      
+            occasion <- "occasion"
+            group <- "group"
+            max.counts <- "max.counts"
+            obs.counts <- "obs.counts"
+            time <- "time"
+          } else {
+            occasion <- "occasion"
+            group <- "group"
+            max.counts <- "max.counts"
+            obs.counts <- "obs.counts"
+            time <- "time"            
+          }
 
-    } else {
-      flog.info("person.id, and the other column names are necessary.", name="orfrlog")
-      return(NULL)
+          
+          if ("cens" %in% c(colnames(data))) {
+            cens <- "cens"           
+          } else {
+            data$cens <- 0 # all are observed
+            cens <- "cens"
+          }
+
+        },
+        error = function(w) {
+          flog.info("Please make sure your prepared data is correct!", name = "orfrlog")
+          flog.info(w, name = "orfrlog")
+        }
+      )
     }   
     
-    if (cens == "") { # in case cens == ""
-      data$cens <- 0 # all are observed
-      cens = "cens"
-    }
-    
+
     if (testlet) { # sub task level
       vars <- c(person.id,
                 task.id,
@@ -385,7 +423,7 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
       class(scoring_output) <- "scoring.censoring"
       return(invisible(scoring_output))
     }
-  } else {
+  } else { # without censoring
     if (se == "analytic") {
       if (est != "bayes") { #not bayes
         if (person.id != "") {
