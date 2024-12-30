@@ -306,10 +306,10 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
   # with censoring
   if (censoring) { # when censoring
     if (person.id != "") {
-      if (testlet) {
-        prep_data <- prep(data,person.id,task.id,occasion,group,max.counts,obs.counts,time, cens,sentence_level = TRUE)
+      if (testlet) { # should with sub.task.id
+        prep_data <- prep(data=data,person.id=person.id,task.id=task.id,sub.task.id=sub.task.id,occasion=occasion,group=group,max.counts=max.counts,obs.counts=obs.counts,time=time,cens=cens,sentence_level = TRUE)
       } else {
-        prep_data <- prep(data,person.id,task.id,occasion,group,max.counts,obs.counts,time,cens)        
+        prep_data <- prep(data=data,person.id=person.id,task.id=task.id,occasion=occasion,group=group,max.counts=max.counts,obs.counts=obs.counts,time=time,cens=cens)        
       }
 
     } else {
@@ -359,7 +359,7 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
       #                                              sigma=calib.data$hyper.param$sigma, rho=calib.data$hyper.param$rho.theta,
       #                                              rhoTestlet=calib.data$hyper.param$rho.testlet,
       #                                              C=Cens_data)
-      
+      class(scoring_output) <- "scoring.testlet.censoring"
       return(invisible(scoring_output))
       
     } else { # task level
@@ -382,6 +382,7 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
                           alpha=calib.data$task.param$alpha, beta=calib.data$task.param$beta,
                           sigma=calib.data$hyper.param$vartau, rho=calib.data$hyper.param$rho,
                           C=Cens_data)
+      class(scoring_output) <- "scoring.censoring"
       return(invisible(scoring_output))
     }
   } else {

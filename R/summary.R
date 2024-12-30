@@ -1,4 +1,4 @@
-#' summary the information of fit.model class
+#' summary the information of fit.model.testlet class
 #'
 #'
 #' Copyright (C) 2021-2023 The ORF Project Team

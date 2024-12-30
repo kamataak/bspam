@@ -65,9 +65,11 @@ prep <- function(data=data,person.id="",task.id="",sub.task.id="",occasion="",gr
     group = "group"
   } 
   if (cens == "") {
-    # add default censoring
-    data["cens"] <- 0 # which mean all data are observation not censoring
-    cens = "cens"
+    if (sentence_level == TRUE) {
+      # add default censoring
+      data["cens"] <- 0 # which mean all data are observation not censoring
+      cens = "cens"     
+    } 
   } 
   
   
@@ -91,7 +93,6 @@ prep <- function(data=data,person.id="",task.id="",sub.task.id="",occasion="",gr
       
       if (sentence_level == FALSE) { # for passage level data
         #  col.names = c(studentid,passageid,numwords.p,season,grade,wrc,time)
-        col.labels <- c("person.id","task.id","max.counts","occasion","group","obs.counts","time","cens","lgsec")
         
         c1 <- dat[person.id] # person.id
         c2 <- dat[task.id] # task.id
@@ -100,10 +101,18 @@ prep <- function(data=data,person.id="",task.id="",sub.task.id="",occasion="",gr
         c5 <- dat[group] # group
         c6 <- dat[obs.counts] # obs.counts
         c7 <- dat[time] # time
-        c8 <- dat[cens] # censoring
         lgsec <- log(c7) # lgsec
         
-        dat <- data.frame(c1,c2,c3,c4,c5,c6,c7,c8,lgsec)
+        if (cens != "") {
+          c8 <- dat[cens] # censoring     
+          dat <- data.frame(c1,c2,c3,c4,c5,c6,c7,c8,lgsec)
+          col.labels <- c("person.id","task.id","max.counts","occasion","group","obs.counts","time","cens","lgsec")
+          
+        } else {
+          dat <- data.frame(c1,c2,c3,c4,c5,c6,c7,lgsec)
+          col.labels <- c("person.id","task.id","max.counts","occasion","group","obs.counts","time","lgsec")
+        }
+        
         colnames(dat) <- col.labels
         
         tp <- as.data.frame(dat %>% select(person.id, task.id, obs.counts) %>%
