@@ -59,7 +59,7 @@ View(passage2)
 Calibrate the passages using the `fit.model()` function by implementing the Monte Carlo EM algorithm described in Potgieter et al. (2017). 
 
 ``` {r eval = F}
-MCEM_run <- fit.model(person.data = passage2,
+MCEM_run <- fit.model(data = passage2,
                       person.id = "id.student",
                       task.id = "id.passage",
                       max.counts = "numwords.pass",
@@ -76,7 +76,7 @@ By default, the standard errors for the model parameters are not estimated. This
 Passage calibration can also be done by using the `est = "bayes"` option, which implements a fully Bayesian approach through Gibbs sampling or Hamiltonian Monte Carlo with JAGS and Stan, respectively. Currently, Stan will be used with complete data, that is, if all students have data on all passages. Otherwise, JAGS will be used as it provides faster computations with missing observations. Note that `bspam` runs JAGS in the auto mode, which does not require the user to supply any specifications for Bayesian estimation (e.g., number of the iterations) or monitor convergence. The standard deviations of the posterior distributions are reported as the standard errors. A specification for the `fit.model()` function can look like as follows.
 
 ```{r, eval = F, message=FALSE}
-Bayes_run <- fit.model(person.data = passage2,
+Bayes_run <- fit.model(data = passage2,
                        person.id = "id.student",
                        task.id = "id.passage",
                        max.counts = "numwords.pass",
@@ -100,7 +100,7 @@ To estimate WCPM scores for all observations in the data set `passage2`, we use 
 
 ```{r eval = F}
 WCPM_all <- scoring(calib.data=MCEM_run, 
-                    person.data = passage2,
+                    data = passage2,
                     person.id = "id.student",
                     occasion = "occasion",
                     group = "grade",
@@ -122,7 +122,7 @@ If the computations of WCPM scores and/or factor scores for only selected cases 
 ```{r eval = F}
 sample.cases <- data.frame(cases = c("2033_fall", "2043_fall", "2089_fall"))
 WCPM_sample <- scoring(calib.data = MCEM_run, 
-                       person.data = passage2,
+                       data = passage2,
                        person.id = "id.student",
                        occasion = "occasion",
                        group = "grade",
@@ -144,7 +144,7 @@ The use of an external passage set is particularly important in the context of O
 
 ```{r eval = F}
 WCPM_sample_ext1 <- scoring(calib.data = MCEM_run, 
-                            person.data = passage2,
+                            data = passage2,
                             person.id = "id.student",
                             occasion = "occasion",
                             group = "grade",
@@ -164,7 +164,7 @@ A fully Bayesian approach can also be used as an estimator in the `scoring()` fu
 
 ```{r eval = F}
 WCPM_sample_ext1_bayes <- scoring(calib.data=MCEM_run, 
-                                  person.data = passage2,
+                                  data = passage2,
                                   person.id = "id.student",
                                   occasion = "occasion",
                                   group = "grade",
@@ -210,7 +210,7 @@ all.cases
 
 ```{r eval = F}
 WCPM_all <- scoring(calib.data=MCEM_run, 
-                    person.data = data$data.long,
+                    data = data$data.long,
                     est = "map", 
                     se = "analytic",
                     type = "orf")
@@ -219,7 +219,7 @@ summary(WCPM_all)
 
 ``` {r eval = F}
 WCPM_sample_ext2 <- scoring(calib.data=MCEM_run, 
-                            person.data = data$data.long,
+                            data = data$data.long,
                             cases = sample.cases, 
                             external = c("32004","32010","32015","32016","33003","33037"),
                             est = "map", 
@@ -228,9 +228,56 @@ WCPM_sample_ext2 <- scoring(calib.data=MCEM_run,
 summary(WCPM_sample_ext2)
 ```
 
+## Other Features
+### Fitting and Scoring by the Testlet Model
+For example, when an ORF data is consisted of sentence-level data, it is reasonable to think that the data on sentences within the same passage are more similar than data on sentences from other passages. Thus, the use of a testlet-version of the model is reasonable to implement. The `bspam` R package can fit and score the data by the testlet model both by the MCEM and Bayes. 
+
+The example data set `sentence.level.data` is a sentence-level student data and consisted of reading accuracy and time data for 4 passages from 58 students. The 4 passages were consisted of 4 to 8 sentences, totalling 23 sentences. All 58 students read all 4 passages completely. This is a small subset of the data collected by Nese and Kamata (2014-2018).
+
+For example the testlet model can be fitted to this data set by the MCEM by:
+```{r eval = F}
+Testlet_run <- fit.model(data = sentence.level.data,
+                                 person.id = "id.student",
+                                 task.id = "id.passage",
+                                 sub.task.id = "id.sentence",
+                                 obs.count = "wrc", 
+                                 max.counts = "numwords.sent",
+                                 time = "sec",
+                                 testlet = TRUE)
+```
+
+The estimated testlet parameter is reported as part of the hyper-parameters.
+```{r eval = F}
+Testlet_run$hyper.param
+```
+
+The estimated model paramters can be extracted by:
+```{r eval = F}
+Testlet_run$task.param
+```
+
+The scoring by the MAP can be done for this data set by:
+```{r eval = F}
+Testlet_scoring <- 
+  scoring(calib.data = Testlet_run,
+          data = sentence.level.data,
+          person.id = "id.student",
+          task.id = "id.passage",
+          sub.task.id = "id.sentence",
+          obs.count = "wrc", 
+          max.counts = "numwords.sent",
+          time = "sec",
+          type = "orf",
+          testlet = TRUE,
+          censoring = TRUE)
+```
+
+### Scoring for Truncated Response Data
+In some circumstances, a test may be designed as a speeded test, such that many examinees do not complete all the tasks in the test. For example, the traditional administration of the ORF test only gives the student 60 seconds to read aloud the given passage, which is typically consisted of 250 words. In this case, many students do not finish reading the entire passage. The `bspam` R package can score such a data set by the censored model both for the regular and the testlet models.
+
 Please see the [package website](https://github.com/kamataak/bspam/) for more detailed usage of the package.
 
-## Citation
+## Citations
 Kara, Y., Kamata, A., Potgieter, C., & Nese, J. F. (2020). Estimating model-based oral reading fluency: A bayesian approach with a binomial-lognormal joint latent model. Educational and Psychological Measurement, 1–25.
 
 Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. Institute of Education Sciences, U.S. Department of Education. https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492
