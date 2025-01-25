@@ -303,6 +303,10 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
   error_case <- tibble()
   prep_data <- NULL
   
+  if (testlet == TRUE) {
+    censoring <- TRUE
+  }
+  
   # with censoring
   if (censoring) { # when censoring
     if (person.id != "") {
