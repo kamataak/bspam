@@ -214,6 +214,12 @@ prep <- function(data=data,person.id="",task.id="",sub.task.id="",occasion="",gr
                      data.wide=data.in)
       flog.info("End preparing data process", name = "orfrlog")
       
+      if (sentence_level == FALSE) {
+        class(output) <- "prepared.task"        
+      } else {
+        class(output) <- "prepared.sub.task"
+      }
+
       return(output)
     },
     warning = function(w) {
@@ -374,3 +380,108 @@ get_errlist <- function(passage) {
   }
   return (err_list)
 }
+#' agg.word function to aggregate word information to sentence or passage level
+#'
+#' @param data = word level data
+#' @param agg.level indicator for sentence or passage level data, default is sentence.
+#' @param person.id variable name that indicates the unique person identifier.
+#' @param passage.id variable name hat indicates 
+#'     the unique task identifier. In the ORF assessment context, it is the
+#'     passage identifier.
+#' @param word.pos.sen The column name that represents 
+#'     the word's specific position sequence in a sentence. 
+#' @param word.pos.pas The column name that represents 
+#'     the word's specific position sequence in a passage. 
+#' @param sen.pos.pas The column name that represents 
+#'     the sentence's specific position sequence in a passage. 
+#' @param start.time The column name in the data that represents the start time
+#'     that the word has been read.
+#' @param end.time The column name in the data that represents the end time
+#'     that the word has been read.
+#' @param time.scale indicator for the unit of reading time, default is centi.
+#'     the value can be centi (hundredth) or sec (second)
+#' @param score The column name in the data that represents the word correctly 
+#'     has been read. 0 or 1 with 1 means correctly read.
+#'     
+#' @import tidyverse
+#'
+#' @return data frame (sentence or passage level)
+#'
+#' @export
+agg.word <- function(data, 
+                     agg.level="sentence", 
+                     person.id="", 
+                     passage.id="", 
+                     word.pos.sen="",  
+                     word.pos.pas="",
+                     sen.pos.pas="",
+                     start.time="", 
+                     end.time="",
+                     time.scale="centi",
+                     score=""){
+  if(agg.level=="sentence"){
+    
+    col_sel <- c(person.id, passage.id, word.pos.sen, sen.pos.pas, start.time, end.time, score)
+    
+    if(all(col_sel %in% colnames(data))!=T){ 
+      stop("Error: At least one of your column names are not correct!")
+    }
+    
+    dat_sel <- data %>%
+      select(all_of(col_sel))
+    
+    col_lab <- c("person.id", "passage.id", "word.pos.sen", "sen.pos.pas", "start.time", "end.time", "score")
+    
+    colnames(dat_sel) <- col_lab
+    
+    if(time.scale!="centi" & time.scale!="sec"){
+      stop("Error: Check your time.scale argument!")
+    }else if (time.scale=="sec"){
+      dat_sel <- dat_sel %>%
+        mutate(start.time=start.time*100, 
+               end.time=end.time*100)
+    }
+    
+    dat_agg <- dat_sel %>%
+      group_by(person.id, passage.id, sen.pos.pas) %>%
+      summarise(wrc=sum(score, na.rm = T), 
+                secs=(max(end.time, na.rm = T)-min(start.time[start.time > 0], na.rm = T))/100, 
+                nwords.sen=max(word.pos.sen, na.rm = T), 
+                wcpm.sen=wrc/secs*60)
+    
+  }else if (agg.level=="passage"){
+    
+    col_sel <- c(person.id, passage.id, word.pos.pas, start.time, end.time, score)
+    
+    if(all(col_sel %in% colnames(data))!=T){ 
+      stop("Error: At least one of your column names are not correct!")
+    }
+    
+    dat_sel <- data %>%
+      select(all_of(col_sel))
+    
+    col_lab <- c("person.id", "passage.id", "word.pos.pas", "start.time", "end.time", "score")
+    
+    colnames(dat_sel) <- col_lab
+    
+    if(time.scale!="centi" & time.scale!="sec"){
+      stop("Error: Check your time.scale argument!")
+    }else if (time.scale=="sec"){
+      dat_sel <- dat_sel %>%
+        mutate(start.time=start.time*100, 
+               end.time=end.time*100)
+    }
+    
+    dat_agg <- dat_sel %>%
+      group_by(person.id, passage.id) %>%
+      summarise(wrc=sum(score, na.rm = T), 
+                secs=(max(end.time, na.rm = T)-min(start.time[start.time > 0], na.rm = T))/100, 
+                nwords.pas=max(word.pos.pas, na.rm = T), 
+                wcpm.pas=wrc/secs*60)
+  }else{
+    stop("\nIncorrect agg.level specification! It should be either `sentence` or `passage`")
+  }
+  return(dat_agg)
+  
+}
+
