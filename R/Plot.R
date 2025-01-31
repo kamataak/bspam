@@ -143,7 +143,7 @@ plot.person <- function(object, person=NULL, parameter, show.se=T, sort=F){
   
   #Change Parameter Ext.
   parameter <- person.sel %>%
-    dplyr::select(starts_with(parameter)) %>%
+    dplyr::select(starts_with(parameter), -ends_with(".obs")) %>% # exclude wcpm.obs
     colnames()
   
   if(length(parameter) == 1){
