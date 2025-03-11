@@ -216,6 +216,9 @@ plot.person <- function(object, person=NULL, parameter, show.se=T, sort=F){
     }else{
       error_x <- NULL
       error_y <- NULL
+      text=~paste("person ID: ", person.id, '<br>', 
+                  paste(parameter[1]), ':', paste(round(par_grph_x, 3)),  '<br>', 
+                  paste(parameter[2]), ':', paste(round(par_grph_y,3)))
     }
     plt_obj <- person.sel %>%
       plot_ly(x=~par_grph_x, 
@@ -224,9 +227,7 @@ plot.person <- function(object, person=NULL, parameter, show.se=T, sort=F){
               mode = "markers",
               error_x=error_x,
               error_y=error_y,
-              text=~paste("person ID: ", person.id, '<br>', 
-                          paste(parameter[1]), ':', paste(round(par_grph_x, 3)), '[', paste(round(ci_low_x,3)), ',', paste(round(ci_high_x,3)), ']', '<br>', 
-                          paste(parameter[2]), ':', paste(round(par_grph_y,3)), '[', paste(round(ci_low_y,3)), ',', paste(round(ci_high_y,3)), ']'),
+              text=text,
               showlegend=F,
               hoverinfo='text',
               textposition = "none",
