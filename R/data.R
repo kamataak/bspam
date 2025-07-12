@@ -5,7 +5,6 @@
 #' among the same 12 passages.
 #' The data is a small subset of the data collected by Nese and Kamata (2014-2018).
 #' 
-#' @usage \code{data(passage2)}
 #' @format A data frame with 847 rows and 7 variables.
 #' \describe{
 #'   \item{\code{id.student}}{unique student identifier}
@@ -152,7 +151,7 @@
 #' @source \url{https://jnese.github.io/core-blog/}
 "sentence.cens.high"
 
-#' @title Sentence-level data set with high censoring
+#' @title Sentence-level data set with low censoring
 #'
 #' @description This is an example data set. It is a sentence-level Oral Reading Fluency 
 #' assessment data set with low proportion of censoring data for 58 students who were assigned to read 4 passages 

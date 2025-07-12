@@ -1,3 +1,5 @@
+#' Bayesian Sampling Models for Passage-Level Observations
+#' 
 #' This program is free software; you can redistribute it and/or modify
 #' it under the terms of the GNU General Public License as published by
 #' the Free Software Foundation; either version 3 of the License, or
@@ -11,8 +13,6 @@
 #' A copy of the GNU General Public License is available at
 #' http://www.gnu.org/licenses/
 #'
-#'
-#' Bayesian Sampling Models for Passage-Level Observations
 #'
 #' This code defines Bayesian sampling models for estimating latent variables
 #' based on passage-level observations for a specific student. The models are
