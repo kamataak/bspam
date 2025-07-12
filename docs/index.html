@@ -5,55 +5,43 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="bspam is an R package that contains functions to fit the speed-accuracy psychometric model for count outcome data (Potgieter, Kamata &amp; Kara, 2017; Kara, Kamata, Potgieter &amp; Nese, 2020), where the accuracy is modeled by a binomial count latent variable model. For example, the use of this modeling technique allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.">
-<title>Binomial SPeed-Accuracy Modeling • bspam</title>
+<title>Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R • bspam</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Binomial SPeed-Accuracy Modeling">
-<meta property="og:description" content="bspam is an R package that contains functions to fit the speed-accuracy psychometric model for count outcome data (Potgieter, Kamata &amp; Kara, 2017; Kara, Kamata, Potgieter &amp; Nese, 2020), where the accuracy is modeled by a binomial count latent variable model. For example, the use of this modeling technique allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R">
+<meta name="description" content="This is an R package that contains functions to fit the speed-accuracy psychometric model for count outcome data (Potgieter, Kamata &amp; Kara, 2017; Kara, Kamata, Potgieter &amp; Nese, 2020), where the accuracy is modeled by a binomial count latent variable model. For example, the use of this modeling technique allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.">
+<meta property="og:description" content="This is an R package that contains functions to fit the speed-accuracy psychometric model for count outcome data (Potgieter, Kamata &amp; Kara, 2017; Kara, Kamata, Potgieter &amp; Nese, 2020), where the accuracy is modeled by a binomial count latent variable model. For example, the use of this modeling technique allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="index.html">bspam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.5</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/kamataak/bspam/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/kamataak/bspam/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-home">
 <div class="row">
@@ -64,42 +52,63 @@
 <div class="section level1">
 <h1 id="speed-accuracy-psychometric-modeling-for-binomial-count-outcome-data-with-r">Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R<a class="anchor" aria-label="anchor" href="#speed-accuracy-psychometric-modeling-for-binomial-count-outcome-data-with-r"></a>
 </h1>
-<p><code>bspam</code> is an R package that contains functions to fit the speed-accuracy psychometric model for count outcome data (Potgieter, Kamata &amp; Kara, 2017; Kara, Kamata, Potgieter &amp; Nese, 2020), where the accuracy is modeled by a binomial count latent variable model. For example, the use of this modeling technique allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.</p>
+<p><code>bspam</code> is an R package that contains functions to fit the speed-accuracy psychometric model for repeatedly measured count outcome data (Potgieter, Kamata &amp; Kara, 2017; Kara, Kamata, Potgieter &amp; Nese, 2020), where the accuracy and speed are modeled by a binomial count and a log-normal latent variable models, respectively.</p>
+<p>For example, the use of this modeling technique allows model-based calibration and scoring for oral reading fluency (ORF) assessment data. This document demonstrates some uses of the <code>bspam</code> package by using an ORF assessment data set.</p>
 <div class="section level2">
 <h2 id="installation">Installation:<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>To install <code>bspam</code> package, follow the steps below.</p>
+<p>To install the <code>bspam</code> package, follow the steps below.</p>
 <ol style="list-style-type: decimal">
-<li><p>The <code>MultiGHQuad</code> package needs to be installed. As of May 31, 2022, <code>MultiGHQuad</code> package has been removed from CRAN, so download an archive package file from <a href="https://cran.r-project.org/src/contrib/Archive/MultiGHQuad/" class="external-link uri">https://cran.r-project.org/src/contrib/Archive/MultiGHQuad/</a> and manually install.</p></li>
-<li><p>Install <code>remotes</code> package, by running the following R code.</p></li>
+<li>Install <code>remotes</code> package, by running the following R code.</li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span></code></pre></div>
-<ol start="3" style="list-style-type: decimal">
+<ol start="2" style="list-style-type: decimal">
 <li>Install <code>bspam</code> by running the following R code.</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"kamataak/bspam"</span><span class="op">)</span></span></code></pre></div>
-<p><code>bspam</code> uses JAGS and Stan for Bayesian estimation. Download JAGS installation file from <a href="https://sourceforge.net/projects/mcmc-jags/files/JAGS/" class="external-link uri">https://sourceforge.net/projects/mcmc-jags/files/JAGS/</a> as per operating system requirements and follow the installation steps. <code>bspam</code> internally uses <code>runjags</code> package as an interface to JAGS. <code>runjags</code> will be automatically installed along with other R packages that <code>bspam</code> depends on. Stan can be installed by following the steps explained here: <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started" class="external-link uri">https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started</a>. Note that these steps show the installation of <code>RStan</code>, which <code>bspam</code> uses as an internal package to run Stan code. Please follow the installation steps carefully along with recommended versions of R and RStudio to prevent any issues releated to running Stan with <code>bspam</code>.</p>
+<div class="section level3">
+<h3 id="optional">Optional:<a class="anchor" aria-label="anchor" href="#optional"></a>
+</h3>
+<p><code>bspam</code> can implement a fully Bayesian approach for the calibration of model parameters and scoring by using JAGS or Stan. If you desire to use the fully Bayesian estimation, please download JAGS and Stan software on your computer.</p>
+<p>To download and install JAGS, download the installation file from <a href="https://sourceforge.net/projects/mcmc-jags/files/JAGS/" class="external-link uri">https://sourceforge.net/projects/mcmc-jags/files/JAGS/</a> as per operating system requirements and follow the installation steps. <code>bspam</code> internally uses <code>runjags</code> package as an interface to JAGS. <code>runjags</code> package needs to be installed separately once JAGS is installed.</p>
+<p>Stan can be installed by following the steps explained here: <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started" class="external-link uri">https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started</a>. Note that these steps show the installation of <code>RStan</code>, which <code>bspam</code> uses as an internal package to run Stan code. Please follow the installation steps carefully along with recommended versions of R and RStudio to prevent any issues releated to running Stan with <code>bspam</code>.</p>
+</div>
 </div>
 <div class="section level2">
-<h2 id="basic-usage">Basic Usage:<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
+<h2 id="basic-usage-task-level-data-analysis">Basic Usage: Task-level Data Analysis<a class="anchor" aria-label="anchor" href="#basic-usage-task-level-data-analysis"></a>
 </h2>
-<p>It is recommended that the data are prepared as a long-format data frame, where each row is data for a unique case, namely, a specific task from a specific student in a specific testing occasion. The data set should minimally contain the following 7 variables: (1) individual ID, (2) group ID, (3) testing occasion ID, (4) task ID, (5) the maximum number of attempts in the task, (6) the number of successes in the task, and (7) the time took to complete the task.</p>
-<p>Variable names and the order of the variables can be flexible in the data frame. When running functions in this package, variable names for required variables need to be specified.</p>
-<p>The <code>bspam</code> package comes with several data sets. To demonstrate some basic usage of key functions in the package, an example ORF assessment data set is used here. In the context of an ORF assessment, a task is a passage given to the student to read aloud, and an attempt is student’s reading on a word in the passage, which is scored correct (i.e., success) or not. The number of successes in the task is the number of words correctly read in the passage.</p>
-<p>The data set <code>passage2</code> is a passage-level student data and consisted of reading accuracy and time data for 12 passages from 85 students. Although the 85 students were assigned to all 12 passages, the number of passages read by the 85 students varied from 2 to 12 passages. The number of students per passage were between 59 to 79.</p>
-<p>Load required packages, and load/view the example data set <code>passage2</code>.</p>
+<div class="section level3">
+<h3 id="data-preparation">Data Preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
+</h3>
+<p>It is required that the data are prepared as a long-format data, where each row is data for a unique case, namely, a specific task from a specific person in a specific testing occasion. In the context of ORF assessment, each row is data for a specific passage from a specific student in a specific testing occasion. A data file can be prepared in any file format that is readable into R.</p>
+<p>For example, a CSV formatted data can be read into R by using the <code><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv()</a></code> function that is part of the base packages. Also, data files in some statistical software formats can be read in to R with functions in packages, such as the <code>haven</code> package. For example, <code>read_spss()</code> function can be used to read in an SPSS formatted data file into R.</p>
+<p>The data set should minimally contain the following 7 variables: (1) individual ID, (2) group ID, (3) testing occasion ID, (4) task ID, (5) the maximum number of attempts in the task, (6) the number of successes in the task, and (7) the time took to complete the task. Note if the data are coming from only one testing occasion and one group, the variables (2) group ID, and (3) testing occasion ID should contain an arbitrary constant value, such as all 1’s.</p>
+<p>Variable names and the order of the variables can be flexible in the data frame. When running functions in this package, variable names for required variables need to be specified, as shown in examples below.</p>
+<p>Then, the data need to be read into R as a data frame.</p>
+</div>
+<div class="section level3">
+<h3 id="data-set-for-the-demonstration">Data Set For the Demonstration<a class="anchor" aria-label="anchor" href="#data-set-for-the-demonstration"></a>
+</h3>
+<p>The <code>bspam</code> package comes with several example data sets in the ORF assessment context. To demonstrate some basic usage of key functions in the package, a sample ORF assessment data set is used here. In the context of an ORF assessment, a task is a passage given to the student to read aloud, and an attempt is student’s reading on a word in the passage, which is scored correct (i.e., success) or not. Accordingly, the number of successes in the task is the number of words correctly read in the passage.</p>
+<p>The data set <code>passage2</code> is a passage-level student data and consisted of reading accuracy and time data for 12 passages from 85 students. Although the 85 students were assigned to all 12 passages, the number of passages read by the 85 students varied from 2 to 12 passages. The number of students per passage were between 59 to 79. This is a small subset of the data collected by Nese and Kamata (2014-2018).</p>
+</div>
+<div class="section level3">
+<h3 id="load-packages">Load Packages<a class="anchor" aria-label="anchor" href="#load-packages"></a>
+</h3>
+<p>Load required packages, and view the example data set <code>passage2</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kamataak/bspam" class="external-link">bspam</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">passage2</span><span class="op">)</span></span></code></pre></div>
+</div>
 <div class="section level3">
-<h3 id="passage-calibration">Passage Calibration<a class="anchor" aria-label="anchor" href="#passage-calibration"></a>
+<h3 id="task-ie-passage-calibration">Task (i.e., Passage) Calibration<a class="anchor" aria-label="anchor" href="#task-ie-passage-calibration"></a>
 </h3>
 <p>Calibrate the passages using the <code><a href="reference/fit.model.html">fit.model()</a></code> function by implementing the Monte Carlo EM algorithm described in Potgieter et al. (2017).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">MCEM_run</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit.model.html">fit.model</a></span><span class="op">(</span>person.data<span class="op">=</span><span class="va">passage2</span>,</span>
+<code class="sourceCode R"><span><span class="va">MCEM_run</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit.model.html">fit.model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">passage2</span>,</span>
 <span>                      person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
 <span>                      task.id <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
 <span>                      max.counts <span class="op">=</span> <span class="st">"numwords.pass"</span>,</span>
@@ -107,84 +116,75 @@
 <span>                      time <span class="op">=</span> <span class="st">"sec"</span>,</span>
 <span>                      k.in <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>                      reps.in <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>                      est <span class="op">=</span> <span class="st">"mcem"</span>,</span>
-<span>                      verbose<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span>                      se<span class="op">=</span><span class="st">"analytic"</span><span class="op">)</span></span>
+<span>                      est <span class="op">=</span> <span class="st">"mcem"</span><span class="op">)</span></span>
 <span><span class="va">MCEM_run</span></span></code></pre></div>
-<p>By default, the standard errors for the model parameters are not estimated. This will allow one to increase the number of Monte-Carlo iterations <code>reps.in</code> to improve the quality of the model parameter estimates, while minimizing the computation time. The number of <code>reps.in</code> should be 50 to 100 in realistic calibrations. SE’s for model parameters are not required for running the <code><a href="reference/scoring.html">scoring()</a></code> function to estimate WCPM scores in the next step. If standard errors for model parameters are desired, an additional argument <code>se = "analytic"</code> or <code>se = "bootstrap"</code> needs to be added to the <code><a href="reference/fit.model.html">fit.model()</a></code> function.</p>
-<p>Passage calibration can also be done by using the <code>est="mcmc"</code> option, which implements a fully Bayesian approach through Gibbs sampling or Hamiltonian Monte Carlo. <code>bspam</code> employs JAGS and Stan, respectively, for the two Bayesian estimation methods. Currently, JAGS is used by default for estimations in the calibration data due to faster sampling with missing observations. Stan will be used in case of complete data, namely, if all students read all passages. <code>bspam</code> runs JAGS in auto mode, which does not require the user to supply any specifications for Bayesian estimation (e.g., number of the iterations) or monitor convergence. Standard errors are provided by default as the standard deviations of the posterior distributions.</p>
+<p>By default, the standard errors for the model parameters are not estimated. This will allow one to increase the number of Monte-Carlo iterations <code>reps.in</code> to improve the quality of the model parameter estimates, while minimizing the computation time. The number of <code>reps.in</code> should be 50 to 100 in realistic calibrations. Also note that <code>k.in</code> is the number of imputations for the MCEM algorithm, where the default is 5. Note that SE’s for model parameters are not required for running the <code><a href="reference/scoring.html">scoring()</a></code> function to estimate latent factor scores and WCPM scores in the next step. If standard errors for model parameters are desired, an additional argument <code>se = "analytic"</code> or <code>se = "bootstrap"</code> needs to be added to the <code><a href="reference/fit.model.html">fit.model()</a></code> function.</p>
+<p>Passage calibration can also be done by using the <code>est = "bayes"</code> option, which implements a fully Bayesian approach through Gibbs sampling or Hamiltonian Monte Carlo with JAGS and Stan, respectively. Currently, Stan will be used with complete data, that is, if all students have data on all passages. Otherwise, JAGS will be used as it provides faster computations with missing observations. Note that <code>bspam</code> runs JAGS in the auto mode, which does not require the user to supply any specifications for Bayesian estimation (e.g., number of the iterations) or monitor convergence. The standard deviations of the posterior distributions are reported as the standard errors. A specification for the <code><a href="reference/fit.model.html">fit.model()</a></code> function can look like as follows.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Bayes_run</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit.model.html">fit.model</a></span><span class="op">(</span>person.data<span class="op">=</span><span class="va">passage2</span>,</span>
+<code class="sourceCode R"><span><span class="va">Bayes_run</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit.model.html">fit.model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">passage2</span>,</span>
 <span>                       person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
 <span>                       task.id <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
 <span>                       max.counts <span class="op">=</span> <span class="st">"numwords.pass"</span>,</span>
 <span>                       obs.counts <span class="op">=</span> <span class="st">"wrc"</span>,</span>
 <span>                       time <span class="op">=</span> <span class="st">"sec"</span>,</span>
-<span>                       est <span class="op">=</span> <span class="st">"mcmc"</span>,</span>
+<span>                       est <span class="op">=</span> <span class="st">"bayes"</span>,</span>
 <span>                       verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">Bayes_run</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="estimating-wcpm-scores-1">Estimating WCPM scores 1<a class="anchor" aria-label="anchor" href="#estimating-wcpm-scores-1"></a>
+<h3 id="scoring-estimating-latent-factor-scores-and-wcpm-scores-1">Scoring: Estimating Latent Factor Scores and WCPM Scores 1<a class="anchor" aria-label="anchor" href="#scoring-estimating-latent-factor-scores-and-wcpm-scores-1"></a>
 </h3>
-<p>To estimate WCPM scores, we can do in two steps.</p>
-<p><strong>Step 1:</strong> Prepare the data using the <code><a href="reference/prep.html">prep()</a></code> function, where required data for the <code><a href="reference/scoring.html">scoring()</a></code> function are prepared, including changing variable names and a generation of the natural-logarithm of the time data.</p>
-<p>The output from the <code><a href="reference/prep.html">prep()</a></code> function is a list of two components. The <code>data.long</code> component is a data frame, which is a long format of student response data, and the <code>data.wide</code> is list that contains four components, including a wide format of the data, as well as other information such as the number of passages and the number of words for each passage.</p>
-<p>One benefit of this two-step approach is that we can use another utility function <code><a href="reference/get.cases.html">get.cases()</a></code> to generate a list of unique cases with the output of the <code><a href="reference/prep.html">prep()</a></code> function. This list can be useful when our interest is to estimate WCPM scores only for selected cases.</p>
+<p>In order to estimate latent factor scores and/or WCPM scores, the <code><a href="reference/scoring.html">scoring()</a></code> function needs to be run.</p>
+<p>Note that we use the output object <code>MCEM_run</code> from the previous passage calibration phase. By default (<code>type = "general"</code>), only factor scores (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>τ</mi><annotation encoding="application/x-tex">\tau</annotation></semantics></math>) and their standard errors are reported. By providing an argument <code>type = "orf"</code>, WCPM scores and their standard errors are also reported. Also, WCPM scores and/or factor scores, and their standard errors will be estimated for all cases in the data by default.</p>
+<p>There are several estimator options and standard error estimation options: maximum likelihood (MLE), maximum a posteriori (MAP), expected a posteriori (EAP), and fully Bayesian approach. In this example, maximum a priori (MAP) estimators for scoring and analytic approach for estimating standard errors are used.</p>
+<div class="section level4">
+<h4 id="scoring-for-all-cases">Scoring for All Cases<a class="anchor" aria-label="anchor" href="#scoring-for-all-cases"></a>
+</h4>
+<p>To estimate WCPM scores for all observations in the data set <code>passage2</code>, we use the <code><a href="reference/scoring.html">scoring()</a></code> function as follows.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/prep.html">prep</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">passage2</span>,</span>
-<span>             person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
-<span>             occasion <span class="op">=</span> <span class="st">"occasion"</span>,</span>
-<span>             group <span class="op">=</span> <span class="st">"grade"</span>,</span>
-<span>             task.id <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
-<span>             max.counts <span class="op">=</span> <span class="st">"numwords.pass"</span>,</span>
-<span>             obs.counts <span class="op">=</span> <span class="st">"wrc"</span>,</span>
-<span>             time <span class="op">=</span> <span class="st">"sec"</span><span class="op">)</span></span></code></pre></div>
-<p>Generate a list of unique cases:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/get.cases.html">get.cases</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">data.long</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Step 2:</strong> Run the <code><a href="reference/scoring.html">scoring()</a></code> function to estimate WCPM scores. Note that we pass the output object <code>MCEM_run</code> from the passage calibration phase, as well as the manipulated data <code>data.long</code> from Step 1. By default, WCPM scores will be estimated for all cases in the data. Additionally, there are several estimator options and standard error estimation options. In this example, maximum a priori (MAP) estimators for model parameter estimation and analytic approach to estimate standard errors are used.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">WCPM_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data<span class="op">=</span><span class="va">MCEM_run</span>, </span>
-<span>                    person.data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data.long</span>,</span>
+<span>                    data <span class="op">=</span> <span class="va">passage2</span>,</span>
+<span>                    person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
+<span>                    occasion <span class="op">=</span> <span class="st">"occasion"</span>,</span>
+<span>                    group <span class="op">=</span> <span class="st">"grade"</span>,</span>
+<span>                    task.id <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
+<span>                    max.counts <span class="op">=</span> <span class="st">"numwords.pass"</span>,</span>
+<span>                    obs.counts <span class="op">=</span> <span class="st">"wrc"</span>,</span>
+<span>                    time <span class="op">=</span> <span class="st">"sec"</span>,</span>
 <span>                    est <span class="op">=</span> <span class="st">"map"</span>, </span>
-<span>                    se <span class="op">=</span> <span class="st">"analytic"</span><span class="op">)</span></span>
+<span>                    se <span class="op">=</span> <span class="st">"analytic"</span>,</span>
+<span>                    type<span class="op">=</span><span class="st">"general"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">WCPM_all</span><span class="op">)</span></span></code></pre></div>
-<p>If the computations of WCPM scores for only selected cases are desired, we can create a list of cases and provide the list by the <code>cases =</code> argument. The list of cases has to be a one-variable data frame with a variable name <code>cases</code>. The format of case values should be: <code>studentid_season</code>, just like the output of the <code><a href="reference/get.cases.html">get.cases()</a></code> function shown earlier in this document.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sample.cases</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>cases <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2033_fall"</span>, <span class="st">"2043_fall"</span>, <span class="st">"2089_fall"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">WCPM_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data<span class="op">=</span><span class="va">MCEM_run</span>, </span>
-<span>                       person.data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data.long</span>,</span>
-<span>                       cases <span class="op">=</span> <span class="va">sample.cases</span>,</span>
-<span>                       est <span class="op">=</span> <span class="st">"map"</span>, </span>
-<span>                       se <span class="op">=</span> <span class="st">"analytic"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">WCPM_sample</span><span class="op">)</span></span></code></pre></div>
-<p>Also, we can specify a set of passages to scale the WCPM scores. If WCPM scores are scaled with a set of passages that is different from the set of passages the student read, the set of passages is referred to as an <strong>external passage set</strong>.</p>
-<p>The use of an external passage set is particularly important to make the estimated WCPM scores to be comparable between students who read different sets of passages, as well as within students for longitudinal data, where a student are likely to read different sets of passages.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">WCPM_sample_ext1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data<span class="op">=</span><span class="va">MCEM_run</span>, </span>
-<span>                            person.data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data.long</span>,</span>
-<span>                            cases <span class="op">=</span> <span class="va">sample.cases</span>, </span>
-<span>                            external <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"32004"</span>,<span class="st">"32010"</span>,<span class="st">"32015"</span>,<span class="st">"32016"</span>,<span class="st">"33003"</span>,<span class="st">"33037"</span><span class="op">)</span>,</span>
-<span>                            est <span class="op">=</span> <span class="st">"map"</span>, </span>
-<span>                            se <span class="op">=</span> <span class="st">"analytic"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">WCPM_sample_ext1</span><span class="op">)</span></span></code></pre></div>
-<p>As mentioned above, fully Bayesian approach can also be used as an estimator in <code><a href="reference/scoring.html">scoring()</a></code> function. The output object from the passage calibration phase should be used as per <code>calib.data</code> argument and it can be the one obtained from <code><a href="reference/fit.model.html">fit.model()</a></code> by using the fully Bayesian or the “mcem” estimator. Note that if <code>est="mcmc"</code> is used, there is no need to use the <code>se=</code> argument. Standard errors will be provided by default as the standard deviations of the posterior distributions along with 95% high density intervals (i.e., confidence intervals). Here is an example of using fully Bayesian approach for estimating the same WCPM scores from external passages used in the former example:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">WCPM_sample_ext1_bayes</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data<span class="op">=</span><span class="va">MCEM_run</span>, </span>
-<span>                                  person.data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data.long</span>,</span>
-<span>                                  cases <span class="op">=</span> <span class="va">sample.cases</span>, </span>
-<span>                                  external <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"32004"</span>,<span class="st">"32010"</span>,<span class="st">"32015"</span>,<span class="st">"32016"</span>,<span class="st">"33003"</span>,<span class="st">"33037"</span><span class="op">)</span>,</span>
-<span>                                  est <span class="op">=</span> <span class="st">"mcmc"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">WCPM_sample_ext1_bayes</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="estimating-wcpm-scores-2">Estimating WCPM scores 2<a class="anchor" aria-label="anchor" href="#estimating-wcpm-scores-2"></a>
-</h3>
-<p><strong>Alternatively, we can run the <code><a href="reference/scoring.html">scoring()</a></code> function without Step 1</strong> above, by entering the original data <code>passage2</code> directly as follows.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">WCPM_sample_ext2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data<span class="op">=</span><span class="va">MCEM_run</span>, </span>
-<span>                            person.data <span class="op">=</span> <span class="va">passage2</span>,</span>
+<div class="section level4">
+<h4 id="scoring-for-selected-cases">Scoring for Selected Cases<a class="anchor" aria-label="anchor" href="#scoring-for-selected-cases"></a>
+</h4>
+<p>If the computations of WCPM scores and/or factor scores for only selected cases are desired, a list of cases needs to be provided by the <code>cases =</code> argument. The list of cases has to be a one-variable data frame with a variable name <code>cases</code>. The format of case values should be: <code>personid_occasion</code>. This one-variable data frame can be created manually, just like shown below. Also, it can be generated by the <code><a href="reference/get.cases.html">get.cases()</a></code> function, which will be shown later in this document.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sample.cases</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>cases <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2033_fall"</span>, <span class="st">"2043_fall"</span>, <span class="st">"2089_fall"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">WCPM_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data <span class="op">=</span> <span class="va">MCEM_run</span>, </span>
+<span>                       data <span class="op">=</span> <span class="va">passage2</span>,</span>
+<span>                       person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
+<span>                       occasion <span class="op">=</span> <span class="st">"occasion"</span>,</span>
+<span>                       group <span class="op">=</span> <span class="st">"grade"</span>,</span>
+<span>                       task.id <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
+<span>                       max.counts <span class="op">=</span> <span class="st">"numwords.pass"</span>,</span>
+<span>                       obs.counts <span class="op">=</span> <span class="st">"wrc"</span>,</span>
+<span>                       time <span class="op">=</span> <span class="st">"sec"</span>,</span>
+<span>                       cases <span class="op">=</span> <span class="va">sample.cases</span>,</span>
+<span>                       est <span class="op">=</span> <span class="st">"eap"</span>, </span>
+<span>                       se <span class="op">=</span> <span class="st">"analytic"</span>,</span>
+<span>                       type <span class="op">=</span> <span class="st">"orf"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">WCPM_sample</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="scoring-with-external-task-set">Scoring with External Task Set<a class="anchor" aria-label="anchor" href="#scoring-with-external-task-set"></a>
+</h4>
+<p>Also, we can specify a set of tasks (i.e., passages) to scale the WCPM scores. If WCPM scores are scaled with a set of passages that is different from the set of passages the student read, the set of passages is referred to as an <strong>external passage set</strong> for the ORF assessment context, or <strong>external task set</strong> in general.</p>
+<p>The use of an external passage set is particularly important in the context of ORF assessment to make the estimated WCPM scores to be comparable between students who read different sets of passages, as well as within students for longitudinal data, where a student is likely to read different sets of passages.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">WCPM_sample_ext1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data <span class="op">=</span> <span class="va">MCEM_run</span>, </span>
+<span>                            data <span class="op">=</span> <span class="va">passage2</span>,</span>
 <span>                            person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
 <span>                            occasion <span class="op">=</span> <span class="st">"occasion"</span>,</span>
 <span>                            group <span class="op">=</span> <span class="st">"grade"</span>,</span>
@@ -194,15 +194,120 @@
 <span>                            time <span class="op">=</span> <span class="st">"sec"</span>,</span>
 <span>                            cases <span class="op">=</span> <span class="va">sample.cases</span>, </span>
 <span>                            external <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"32004"</span>,<span class="st">"32010"</span>,<span class="st">"32015"</span>,<span class="st">"32016"</span>,<span class="st">"33003"</span>,<span class="st">"33037"</span><span class="op">)</span>,</span>
+<span>                            est <span class="op">=</span> <span class="st">"eap"</span>, </span>
+<span>                            se <span class="op">=</span> <span class="st">"analytic"</span>,</span>
+<span>                            type <span class="op">=</span> <span class="st">"orf"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">WCPM_sample_ext1</span><span class="op">)</span></span></code></pre></div>
+<p>A fully Bayesian approach can also be used as an estimator in the <code><a href="reference/scoring.html">scoring()</a></code> function. Note that if <code>est="bayes"</code> is specified, there is no need to use the <code>se=</code> argument. By default, the standard deviations of the posterior distributions are reported as the standard errors, along with 95% high density intervals, which is analogous to 95% confidence intervals. Here is an example of using the fully Bayesian approach for estimating WCPM scores from the same external passages used in the previous example.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">WCPM_sample_ext1_bayes</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data<span class="op">=</span><span class="va">MCEM_run</span>, </span>
+<span>                                  data <span class="op">=</span> <span class="va">passage2</span>,</span>
+<span>                                  person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
+<span>                                  occasion <span class="op">=</span> <span class="st">"occasion"</span>,</span>
+<span>                                  group <span class="op">=</span> <span class="st">"grade"</span>,</span>
+<span>                                  task.id <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
+<span>                                  max.counts <span class="op">=</span> <span class="st">"numwords.pass"</span>,</span>
+<span>                                  obs.counts <span class="op">=</span> <span class="st">"wrc"</span>,</span>
+<span>                                  time <span class="op">=</span> <span class="st">"sec"</span>,</span>
+<span>                                  cases <span class="op">=</span> <span class="va">sample.cases</span>, </span>
+<span>                                  external <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"32004"</span>,<span class="st">"32010"</span>,<span class="st">"32015"</span>,<span class="st">"32016"</span>,<span class="st">"33003"</span>,<span class="st">"33037"</span><span class="op">)</span>,</span>
+<span>                                  est <span class="op">=</span> <span class="st">"bayes"</span>,</span>
+<span>                                  type <span class="op">=</span> <span class="st">"orf"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">WCPM_sample_ext1_bayes</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="scoring-estimating-latent-factor-scores-and-wcpm-scores-2">Scoring: Estimating Latent Factor Scores and WCPM Scores 2<a class="anchor" aria-label="anchor" href="#scoring-estimating-latent-factor-scores-and-wcpm-scores-2"></a>
+</h3>
+<p>Alternatively, we can run the <code><a href="reference/scoring.html">scoring()</a></code> in two steps.</p>
+<p><strong>Step 1:</strong> Prepare the data using the <code><a href="reference/prep.html">prep()</a></code> function, where required data set for the <code><a href="reference/scoring.html">scoring()</a></code> function is prepared, including changing variable names and a generation of the natural-logarithm of the time data.</p>
+<p>The output from the <code><a href="reference/prep.html">prep()</a></code> function is a list of two components. The <code>data.long</code> component is a data frame, which is a long format of student response data, and the <code>data.wide</code> is list that contains four components, including a wide format of the data, as well as other information such as the number of passages and the number of words for each passage.</p>
+<p>One benefit of this two-step approach is that we can use another utility function <code><a href="reference/get.cases.html">get.cases()</a></code> to generate a list of unique cases with the output of the <code><a href="reference/prep.html">prep()</a></code> function. This list can be useful when our interest is to estimate WCPM scores only for selected cases.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/prep.html">prep</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">passage2</span>,</span>
+<span>             person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
+<span>             occasion <span class="op">=</span> <span class="st">"occasion"</span>,</span>
+<span>             group <span class="op">=</span> <span class="st">"grade"</span>,</span>
+<span>             task.id <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
+<span>             max.counts <span class="op">=</span> <span class="st">"numwords.pass"</span>,</span>
+<span>             obs.counts <span class="op">=</span> <span class="st">"wrc"</span>,</span>
+<span>             time <span class="op">=</span> <span class="st">"sec"</span><span class="op">)</span></span></code></pre></div>
+<p>Generate a list of unique cases:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">all.cases</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get.cases.html">get.cases</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">data.long</span><span class="op">)</span></span>
+<span><span class="va">all.cases</span></span></code></pre></div>
+<p><strong>Step 2:</strong> Run the <code><a href="reference/scoring.html">scoring()</a></code> function to estimate WCPM scores. Note that we pass the output object <code>MCEM_run</code> from the passage calibration phase, as well as the manipulated data <code>data.long</code> from Step 1. By default, WCPM scores will be estimated for all cases in the data. Additionally, there are several estimator options and standard error estimation options. In this example, maximum a priori (MAP) estimators for model parameter estimation and analytic approach to estimate standard errors are used.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">WCPM_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data<span class="op">=</span><span class="va">MCEM_run</span>, </span>
+<span>                    data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data.long</span>,</span>
+<span>                    est <span class="op">=</span> <span class="st">"map"</span>, </span>
+<span>                    se <span class="op">=</span> <span class="st">"analytic"</span>,</span>
+<span>                    type <span class="op">=</span> <span class="st">"orf"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">WCPM_all</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">WCPM_sample_ext2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data<span class="op">=</span><span class="va">MCEM_run</span>, </span>
+<span>                            data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data.long</span>,</span>
+<span>                            cases <span class="op">=</span> <span class="va">sample.cases</span>, </span>
+<span>                            external <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"32004"</span>,<span class="st">"32010"</span>,<span class="st">"32015"</span>,<span class="st">"32016"</span>,<span class="st">"33003"</span>,<span class="st">"33037"</span><span class="op">)</span>,</span>
 <span>                            est <span class="op">=</span> <span class="st">"map"</span>, </span>
-<span>                            se <span class="op">=</span> <span class="st">"analytic"</span><span class="op">)</span></span>
+<span>                            se <span class="op">=</span> <span class="st">"analytic"</span>,</span>
+<span>                            type <span class="op">=</span> <span class="st">"orf"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">WCPM_sample_ext2</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="other-features">Other Features<a class="anchor" aria-label="anchor" href="#other-features"></a>
+</h2>
+<div class="section level3">
+<h3 id="fitting-and-scoring-by-the-testlet-model">Fitting and Scoring by the Testlet Model<a class="anchor" aria-label="anchor" href="#fitting-and-scoring-by-the-testlet-model"></a>
+</h3>
+<p>For example, when an ORF data is consisted of sentence-level data, it is reasonable to think that the data on sentences within the same passage are more similar than data on sentences from other passages. Thus, the use of a testlet-version of the model is reasonable to implement. The <code>bspam</code> R package can fit and score the data by the testlet model both by the MCEM and Bayes.</p>
+<p>The example data set <code>sentence.level.data</code> is a sentence-level student data and consisted of reading accuracy and time data for 4 passages from 58 students. The 4 passages were consisted of 4 to 8 sentences, totalling 23 sentences. All 58 students read all 4 passages completely. This is a small subset of the data collected by Nese and Kamata (2014-2018).</p>
+<p>For example the testlet model can be fitted to this data set by the MCEM by:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Testlet_run</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit.model.html">fit.model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sentence.level.data</span>,</span>
+<span>                                 person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
+<span>                                 task.id <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
+<span>                                 sub.task.id <span class="op">=</span> <span class="st">"id.sentence"</span>,</span>
+<span>                                 obs.count <span class="op">=</span> <span class="st">"wrc"</span>, </span>
+<span>                                 max.counts <span class="op">=</span> <span class="st">"numwords.sent"</span>,</span>
+<span>                                 time <span class="op">=</span> <span class="st">"sec"</span>,</span>
+<span>                                 testlet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>The estimated testlet parameter is reported as part of the hyper-parameters.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Testlet_run</span><span class="op">$</span><span class="va">hyper.param</span></span></code></pre></div>
+<p>The estimated model paramters can be extracted by:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Testlet_run</span><span class="op">$</span><span class="va">task.param</span></span></code></pre></div>
+<p>The scoring by the MAP can be done for this data set by:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Testlet_scoring</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data <span class="op">=</span> <span class="va">Testlet_run</span>,</span>
+<span>          data <span class="op">=</span> <span class="va">sentence.level.data</span>,</span>
+<span>          person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
+<span>          task.id <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
+<span>          sub.task.id <span class="op">=</span> <span class="st">"id.sentence"</span>,</span>
+<span>          obs.count <span class="op">=</span> <span class="st">"wrc"</span>, </span>
+<span>          max.counts <span class="op">=</span> <span class="st">"numwords.sent"</span>,</span>
+<span>          time <span class="op">=</span> <span class="st">"sec"</span>,</span>
+<span>          type <span class="op">=</span> <span class="st">"orf"</span>,</span>
+<span>          testlet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>          censoring <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="scoring-for-truncated-response-data">Scoring for Truncated Response Data<a class="anchor" aria-label="anchor" href="#scoring-for-truncated-response-data"></a>
+</h3>
+<p>In some circumstances, a test may be designed as a speeded test, such that many examinees do not complete all the tasks in the test. For example, the traditional administration of the ORF test only gives the student 60 seconds to read aloud the given passage, which is typically consisted of 250 words. In this case, many students do not finish reading the entire passage. The <code>bspam</code> R package can score such a data set by the censored model both for the regular and the testlet models.</p>
 <p>Please see the <a href="https://github.com/kamataak/bspam/" class="external-link">package website</a> for more detailed usage of the package.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+<h2 id="citations">Citations<a class="anchor" aria-label="anchor" href="#citations"></a>
 </h2>
+<p>Kara, Y., Kamata, A., Potgieter, C., &amp; Nese, J. F. (2020). Estimating model-based oral reading fluency: A bayesian approach with a binomial-lognormal joint latent model. Educational and Psychological Measurement, 1–25.</p>
+<p>Nese, J. F. T. &amp; Kamata, A. (2014-2018). Measuring Oral Reading Fluency: Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. Institute of Education Sciences, U.S. Department of Education. <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492" class="external-link uri">https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492</a></p>
+<p>Potgieter, N., Kamata, A., &amp; Kara, Y. (2017). An EM algorithm for estimating an oral reading speed and accuracy model. Manuscript submitted for publication.</p>
+<p>Qiao, X, Potgieter, N., &amp; Kamata, A. (2023). Likelihood Estimation of Model-based Oral Reading Fluency. Manuscript submitted for publication.</p>
 </div>
 <div class="section level2">
 <h2 id="copyright-statement">Copyright Statement<a class="anchor" aria-label="anchor" href="#copyright-statement"></a>
@@ -240,10 +345,11 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Akihito Kamata <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-9570-1464" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Cornelis J. Potgieter <br><small class="roles"> Author </small>  </li>
+<li>Cornelis J. Potgieter <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-1995-6817" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Joseph F. T. Nese <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-9878-7395" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Yusuf Kara <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-0691-0630" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Sarunya Somsong <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-4974-7346" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Xin Qiao <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-3248-7859" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Kuo Wang <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-4925-0591" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
@@ -255,21 +361,19 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by Akihito Kamata, Cornelis J. Potgieter, Joseph F. T. Nese, Yusuf Kara, Sarunya Somsong, Kuo Wang.</p>
+  <p>Developed by Akihito Kamata, Cornelis J. Potgieter, Joseph F. T. Nese, Yusuf Kara, Sarunya Somsong, Xin Qiao, Kuo Wang.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
