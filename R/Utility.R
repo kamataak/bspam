@@ -202,12 +202,13 @@ prep <- function(data=data,person.id="",task.id="",sub.task.id="",occasion="",gr
                              select(-person.id))
         
         I <- length(N)
+        N.vec <- N %>% slice(1)
         N.matrix <- matrix(rep(as.matrix(N),dim(Y)[1]),nrow = dim(Y)[1], byrow = TRUE)
         logT10 <- logT - log(N.matrix) + log(10)
         
         logT10 <- logT10[, numeric_order]
         
-        data.in <- list(Y = Y, logT10 = logT10, N = N.matrix, I = I)
+        data.in <- list(Y = Y, logT10 = logT10, N = N.matrix, N.vec=N.vec, I = I)
       }
       
       output <- list(data.long=dat,
