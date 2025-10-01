@@ -291,16 +291,24 @@ model {
 # Scenario 4: Multiple Observed and No Censored Sentence
 testlet_scoring_multi_obs_no_cens_sentence <- "
 data {
-  int<lower=0> N_obs;             // Number of observed values
-  int<lower=0> K;                 // Number of passages with data
-  int<lower=0> Passage_obs[N_obs]; // Passage indices of observed values
+  int<lower=0> N_obs;             // Number of sentences read
+  int<lower=0> N_score;           // Number of sentences for scoring
+  int<lower=0> K;                 // Number of passages read
+  int<lower=0> K_score;           // Number of passages for scoring
+  int<lower=0> Passage_obs[N_obs]; // Passage indicators for sentences read
+  int<lower=0> Passage_score[N_score]; //Passage indicators for scoring
   int<lower=0> Count_obs[N_obs];        // Array of observed values
   real logT10_obs[N_obs];        // Array of observed values
   int<lower=0> MaxN_obs[N_obs]; // Sentence lengths of observed values
-  real a_obs[N_obs];
+  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
+  real a_obs[N_obs]; // All _obs params are for sentences of passages read!
   real b_obs[N_obs];
   real alpha_obs[N_obs];
   real beta_obs[N_obs];
+  real a_score[N_score]; // All _score params are for sentences of scoring passages
+  real b_score[N_score];
+  real alpha_score[N_score];
+  real beta_score[N_score];
   real<lower=0> gamma1;
   real<lower=0> gamma2;
   real<lower=0> sigma;
@@ -347,7 +355,42 @@ model {
     logT10_obs[i] ~ normal(mu_obs, 1/alpha_obs[i]);
   }
 
-}"
+}
+
+// The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
+// Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
+generated quantities{
+  real tim_ex[N_score]; //Expeced time matrix
+  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  real <lower=0> exp_cnt; //Model-based obs.counts
+  real <lower=0> exp_tim; //Model-based secs
+  real <lower=0> wcpm; //Model-based WCPM
+  
+  real V1_score[K_score]; 
+  real V2_score[K_score]; 
+  real U1_score[K_score];
+  real U2_score[K_score];
+  
+  for (k in 1:K_score){
+        V1_score[k] = normal_rng(0, 1);
+        V2_score[k] = normal_rng(0, 1);
+        U1_score[k] = V1_score[k];
+        U2_score[k] = rhoTestlet*V1_score[k] + sqrt(1-rhoTestlet^2)*V2_score[k];
+  }
+
+ for(i in 1:N_score){
+    real p_score; real mu_score;
+    p_score = Phi(fmax(-5, fmin(5, a_score[i] * (theta1 + gamma1 * U1_score[Passage_score[i]]) / sqrt(1 + gamma1^2) - b_score[i])));
+    mu_score = beta_score[i]-sigma*(theta2+gamma2*U2_score[Passage_score[i]])/sqrt(1+gamma2^2);
+    cnt_ex[i] = p_score * MaxN_score[i];
+    tim_ex[i]=(exp(mu_score + log(MaxN_score[i]) -log(10) + 0.5 * 1/(square(alpha_score[i]))));
+  }
+    exp_cnt=sum(cnt_ex);
+    exp_tim=sum(tim_ex);
+    wcpm=exp_cnt/exp_tim*60;
+}
+
+"
 
 # Scenario 5: No Observed and Multiple Censored Sentence
 testlet_scoring_no_obs_multi_cens_sentence <- " 
