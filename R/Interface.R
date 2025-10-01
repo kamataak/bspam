@@ -309,6 +309,24 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
   
   # with censoring
   if (censoring) { # when censoring
+    
+    #Check if scoring will be done for specific cases of data. 
+    if(is.character(cases)){
+      data <- data
+    }else{
+      colnames(cases) <- "cases"
+      id_col <- which(colnames(data)==person.id)
+      if (occasion == ""){ 
+        id_sel <- unlist(data[,id_col], use.names = F) %in% cases$cases
+        data <- data[id_sel,]
+      }else {
+        occ_col <- which(colnames(data)==occasion)
+        id_new <- paste(unlist(data[,id_col]), unlist(data[,occ_col]), sep = "_")
+        id_sel <- id_new %in% cases$cases
+        data <- data[id_sel,]
+      }
+    }
+    
     if (person.id != "") {
       if (testlet) { # should with sub.task.id
         prep_data <- prep(data=data,person.id=person.id,task.id=task.id,sub.task.id=sub.task.id,occasion=occasion,group=group,max.counts=max.counts,obs.counts=obs.counts,time=time,cens=cens,sentence_level = TRUE)
@@ -383,24 +401,77 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
                           pivot_wider(names_from = id.seq, values_from = cens) %>% 
                           select(-person.id))
       
-      scoring_output <- scoring.sentence.censoring(Count=calib.data$Y, logT10=calib.data$logT10, 
-                                 N=calib.data$N,
-                                 Passage=calib.data$task.param$task.id,
-                                 a=calib.data$task.param$a, b=calib.data$task.param$b,
-                                 alpha=calib.data$task.param$alpha, beta=calib.data$task.param$beta,
-                                 gamma1=calib.data$hyper.param$gamma1, gamma2=calib.data$hyper.param$gamma2,
-                                 sigma=calib.data$hyper.param$sigma, rho=calib.data$hyper.param$rho.theta,
-                                 rhoTestlet=calib.data$hyper.param$rho.testlet,
-                                 C=Cens_data)
-      # scoring_output <- scoring.sentence.censoring(Count=prep_data$data.wide$Y, logT10=prep_data$data.wide$logT10, 
-      #                                              N=prep_data$data.wide$N,
-      #                                              Passage=calib.data$task.param$task.id,
-      #                                              a=calib.data$task.param$a, b=calib.data$task.param$b,
-      #                                              alpha=calib.data$task.param$alpha, beta=calib.data$task.param$beta,
-      #                                              gamma1=calib.data$hyper.param$gamma1, gamma2=calib.data$hyper.param$gamma2,
-      #                                              sigma=calib.data$hyper.param$sigma, rho=calib.data$hyper.param$rho.theta,
-      #                                              rhoTestlet=calib.data$hyper.param$rho.testlet,
-      #                                              C=Cens_data)
+      #Filter the parameters in the calib data for sentences read
+      param_read <- data %>%
+        select(task.id, sub.task.id) %>%
+        distinct() %>%
+        mutate(sub.task.id=as.numeric(paste(task.id, sub.task.id, sep = ""))) %>%
+        left_join(calib.data$task.param)
+      
+      a_read <- param_read$a
+      b_read <- param_read$b
+      alpha_read <- param_read$alpha
+      beta_read <- param_read$beta
+      passage_read <- param_read$task.id
+      N_read <- prep_data$data.wide$N.vec %>% as.vector() %>% unlist()
+      
+      #Conditional for external scoring.
+      if((length(external) == 0)){ #if no external, wcpm will be estimated from the passages & sentences read! Using the same strategy as in bayes.wcpm function. 
+        a_score <- a_read
+        b_score <- b_read
+        alpha_score <- alpha_read 
+        beta_score <- beta_read
+        N_score <- N_read
+        passage_score <- passage_read
+      }else{
+        #pull the below from the "external" vector supplied!
+        #Will be edited later, after we see what is the rule for the task and sub.task ID scheme?
+        param_score <- calib.data$task.param %>%
+          mutate(Nwords=calib.data$N) %>%
+          filter(sub.task.id %in% external)
+          
+        a_score <- param_score$a
+        b_score <- param_score$b
+        alpha_score <- param_score$alpha
+        beta_score <- param_score$beta
+        N_score <- param_score$Nwords
+        passage_score <- param_score$task.id
+      }
+      
+     # scoring_output <- scoring.sentence.censoring(Count=calib.data$Y, logT10=calib.data$logT10, 
+     #                             N=calib.data$N,
+     #                             Passage=calib.data$task.param$task.id,
+     #                            a=calib.data$task.param$a, b=calib.data$task.param$b,
+     #                             alpha=calib.data$task.param$alpha, beta=calib.data$task.param$beta,
+     #                             gamma1=calib.data$hyper.param$gamma1, gamma2=calib.data$hyper.param$gamma2,
+     #                             sigma=calib.data$hyper.param$sigma, rho=calib.data$hyper.param$rho.theta,
+     #                            rhoTestlet=calib.data$hyper.param$rho.testlet,
+     #                             C=Cens_data)
+     
+       scoring_output <- scoring.sentence.censoring(Count=prep_data$data.wide$Y, 
+                                                    logT10=prep_data$data.wide$logT10, 
+                                                    N=N_read,
+                                                    N_score=N_score,
+                                                    Passage=passage_read,
+                                                    Passage_score=passage_score,
+                                                    a=a_read, 
+                                                    b=b_read,
+                                                    alpha=alpha_read, 
+                                                    beta=beta_read,
+                                                    a_score=a_score, 
+                                                    b_score=b_score,
+                                                    alpha_score=alpha_score, 
+                                                    beta_score=beta_score,
+                                                    gamma1=calib.data$hyper.param$gamma1, 
+                                                    gamma2=calib.data$hyper.param$gamma2,
+                                                    sigma=calib.data$hyper.param$sigma, 
+                                                    rho=calib.data$hyper.param$rho.theta,
+                                                    rhoTestlet=calib.data$hyper.param$rho.testlet,
+                                                    C=Cens_data, 
+                                                    type=type)
+      
+      
+      
       class(scoring_output) <- "scoring.testlet.censoring"
       return(invisible(scoring_output))
       
