@@ -133,10 +133,18 @@ score_testlet_sentence <- function(data_list) {
     # Extract the means for theta1 and theta2
     theta1_mean <- posterior_means["theta1"]
     theta2_mean <- posterior_means["theta2"]
+    count_mean <- posterior_means["exp_cnt"]
+    time_mean <- posterior_means["exp_tim"]
+    wcpm_mean <- posterior_means["wcpm"]
+    
     # Extract the sd's for theta1 and theta2
     posterior_sd <- summary_info$summary[, "sd"]
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
+    count_sd <- posterior_sd["exp_cnt"]
+    time_sd <- posterior_sd["exp_tim"]
+    wcpm_sd <- posterior_sd["wcpm"]
+    
   } else if (C0 >= 2 && C1 == 1) { # C1 is cens, C0 is obs
     fit <- rstan::sampling(model_multi_obs_one_cens_sentence, #model_one_obs_multi_cens_sentence, 
                     data = data_list, chains = 4, 
@@ -147,10 +155,16 @@ score_testlet_sentence <- function(data_list) {
     # Extract the means for theta1 and theta2
     theta1_mean <- posterior_means["theta1"]
     theta2_mean <- posterior_means["theta2"]
+    count_mean <- posterior_means["exp_cnt"]
+    time_mean <- posterior_means["exp_tim"]
+    wcpm_mean <- posterior_means["wcpm"]
     # Extract the sd's for theta1 and theta2
     posterior_sd <- summary_info$summary[, "sd"]
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
+    count_sd <- posterior_sd["exp_cnt"]
+    time_sd <- posterior_sd["exp_tim"]
+    wcpm_sd <- posterior_sd["wcpm"]
   } else if (C0 >= 2 && C1 == 0) { ## -----> This is the testlet model!!!
     fit <- rstan::sampling(model_multi_obs_no_cens_sentence, #model_no_obs_multi_cens_sentence, 
                     data = data_list, chains = 4, 
@@ -183,10 +197,16 @@ score_testlet_sentence <- function(data_list) {
     # Extract the means for theta1 and theta2
     theta1_mean <- posterior_means["theta1"]
     theta2_mean <- posterior_means["theta2"]
+    count_mean <- posterior_means["exp_cnt"]
+    time_mean <- posterior_means["exp_tim"]
+    wcpm_mean <- posterior_means["wcpm"]
     # Extract the sd's for theta1 and theta2
     posterior_sd <- summary_info$summary[, "sd"]
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
+    count_sd <- posterior_sd["exp_cnt"]
+    time_sd <- posterior_sd["exp_tim"]
+    wcpm_sd <- posterior_sd["wcpm"]
   } else if (C0 == 0 && C1 >= 2) {
     fit <- rstan::sampling(model_no_obs_multi_cens_sentence, #model_multi_obs_no_cens_sentence, 
                     data = data_list, chains = 4, 
@@ -197,10 +217,16 @@ score_testlet_sentence <- function(data_list) {
     # Extract the means for theta1 and theta2
     theta1_mean <- posterior_means["theta1"]
     theta2_mean <- posterior_means["theta2"]
+    count_mean <- posterior_means["exp_cnt"]
+    time_mean <- posterior_means["exp_tim"]
+    wcpm_mean <- posterior_means["wcpm"]
     # Extract the sd's for theta1 and theta2
     posterior_sd <- summary_info$summary[, "sd"]
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
+    count_sd <- posterior_sd["exp_cnt"]
+    time_sd <- posterior_sd["exp_tim"]
+    wcpm_sd <- posterior_sd["wcpm"]
   } else if (C0 == 1 && C1 == 1) {
     fit <- rstan::sampling(model_one_obs_one_cens_sentence, 
                            data = data_list, chains = 4, 
@@ -211,10 +237,19 @@ score_testlet_sentence <- function(data_list) {
     # Extract the means for theta1 and theta2
     theta1_mean <- posterior_means["theta1"]
     theta2_mean <- posterior_means["theta2"]
+    count_mean <- posterior_means["exp_cnt"]
+    time_mean <- posterior_means["exp_tim"]
+    wcpm_mean <- posterior_means["wcpm"]
     # Extract the sd's for theta1 and theta2
     posterior_sd <- summary_info$summary[, "sd"]
     theta1_sd <- posterior_sd["theta1"]
     theta2_sd <- posterior_sd["theta2"]
+    count_sd <- posterior_sd["exp_cnt"]
+    time_sd <- posterior_sd["exp_tim"]
+    wcpm_sd <- posterior_sd["wcpm"]
+    #Stop the analyses in case of cases with excessive missingness (NAs not censored sentence observations!)
+  }else{
+    stop("Error: Your data contain cases with excessive missingness. Consider discarding these cases and rerun the analyses.")
   }
   
   return(list(theta_acc = as.numeric(theta1_mean),
