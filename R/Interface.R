@@ -383,6 +383,42 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
     
 
     if (testlet) { # sub task level
+      # save data
+      preped_data <- prep_data$data.long
+      
+      # need to keep the order of person.id as group_by and summarize will automatically order the id
+      original_order <- preped_data %>%
+        distinct(person.id) %>%
+        mutate(order = row_number())
+      
+      temp_summary <- preped_data %>%
+        group_by(person.id, task.id) %>%
+        summarise(max.counts.sum = sum(max.counts, na.rm = TRUE), 
+                  obs.counts.sum = sum(obs.counts, na.rm = TRUE), .groups = "drop") %>%
+        group_by(person.id) %>%
+        summarise(
+          task.n = n(), 
+          max.counts.total = sum(max.counts.sum),
+          obs.counts.total = sum(obs.counts.sum),
+          .groups = "drop"
+        )
+      
+      subtask_summary <- preped_data %>%
+        group_by(person.id) %>%
+        summarise(sub.task.n = n(), 
+                  secs.obs = sum(time, na.rm = TRUE), 
+                  occasion = n_distinct(occasion), 
+                  group = n_distinct(group), .groups = "drop")
+      
+      temp_summary <- temp_summary %>%
+        left_join(subtask_summary, by = "person.id") %>% mutate(wcpm.obs = obs.counts.total/secs.obs*60)
+
+      # restore the order of person.id 
+      temp_summary <- temp_summary %>%
+        left_join(original_order, by = "person.id") %>%
+        arrange(order) %>%
+        select(-order)
+      
       vars <- c(person.id,
                 task.id,
                 sub.task.id,
@@ -472,10 +508,55 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
       
       
       
-      class(scoring_output) <- "scoring.testlet.censoring"
-      return(invisible(scoring_output))
+       out <- tibble(person.id=temp_summary$person.id, occasion=temp_summary$occasion, group=temp_summary$group,
+                     task.n=temp_summary$task.n,
+                     sub.task.n=temp_summary$sub.task.n, max.counts.total=temp_summary$max.counts.total,
+                     obs.counts.total=temp_summary$obs.counts.total, 
+                     secs.obs=temp_summary$secs.obs, wcpm.obs=temp_summary$wcpm.obs,
+                     tau.bayes=scoring_output$theta_spd_est,
+                     theta.bayes=scoring_output$theta_acc_est,
+                     se.tau.bayes=scoring_output$theta_spd_sd,
+                     se.theta.bayes=scoring_output$theta_acc_sd,
+                     count.bayes = scoring_output$count_est,
+                     se.count.bayes = scoring_output$count_sd,
+                     secs.bayes = scoring_output$time_est,
+                     se.secs.bayes = scoring_output$time_sd,
+                     wcpm.bayes = scoring_output$wcpm_est,
+                     se.wcpm.bayes = scoring_output$wcpm_sd)
+       
+       class(out) <- "scoring.censoring"
+       return(invisible(out))
       
     } else { # task level
+
+    original_order <- prep_data$data.long %>% #data
+        distinct(person.id) %>%
+        mutate(order = row_number())
+      
+      temp_summary <- prep_data$data.long %>%
+        group_by(person.id) %>%
+        summarise(
+          task.n = n_distinct(task.id), # Number of unique tasks
+          max.counts.total = sum(max.counts),
+          obs.counts.total = sum(obs.counts),
+          .groups = "drop"
+        )
+      
+      subtask_summary <- prep_data$data.long %>%
+        group_by(person.id) %>%
+        summarise(#sub.task.n = n(), 
+                  secs.obs = sum(time, na.rm = TRUE), 
+                  occasion = n_distinct(occasion), 
+                  group = n_distinct(group), .groups = "drop")
+      
+      temp_summary <- temp_summary %>%
+        left_join(subtask_summary, by = "person.id") %>% mutate(wcpm.obs = obs.counts.total/secs.obs*60)
+      
+      temp_summary <- temp_summary %>%
+        left_join(original_order, by = "person.id") %>%
+        arrange(order) %>%
+        select(-order)
+      
       vars <- c(person.id,
                 task.id,
                 cens)
@@ -495,8 +576,18 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
                           alpha=calib.data$task.param$alpha, beta=calib.data$task.param$beta,
                           sigma=calib.data$hyper.param$vartau, rho=calib.data$hyper.param$rho,
                           C=Cens_data)
-      class(scoring_output) <- "scoring.censoring"
-      return(invisible(scoring_output))
+
+      out <- tibble(person.id=temp_summary$person.id, occasion=temp_summary$occasion, group=temp_summary$group,
+                    task.n=temp_summary$task.n,
+                    max.counts.total=temp_summary$max.counts.total,
+                    obs.counts.total=temp_summary$obs.counts.total, 
+                    secs.obs=temp_summary$secs.obs, wcpm.obs=temp_summary$wcpm.obs,
+                    tau.bayes=scoring_output$theta_spd_est,
+                    theta.bayes=scoring_output$theta_acc_est,
+                    se.tau.bayes=scoring_output$theta_spd_sd,
+                    se.theta.bayes=scoring_output$theta_acc_sd)                    
+      class(out) <- "scoring.censoring"
+      return(invisible(out))
     }
   } else { # without censoring
     if (se == "analytic") {
