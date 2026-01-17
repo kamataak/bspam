@@ -76,12 +76,26 @@ create_data_list_sentence <- function(Count, logT10, MaxN, MaxN_score,
     #   return(result)  
     # }
   }
+  
+  #Attach dim spec to prevent stan issues when only 1 task is used for scoring. 
+  N_score = length(MaxN_score)
+  dim(MaxN_score) <- N_score
+  
+  dim(a_score) <- N_score
+  dim(b_score) <- N_score
+  dim(alpha_score) <- N_score
+  dim(beta_score) <- N_score
+  
+  K_score = max(Passage_score)
+  dim(Passage_score) <- N_score
+  
+  
   data_list <- list(
     N_obs = N_obs,
     N_cens = N_cens,
-    N_score = length(MaxN_score),
+    N_score = N_score,
     K = max(Passage),
-    K_score = max(Passage_score),
+    K_score = K_score,
     Passage_obs = safe_na_omit(Passage[C == 0]),
     Passage_cens = safe_na_omit(Passage[C == 1]),
     Passage_score = Passage_score, 
