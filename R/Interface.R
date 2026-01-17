@@ -308,7 +308,7 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
   }
   
   # with censoring
-  if (censoring) { # when censoring
+  if (censoring) {
     
     #Check if scoring will be done for specific cases of data. 
     if(is.character(cases)){
@@ -571,11 +571,59 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
                           pivot_wider(names_from = task.id, values_from = cens) %>% 
                           select(-person.id))
       
-      scoring_output <- scoring.passage.censoring(Count=prep_data$data.wide$Y, logT10=prep_data$data.wide$logT10, N=prep_data$data.wide$N,
-                          a=calib.data$task.param$a, b=calib.data$task.param$b,
-                          alpha=calib.data$task.param$alpha, beta=calib.data$task.param$beta,
-                          sigma=calib.data$hyper.param$vartau, rho=calib.data$hyper.param$rho,
-                          C=Cens_data)
+      
+      #Filter the parameters in the calib data for passages read
+      param_read <- data %>%
+        select(task.id) %>%
+        distinct() %>%
+        mutate(task.id=as.numeric(task.id)) %>%
+        left_join(calib.data$task.param)
+      
+      a_read <- param_read$a
+      b_read <- param_read$b
+      alpha_read <- param_read$alpha
+      beta_read <- param_read$beta
+      passage_read <- param_read$task.id
+      N_read <- param_read$max.counts
+      
+      #Conditional for external scoring.
+      if((length(external) == 0)){ #if no external, wcpm will be estimated from the passages & sentences read! Using the same strategy as in bayes.wcpm function. 
+        a_score <- a_read
+        b_score <- b_read
+        alpha_score <- alpha_read 
+        beta_score <- beta_read
+        N_score <- N_read
+        passage_score <- passage_read
+      }else{
+        #pull the below from the "external" vector supplied!
+        param_score <- calib.data$task.param %>%
+          rename(Nwords=max.counts) %>%
+          filter(task.id %in% external)
+        
+        a_score <- param_score$a
+        b_score <- param_score$b
+        alpha_score <- param_score$alpha
+        beta_score <- param_score$beta
+        N_score <- param_score$Nwords
+        passage_score <- param_score$task.id
+      }
+      
+      scoring_output <- scoring.passage.censoring(Count=prep_data$data.wide$Y, 
+                                                  logT10=prep_data$data.wide$logT10, 
+                                                  N=N_read,
+                                                  N_score=N_score, 
+                                                  a=a_read,
+                                                  b=b_read, 
+                                                  alpha=alpha_read,  
+                                                  beta=beta_read,
+                                                  a_score=a_score, 
+                                                  b_score=b_score,
+                                                  alpha_score=alpha_score, 
+                                                  beta_score=beta_score,
+                                                  sigma=calib.data$hyper.param$vartau, 
+                                                  rho=calib.data$hyper.param$rho,
+                                                  C=Cens_data, 
+                                                  type=type)
 
       out <- tibble(person.id=temp_summary$person.id, occasion=temp_summary$occasion, group=temp_summary$group,
                     task.n=temp_summary$task.n,
@@ -585,11 +633,18 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
                     tau.bayes=scoring_output$theta_spd_est,
                     theta.bayes=scoring_output$theta_acc_est,
                     se.tau.bayes=scoring_output$theta_spd_sd,
-                    se.theta.bayes=scoring_output$theta_acc_sd)                    
+                    se.theta.bayes=scoring_output$theta_acc_sd,
+                    count.bayes = scoring_output$count_est,
+                    se.count.bayes = scoring_output$count_sd,
+                    secs.bayes = scoring_output$time_est,
+                    se.secs.bayes = scoring_output$time_sd,
+                    wcpm.bayes = scoring_output$wcpm_est,
+                    se.wcpm.bayes = scoring_output$wcpm_sd)
+      
       class(out) <- "scoring.censoring"
       return(invisible(out))
     }
-  } else { # without censoring
+  } else { # without censoring ---------------------------------------------------------------------------------------------
     if (se == "analytic") {
       if (est != "bayes") { #not bayes
         if (person.id != "") {
