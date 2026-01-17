@@ -26,12 +26,14 @@ testlet_scoring_multi_obs_multi_cens <- "
 data {
   int<lower=0> N_obs;             // Number of observed values
   int<lower=0> N_cens;            // Number of censored values
+  int<lower=0> N_score;           // Number of tasks for scoring
   int<lower=0> Count_obs[N_obs];        // Array of observed values
   int<lower=0> Count_cens[N_cens];      // Array of censoring points for censored values
   real logT10_obs[N_obs];        // Array of observed values
   real logT10_cens[N_cens];      // Array of censoring points for censored values
   int<lower=0> MaxN_obs[N_obs]; // Sentence lengths of observed values
   int<lower=0> MaxN_cens[N_cens]; // Sentence lengths of censored values
+  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
   real a_obs[N_obs];
   real a_cens[N_cens];
   real b_obs[N_obs];
@@ -40,6 +42,10 @@ data {
   real alpha_cens[N_cens];
   real beta_obs[N_obs];
   real beta_cens[N_cens];
+  real a_score[N_score]; // All _score params are for sentences of scoring passages
+  real b_score[N_score];
+  real alpha_score[N_score];
+  real beta_score[N_score];
   real<lower=0> sigma;
   real<lower=-1,upper=1> rho;
 }
@@ -91,19 +97,45 @@ for (i in 1:N_cens) {
   // Add the log-likelihood to the target
   target += logLikelihoodCount + logLikelihoodLogT10;
 }
+}
 
-}"
+// The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
+// Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
+generated quantities{
+  real tim_ex[N_score]; //Expeced time matrix
+  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  real <lower=0> exp_cnt; //Model-based obs.counts
+  real <lower=0> exp_tim; //Model-based secs
+  real <lower=0> wcpm; //Model-based WCPM
+  
+ 
+ for(i in 1:N_score){
+    real p_score; real mu_score;
+  
+    p_score = Phi(fmax(-5, fmin(5, a_score[i] * (theta1 - b_score[i]))));
+    mu_score = beta_score[i]-sigma*theta2;
+    cnt_ex[i] = p_score * MaxN_score[i];
+    tim_ex[i]=(exp(mu_score + log(MaxN_score[i]) -log(10) + 0.5 * 1/(square(alpha_score[i]))));
+  }
+    exp_cnt=sum(cnt_ex);
+    exp_tim=sum(tim_ex);
+    wcpm=exp_cnt/exp_tim*60;
+}
+
+"
 
 # Scenario 2: Multiple Observed and One Censored Passage
 testlet_scoring_multi_obs_one_cens <- "
 data {
   int<lower=0> N_obs;             // Number of observed values
+  int<lower=0> N_score;           // Number of tasks for scoring
   int<lower=0> Count_obs[N_obs];        // Array of observed values
   int<lower=0> Count_cens;      // Censoring point for censored value
   real logT10_obs[N_obs];        // Array of observed values
   real logT10_cens;      // Censoring points for censored value
   int<lower=0> MaxN_obs[N_obs]; // Sentence lengths of observed values
   int<lower=0> MaxN_cens; // Sentence length of censored value
+  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
   real a_obs[N_obs];
   real a_cens;
   real b_obs[N_obs];
@@ -112,6 +144,10 @@ data {
   real alpha_cens;
   real beta_obs[N_obs];
   real beta_cens;
+  real a_score[N_score]; // All _score params are for sentences of scoring passages
+  real b_score[N_score];
+  real alpha_score[N_score];
+  real beta_score[N_score];
   real<lower=0> sigma;
   real<lower=-1,upper=1> rho;
 }
@@ -161,19 +197,46 @@ model {
 
   // Add the log-likelihood to the target
   target += logLikelihoodCount + logLikelihoodLogT10;
+}
 
-}"
+// The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
+// Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
+generated quantities{
+  real tim_ex[N_score]; //Expeced time matrix
+  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  real <lower=0> exp_cnt; //Model-based obs.counts
+  real <lower=0> exp_tim; //Model-based secs
+  real <lower=0> wcpm; //Model-based WCPM
+  
+ 
+ for(i in 1:N_score){
+    real p_score; real mu_score;
+  
+    p_score = Phi(fmax(-5, fmin(5, a_score[i] * (theta1 - b_score[i]))));
+    mu_score = beta_score[i]-sigma*theta2;
+    cnt_ex[i] = p_score * MaxN_score[i];
+    tim_ex[i]=(exp(mu_score + log(MaxN_score[i]) -log(10) + 0.5 * 1/(square(alpha_score[i]))));
+  }
+    exp_cnt=sum(cnt_ex);
+    exp_tim=sum(tim_ex);
+    wcpm=exp_cnt/exp_tim*60;
+}
+
+
+"
 
 # Scenario 3: One Observed and Multiple Censored Passages
 testlet_scoring_one_obs_multi_cens <- "
 data {
   int<lower=0> N_cens;            // Number of censored values
+  int<lower=0> N_score;           // Number of tasks for scoring
   int<lower=0> Count_obs;         // Observed value
   int<lower=0> Count_cens[N_cens]; // Array of censoring points for censored values
   real logT10_obs;               // Observed value
   real logT10_cens[N_cens];      // Array of censoring points for censored values
   int<lower=0> MaxN_obs;         // Sentence length of observed value
   int<lower=0> MaxN_cens[N_cens]; // Sentence lengths of censored values
+  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
   real a_obs;
   real a_cens[N_cens];
   real b_obs;
@@ -182,6 +245,10 @@ data {
   real alpha_cens[N_cens];
   real beta_obs;
   real beta_cens[N_cens];
+  real a_score[N_score]; // All _score params are for sentences of scoring passages
+  real b_score[N_score];
+  real alpha_score[N_score];
+  real beta_score[N_score];
   real<lower=0> sigma;
   real<lower=-1,upper=1> rho;
 }
@@ -232,21 +299,50 @@ model {
     // Add the log-likelihood to the target
     target += logLikelihoodCount + logLikelihoodLogT10;
   }
-
 }
+
+// The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
+// Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
+generated quantities{
+  real tim_ex[N_score]; //Expeced time matrix
+  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  real <lower=0> exp_cnt; //Model-based obs.counts
+  real <lower=0> exp_tim; //Model-based secs
+  real <lower=0> wcpm; //Model-based WCPM
+  
+ 
+ for(i in 1:N_score){
+    real p_score; real mu_score;
+  
+    p_score = Phi(fmax(-5, fmin(5, a_score[i] * (theta1 - b_score[i]))));
+    mu_score = beta_score[i]-sigma*theta2;
+    cnt_ex[i] = p_score * MaxN_score[i];
+    tim_ex[i]=(exp(mu_score + log(MaxN_score[i]) -log(10) + 0.5 * 1/(square(alpha_score[i]))));
+  }
+    exp_cnt=sum(cnt_ex);
+    exp_tim=sum(tim_ex);
+    wcpm=exp_cnt/exp_tim*60;
+}
+
 "
 
 # Scenario 4: Multiple Observed and No Censored Passages
 testlet_scoring_multi_obs_no_cens <- "
 data {
   int<lower=0> N_obs;             // Number of observed values
-  int<lower=0> Count_obs[N_obs];        // Array of observed values
+  int<lower=0> N_score;           // Number of tasks for scoring
+  int<lower=0> Count_obs[N_obs];  // Array of observed values
   real logT10_obs[N_obs];        // Array of observed values
   int<lower=0> MaxN_obs[N_obs]; // Sentence lengths of observed values
+  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
   real a_obs[N_obs];
   real b_obs[N_obs];
   real alpha_obs[N_obs];
   real beta_obs[N_obs];
+  real a_score[N_score]; // All _score params are for sentences of scoring passages
+  real b_score[N_score];
+  real alpha_score[N_score];
+  real beta_score[N_score];
   real<lower=0> sigma;
   real<lower=-1,upper=1> rho;
 }
@@ -278,19 +374,50 @@ model {
     logT10_obs[i] ~ normal(mu_obs, 1/alpha_obs[i]);
   }
 
-}"
+}
+
+// The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
+// Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
+generated quantities{
+  real tim_ex[N_score]; //Expeced time matrix
+  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  real <lower=0> exp_cnt; //Model-based obs.counts
+  real <lower=0> exp_tim; //Model-based secs
+  real <lower=0> wcpm; //Model-based WCPM
+  
+ 
+ for(i in 1:N_score){
+    real p_score; real mu_score;
+  
+    p_score = Phi(fmax(-5, fmin(5, a_score[i] * (theta1 - b_score[i]))));
+    mu_score = beta_score[i]-sigma*theta2;
+    cnt_ex[i] = p_score * MaxN_score[i];
+    tim_ex[i]=(exp(mu_score + log(MaxN_score[i]) -log(10) + 0.5 * 1/(square(alpha_score[i]))));
+  }
+    exp_cnt=sum(cnt_ex);
+    exp_tim=sum(tim_ex);
+    wcpm=exp_cnt/exp_tim*60;
+}
+
+"
 
 # Scenario 5: No Observed and Multiple Censored Passages
 testlet_scoring_no_obs_multi_cens <- " 
 data {
   int<lower=0> N_cens;            // Number of censored values
+  int<lower=0> N_score;           // Number of tasks for scoring
   int<lower=0> Count_cens[N_cens];      // Array of censoring points for censored values
   real logT10_cens[N_cens];      // Array of censoring points for censored values
   int<lower=0> MaxN_cens[N_cens]; // Sentence lengths of censored values
+  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
   real a_cens[N_cens];
   real b_cens[N_cens];
   real alpha_cens[N_cens];
   real beta_cens[N_cens];
+  real a_score[N_score]; // All _score params are for sentences of scoring passages
+  real b_score[N_score];
+  real alpha_score[N_score];
+  real beta_score[N_score];
   real<lower=0> sigma;
   real<lower=-1,upper=1> rho;
 }
@@ -331,20 +458,47 @@ model {
     // Add the log-likelihood to the target
     target += logLikelihoodCount + logLikelihoodLogT10;
   }
+}
+
+// The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
+// Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
+generated quantities{
+  real tim_ex[N_score]; //Expeced time matrix
+  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  real <lower=0> exp_cnt; //Model-based obs.counts
+  real <lower=0> exp_tim; //Model-based secs
+  real <lower=0> wcpm; //Model-based WCPM
   
-}"
+ 
+ for(i in 1:N_score){
+    real p_score; real mu_score;
+  
+    p_score = Phi(fmax(-5, fmin(5, a_score[i] * (theta1 - b_score[i]))));
+    mu_score = beta_score[i]-sigma*theta2;
+    cnt_ex[i] = p_score * MaxN_score[i];
+    tim_ex[i]=(exp(mu_score + log(MaxN_score[i]) -log(10) + 0.5 * 1/(square(alpha_score[i]))));
+  }
+    exp_cnt=sum(cnt_ex);
+    exp_tim=sum(tim_ex);
+    wcpm=exp_cnt/exp_tim*60;
+}
+
+"
+
 
 # Scenario 6: One Observed and One Censored Passages
 testlet_scoring_one_obs_one_cens <- "
 data {
   int<lower=0> N_obs;             // Number of observed values
   int<lower=0> N_cens;            // Number of censored values
+  int<lower=0> N_score;           // Number of tasks for scoring
   int<lower=0> Count_obs;        // Array of observed values
   int<lower=0> Count_cens;      // Array of censoring points for censored values
   real logT10_obs;        // Array of observed values
   real logT10_cens;      // Array of censoring points for censored values
   int<lower=0> MaxN_obs; // Sentence lengths of observed values
   int<lower=0> MaxN_cens; // Sentence lengths of censored values
+  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
   real a_obs;
   real a_cens;
   real b_obs;
@@ -353,6 +507,10 @@ data {
   real alpha_cens;
   real beta_obs;
   real beta_cens;
+  real a_score[N_score]; // All _score params are for sentences of scoring passages
+  real b_score[N_score];
+  real alpha_score[N_score];
+  real beta_score[N_score];
   real<lower=0> sigma;
   real<lower=-1,upper=1> rho;
 }
@@ -398,9 +556,31 @@ model {
 
   // Add the log-likelihood to the target
   target += logLikelihoodCount + logLikelihoodLogT10;
+}
 
-
-}"
+// The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
+// Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
+generated quantities{
+  real tim_ex[N_score]; //Expeced time matrix
+  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  real <lower=0> exp_cnt; //Model-based obs.counts
+  real <lower=0> exp_tim; //Model-based secs
+  real <lower=0> wcpm; //Model-based WCPM
+  
+ 
+ for(i in 1:N_score){
+    real p_score; real mu_score;
+  
+    p_score = Phi(fmax(-5, fmin(5, a_score[i] * (theta1 - b_score[i]))));
+    mu_score = beta_score[i]-sigma*theta2;
+    cnt_ex[i] = p_score * MaxN_score[i];
+    tim_ex[i]=(exp(mu_score + log(MaxN_score[i]) -log(10) + 0.5 * 1/(square(alpha_score[i]))));
+  }
+    exp_cnt=sum(cnt_ex);
+    exp_tim=sum(tim_ex);
+    wcpm=exp_cnt/exp_tim*60;
+}
+"
 
 # Define Stan models for different scenarios
 model_multi_obs_multi_cens <- rstan::stan_model(model_code = testlet_scoring_multi_obs_multi_cens)
