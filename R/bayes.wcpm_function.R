@@ -203,14 +203,52 @@ bayes.wcpm <- function(
     time.data <- time.data %>% t()
     count.data <- count.data %>% t()
     pas_est_ind <- pas_est_ind %>% t()
-    data.list <- list(J = J, I = I, K = K, tim = log(time.data), 
-                      res = count.data, nw_read = n.words, a_read = pas_param_read$a, 
-                      b_read = pas_param_read$b, alpha_read = pas_param_read$alpha, 
-                      beta_raw_read = pas_param_read$beta + log(pas_param_read$max.counts/10), 
-                      pas_est_ind = pas_est_ind, nw_est = pas_param_est$max.counts, 
-                      a_est = pas_param_est$a, b_est = pas_param_est$b, 
-                      alpha_est = pas_param_est$alpha, beta_raw_est = pas_param_est$beta + 
-                        log(pas_param_est$max.counts/10), stau = sqrt(calib.data$hyper.param$vartau), 
+    
+    nw_read = n.words
+    a_read = pas_param_read$a 
+    b_read = pas_param_read$b
+    alpha_read = pas_param_read$alpha 
+    beta_raw_read = pas_param_read$beta + log(pas_param_read$max.counts/10)
+    pas_est_ind = pas_est_ind
+    nw_est = pas_param_est$max.counts 
+    a_est = pas_param_est$a
+    b_est = pas_param_est$b 
+    alpha_est = pas_param_est$alpha
+    beta_raw_est = pas_param_est$beta + log(pas_param_est$max.counts/10)
+    
+    dim_read <- length(n.words)
+    dim_est <- length(nw_est)
+    
+    dim(nw_read) = dim_read
+    dim(a_read) = dim_read
+    dim(b_read) = dim_read
+    dim(alpha_read) = dim_read
+    dim(beta_raw_read) = dim_read
+    
+    #dim(pas_est_ind) = dim_est
+    dim(nw_est) = dim_est
+    dim(a_est) = dim_est
+    dim(b_est) = dim_est
+    dim(alpha_est) = dim_est
+    dim(beta_raw_est) = dim_est
+    
+    data.list <- list(J = J, 
+                      I = I, 
+                      K = K, 
+                      tim = log(time.data), 
+                      res = count.data, 
+                      nw_read = nw_read, 
+                      a_read = a_read, 
+                      b_read = b_read, 
+                      alpha_read = alpha_read, 
+                      beta_raw_read = beta_raw_read, 
+                      pas_est_ind = pas_est_ind, 
+                      nw_est = nw_est, 
+                      a_est = a_est, 
+                      b_est = b_est, 
+                      alpha_est = alpha_est, 
+                      beta_raw_est = beta_raw_est, 
+                      stau = sqrt(calib.data$hyper.param$vartau), 
                       cvr = calib.data$hyper.param$rho * sqrt(calib.data$hyper.param$vartau))
     stan.syntax <- "\ndata{\n// Data\n  int <lower=0> J; //number of individuals\n  int <lower=0> I; //number of passages read\n  int <lower=0> K; //number of passages external\n  int <lower=0> res[I,J]; //array of counts\n  real tim[I,J]; //array of times\n  real pas_est_ind[K, J]; //array of passage indicators\n  int <lower=0> nw_read[I]; //vector of number of the words per passage\n  int <lower=0> nw_est[K]; //vector of number of the words per passage\n\n// Known Parameters\n  real <lower=0> stau; // SD of tau\n  real cvr; // Covariance between theta and tau\n\n  vector <lower=0> [I] alpha_read; //time discrimintion\n  vector[I] beta_raw_read; //time intensity\n  vector <lower=0> [I] a_read; //accuracy discrimination\n  vector[I] b_read; //accuracy difficulty (threshold style)\n\n  vector <lower=0> [K] alpha_est; //time discrimintion\n  vector[K] beta_raw_est; //time intensity\n  vector <lower=0> [K] a_est; //accuracy discrimination\n  vector[K] b_est; //accuracy difficulty (threshold style)\n\n}\n\nparameters{\n  vector[J] theta; //accuracy ability\n  vector[J] tau; //speed ability\n}\n\n\nmodel{\n  // Priors\n  theta ~ normal(0, 1);\n\n  // Likelihood\nfor(i in 1:I){\n  res[i] ~ binomial(nw_read[i], Phi(a_read[i] * theta - b_read[i]));\n  tim[i] ~ normal(beta_raw_read[i] - tau, 1/alpha_read[i]);\n              }\n}\n\n// Estimation of model-based WCPM\ngenerated quantities{\n\n  real tim_ex[K,J]; //Expeced time matrix\n  real <lower=0> cnt_ex[K,J]; //Expected count matrix\n  vector <lower=0> [J] exp_cnt; //Model-based obs.counts\n  vector <lower=0> [J] exp_tim; //Model-based secs\n  vector <lower=0> [J] wcpm; //Model-based WCPM\n\n\n for(j in 1:J){\n    for(k in 1:K){real p; real mu;\n      p=Phi(a_est[k] * theta[j] - b_est[k]);\n      cnt_ex[k,j]=(p*nw_est[k]) * pas_est_ind[k, j];\n      mu=beta_raw_est[k] - tau[j];\n      tim_ex[k,j]=(exp(mu + 0.5 * 1/(square(alpha_est[k])))) * pas_est_ind[k, j];\n    }\n    exp_cnt[j]=sum(cnt_ex[,j]);\n    exp_tim[j]=sum(tim_ex[,j]);\n    wcpm[j]=exp_cnt[j]/exp_tim[j]*60;\n  }\n}\n\n"
     if (isTRUE(parallel)) {
@@ -223,7 +261,7 @@ bayes.wcpm <- function(
                             data = data.list, chains = n.chains, warmup = 1000, 
                             iter = 5000, thin = thin, cores = n.cores, init = inits, 
                             control = list(adapt_delta = 0.99))
-    par_est <- summary(stan_out)$summary %>% as.data.frame() %>% 
+    par_est <- rstan::summary(stan_out)$summary %>% as.data.frame() %>% 
       rownames_to_column(var = "Parameter") %>% filter(Parameter != 
                                                          "lp__") %>% select(Mean = mean, SD = sd, Lower95 = `2.5%`, 
                                                                             Upper95 = `97.5%`)
