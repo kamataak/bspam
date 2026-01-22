@@ -299,6 +299,12 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
   # loading logger
   log.initiating()
   
+  # Check MCEM object
+  if (class(calib.data)[1] != "fit.model") {
+    flog.info("Missed fit.model object, end scoring process", name = "orfrlog")
+    return(NULL)
+  }
+  
   bootstrap.out <- tibble()
   error_case <- tibble()
   prep_data <- NULL
@@ -311,19 +317,35 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
   if (censoring) {
     
     #Check if scoring will be done for specific cases of data. 
-    if(is.character(cases)){
+    # if(is.character(cases)){
+    if (length(cases) == 0) {
+      flog.info("No cases!", name = "orfrlog")  
       data <- data
-    }else{
-      colnames(cases) <- "cases"
-      id_col <- which(colnames(data)==person.id)
-      if (occasion == ""){ 
-        id_sel <- unlist(data[,id_col], use.names = F) %in% cases$cases
-        data <- data[id_sel,]
-      }else {
-        occ_col <- which(colnames(data)==occasion)
-        id_new <- paste(unlist(data[,id_col]), unlist(data[,occ_col]), sep = "_")
+    }else{ # with cases 
+      if (is.list(data) && !is.data.frame(data)) { # preped data
+        longdata <- data$data.long
+        colnames(cases) <- "cases"
+        id_col <- which(colnames(longdata)== ifelse(person.id != "", person.id, "person.id"))
+        occ_col <- which(colnames(longdata)==ifelse(occasion != "", occasion, "occasion"))
+        id_new <- paste(unlist(longdata[,id_col]), unlist(longdata[,occ_col]), sep = "_")
         id_sel <- id_new %in% cases$cases
-        data <- data[id_sel,]
+
+        # need to recreate prep_data
+        longdata <- data$data.long[id_sel,]
+        # data <- prep(data=data$data.long,person.id="person.id",task.id="task.id",occasion="occasion",group="group",max.counts="max.counts",obs.counts="obs.counts",time="time",cens="cens")
+        data <- prep(data=longdata,person.id="person.id",task.id="task.id",occasion="occasion",group="group",max.counts="max.counts",obs.counts="obs.counts",time="time",cens="cens")
+        
+      } else { # raw data set
+        id_col <- which(colnames(data)==person.id)
+        if (occasion == ""){ 
+          id_sel <- unlist(data[,id_col], use.names = F) %in% cases$cases
+          data <- data[id_sel,]
+        }else {
+          occ_col <- which(colnames(data)==occasion)
+          id_new <- paste(unlist(data[,id_col]), unlist(data[,occ_col]), sep = "_")
+          id_sel <- id_new %in% cases$cases
+          data <- data[id_sel,]
+        }        
       }
     }
     
