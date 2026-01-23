@@ -300,7 +300,7 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
   log.initiating()
   
   # Check MCEM object
-  if (class(calib.data)[1] != "fit.model") {
+  if (!class(calib.data)[1] %in% c("fit.model", "fit.model.testlet")) {
     flog.info("Missed fit.model object, end scoring process", name = "orfrlog")
     return(NULL)
   }
