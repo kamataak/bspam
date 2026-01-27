@@ -1,5 +1,10 @@
-bspam
-================
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# bspam
 
 # Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R
 
@@ -128,6 +133,18 @@ MCEM_run <- fit.model(data = passage2,
 MCEM_run
 ```
 
+The `fit.model()` function supports two calibration modes:
+
+1.  **Task-level (passage-level) calibration** (default), where each
+    task is modeled independently.
+2.  **Testlet (sentence-level) calibration**, enabled by setting
+    `testlet = TRUE` and providing a `sub.task.id`, which models local
+    dependence among sub-tasks (e.g., sentences within a passage).
+
+For Bayesian calibration (`est = "bayes"`), `bspam` automatically
+selects the estimation engine: Stan is used when the data are complete,
+and JAGS is used when missing observations are present.
+
 By default, the standard errors for the model parameters are not
 estimated. This will allow one to increase the number of Monte-Carlo
 iterations `reps.in` to improve the quality of the model parameter
@@ -177,11 +194,17 @@ errors are also reported. Also, WCPM scores and/or factor scores, and
 their standard errors will be estimated for all cases in the data by
 default.
 
-There are several estimator options and standard error estimation
-options: maximum likelihood (MLE), maximum a posteriori (MAP), expected
-a posteriori (EAP), and fully Bayesian approach. In this example,
-maximum a priori (MAP) estimators for scoring and analytic approach for
-estimating standard errors are used.
+There are several estimator options for scoring: maximum likelihood
+(`"mle"`), maximum a posteriori (`"map"`), expected a posteriori
+(`"eap"`), and a fully Bayesian approach (`"bayes"`). Standard errors
+can be estimated analytically or via bootstrap, except when
+`est = "bayes"`, in which case posterior standard deviations are
+reported.
+
+In addition to standard scoring, the `scoring()` function supports
+**censored (truncated) response data** by setting `censoring = TRUE` and
+supplying a censoring indicator via the `cens` argument. Sentence-level
+testlet scoring also uses the censoring framework internally.
 
 #### Scoring for All Cases
 
@@ -294,10 +317,17 @@ summary(WCPM_sample_ext1_bayes)
 
 Alternatively, we can run the `scoring()` in two steps.
 
-**Step 1:** Prepare the data using the `prep()` function, where required
-data set for the `scoring()` function is prepared, including changing
-variable names and a generation of the natural-logarithm of the time
-data.
+**Step 1:** Prepare the data using the `prep()` function. The function
+standardizes variable names, computes the natural logarithm of time, and
+creates analysis-ready long and wide data structures.
+
+For passage-level data, use the default setting
+(`sentence_level = FALSE`).\
+For sentence-level data, set `sentence_level = TRUE` and provide a
+`sub.task.id`.
+
+If `occasion` or `group` variables are not provided, `prep()` will
+create default constant values automatically.
 
 The output from the `prep()` function is a list of two components. The
 `data.long` component is a data frame, which is a long format of student
@@ -360,14 +390,11 @@ summary(WCPM_sample_ext2)
 
 ## Other Features
 
-### Fitting and Scoring by the Testlet Model
+### Fitting and Scoring by the Testlet Model (Sentence-level)
 
-For example, when an ORF data is consisted of sentence-level data, it is
-reasonable to think that the data on sentences within the same passage
-are more similar than data on sentences from other passages. Thus, the
-use of a testlet-version of the model is reasonable to implement. The
-`bspam` R package can fit and score the data by the testlet model both
-by the MCEM and Bayes.
+When ORF data are collected at the sentence level, sentences are nested
+within passages and may exhibit local dependence. In this case, a
+testlet-version of the model can be fitted and scored using `bspam`.
 
 The example data set `sentence.level.data` is a sentence-level student
 data and consisted of reading accuracy and time data for 4 passages from
@@ -376,18 +403,20 @@ totalling 23 sentences. All 58 students read all 4 passages completely.
 This is a small subset of the data collected by Nese and Kamata
 (2014-2018).
 
-For example the testlet model can be fitted to this data set by the MCEM
-by:
+#### Testlet Calibration
 
 ``` r
-Testlet_run <- fit.model(data = sentence.level.data,
-                                 person.id = "id.student",
-                                 task.id = "id.passage",
-                                 sub.task.id = "id.sentence",
-                                 obs.count = "wrc", 
-                                 max.counts = "numwords.sent",
-                                 time = "sec",
-                                 testlet = TRUE)
+Testlet_run <- fit.model(
+  data        = sentence.level.data,
+  person.id   = "id.student",
+  task.id     = "id.passage",
+  sub.task.id = "id.sentence",
+  max.counts  = "numwords.sent",
+  obs.counts  = "wrc",
+  time        = "sec",
+  testlet     = TRUE,
+  verbose     = TRUE
+)
 ```
 
 The estimated testlet parameter is reported as part of the
@@ -397,11 +426,13 @@ hyper-parameters.
 Testlet_run$hyper.param
 ```
 
-The estimated model paramters can be extracted by:
+Task- and sentence-level parameters can be extracted by:
 
 ``` r
 Testlet_run$task.param
 ```
+
+#### Testlet Scoring
 
 The scoring by the MAP can be done for this data set by:
 
@@ -412,7 +443,7 @@ Testlet_scoring <-
           person.id = "id.student",
           task.id = "id.passage",
           sub.task.id = "id.sentence",
-          obs.count = "wrc", 
+          obs.counts = "wrc", 
           max.counts = "numwords.sent",
           time = "sec",
           type = "orf",
@@ -433,6 +464,13 @@ set by the censored model both for the regular and the testlet models.
 Please see the [package website](https://github.com/kamataak/bspam/) for
 more detailed usage of the package.
 
+## Plotting
+
+``` r
+plot.task(MCEM_run, parameter = "a", sort = TRUE)
+plot.person(WCPM_all, parameter = "wcpm", show.se = TRUE)
+```
+
 ## Citations
 
 Kara, Y., Kamata, A., Potgieter, C., & Nese, J. F. (2020). Estimating
@@ -442,7 +480,7 @@ Measurement, 1–25.
 
 Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency:
 Computerized Oral Reading Evaluation (Project No. R305A140203)
-\[Grant\]. Institute of Education Sciences, U.S. Department of
+$$Grant$$. Institute of Education Sciences, U.S. Department of
 Education. <https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492>
 
 Potgieter, N., Kamata, A., & Kara, Y. (2017). An EM algorithm for
@@ -454,7 +492,7 @@ Model-based Oral Reading Fluency. Manuscript submitted for publication.
 
 ## Copyright Statement
 
-Copyright (C) 2022-2023 The ORF Project Team
+Copyright (C) 2022-2025 The ORF Project Team
 
 The bspam package is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as published
