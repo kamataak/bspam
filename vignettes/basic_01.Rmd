@@ -1,0 +1,155 @@
+---
+title: "bspam: Passage-level Calibration & Scoring for ORF Data 1"
+author: "Akihito Kamata"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Basic Tuorial 1}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Overview
+This document is an in-depth tutorial for the basic use of the `bspam` R package for ORF data. 
+
+## Installation
+Please refer to the README document to install the `bspam` package and other related packages:
+https://github.com/kamataak/bspam 
+
+## Load Packages
+First, we load required packages, including the `bspam` and `tidyverse` packages. We also load the example data set `passage2`, which comes with the `bspam` package.
+
+```{r setup, echo=T, message=F, warning=F}
+library(tidyverse)
+library(bspam)
+data("passage2")
+```
+
+## Data Exploration
+We use an example data included in the package for demonstration purposes.The data set `passage2` is a passage-level student data on ORF assessment and consisted of reading accuracy and time data for 12 passages from 85 students.Although the 85 students were assigned to all 12 passages, the number of passages read by the 85 students varied from 2 to 12 passages. The number of students per passage were between 59 to 79. This is a small subset of the data collected by Nese and Kamata (2014-2018).
+
+The seven variables in the data set includes:
+- `id.student`: individual ID
+- `occasion`: timing of the assessment
+- `grade`: grade level of the student
+- `id.passage`: passage ID
+- `numwords.pass`: the number of words in the passage
+- `wrc`: the number of correctly read words
+- `sec`: the time took to read the passage in seconds
+
+Some descriptive statistics are as follows.
+```{r desc1}
+passage2 %>% 
+  group_by(id.passage) %>% 
+  summarise(n.students = n(),
+            numwords.pass = unique(numwords.pass),
+            mean.wrc = mean(wrc),
+            mean.sec = mean(sec)) %>% 
+  ungroup() %>% 
+  mutate(rate.wrc = mean.wrc/numwords.pass,
+         mean.sec.per10 = mean.sec/numwords.pass*10) %>% 
+  knitr::kable(digits = 2)
+```
+
+```{r desc2}
+passage2 %>% 
+  group_by(id.student) %>% 
+  summarise(n.passages = n(),
+            tot.wrc = sum(wrc),
+            tot.sec = sum(sec),
+            obs.wcpm = tot.wrc/tot.sec*60) %>% 
+  ungroup() %>% 
+  knitr::kable(digits = 2)
+```
+
+## Passage Calibration
+
+In this section, ORF passage calibration, namely, model parameter estimation is demonstrated. We will use the `fit.model()` function with the default estimation method, which is the Monte Carlo EM algorithm described in Potgieter et al. (2025). 
+
+``` {r calibration1, message=F}
+MCEM_run1 <- fit.model(data = passage2,
+                       person.id = "id.student",
+                       task.id = "id.passage",
+                       max.counts = "numwords.pass",
+                       obs.counts = "wrc",
+                       time = "sec",
+                       k.in = 5,
+                       reps.in = 50,
+                       est = "mcem")
+```
+
+```{r}
+MCEM_run1
+```
+
+```{r out1 }
+MCEM_run1$task.param %>% knitr::kable(digits = 2)
+```
+
+```{r out2}
+MCEM_run1$hyper.param %>% knitr::kable(digits = 3)
+```
+
+##### Interpretations
+[Add some interpretations of the estimated quantities.]
+
+By default, the standard errors for the model parameters are not estimated. This will allow one to increase the number of Monte-Carlo iterations `reps.in` to improve the quality of the model parameter estimates, while minimizing the computation time. The number of `reps.in` should be 50 to 100 in realistic calibrations. Also note that `k.in` is the number of imputations for the MCEM algorithm, where the default is 5. Note that SE's for model parameters are not required for running the `scoring()` function to estimate latent factor scores and WCPM scores in the next step. If standard errors for model parameters are desired, an additional argument `se = "analytic"` or `se = "bootstrap"` needs to be added to the `fit.model()` function as follows. 
+
+``` {r calibration2, eval=F}
+MCEM_run2 <- fit.model(data = passage2,
+                       person.id = "id.student",
+                       task.id = "id.passage",
+                       max.counts = "numwords.pass",
+                       obs.counts = "wrc",
+                       time = "sec",
+                       k.in = 5,
+                       reps.in = 50,
+                       est = "mcem",
+                       se = "analytic")
+```
+
+```{r out3, eval=F}
+MCEM_run2$task.param %>% knitr::kable(digits = 2)
+```
+
+```{r out4, eval=F}
+MCEM_run2$hyper.param %>% knitr::kable(digits = 3)
+```
+
+
+### Scoring: Estimating Latent Factor Scores and WCPM Scores 1
+
+In order to estimate latent factor scores and/or WCPM scores, the `scoring()` function needs to be run. 
+
+Note that we use the output object `MCEM_run` from the previous passage calibration phase. By default (`type = "general"`), only factor scores ($\theta$ and $\tau$) and their standard errors are reported. By providing an argument `type = "orf"`, WCPM scores and their standard errors are also reported. Also, WCPM scores and/or factor scores, and their standard errors will be estimated for all cases in the data by default. 
+
+There are several estimator options and standard error estimation options: maximum likelihood (MLE), maximum a posteriori (MAP), expected a posteriori (EAP), and fully Bayesian approach. In this example, maximum a priori (MAP) estimators for scoring and analytic approach for estimating standard errors are used.
+
+#### Scoring for All Cases
+To estimate WCPM scores for all observations in the data set `passage2`, we use the `scoring()` function as follows. While there are four options for the estimator, this example uses the maximum a posteriori (MAP) estimator. This option is specified by the `est = "map"` argument. Also, the standard errors are estimated by the formula derived by the Delta method, which is specified by the `se = "analytic"` argument. Additionally, the `type = "orf"` argument will estimate the model-based WCPM scores and their standar errors, in addition to the speed and acuracy latent factor scores and their standard errors.
+
+```{r eval = F}
+WCPM_all <- scoring(calib.data=MCEM_run, 
+                    data = passage2,
+                    person.id = "id.student",
+                    occasion = "occasion",
+                    group = "grade",
+                    task.id = "id.passage",
+                    max.counts = "numwords.pass",
+                    obs.counts = "wrc",
+                    time = "sec",
+                    est = "map", 
+                    se = "analytic",
+                    type="orf")
+summary(WCPM_all)
+```
+
+##### Interpretations
+[Add some interpretations of the estimated quantities.]
