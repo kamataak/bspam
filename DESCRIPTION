@@ -50,7 +50,10 @@ Imports:
     tibble, rootSolve, tidyverse, tidyr, magrittr, doParallel, foreach, 
     futile.logger, mvtnorm, nleqslv, tryCatchLog, parallel, miscTools, psych, rstan, dplyr, plotly
 Suggests: 
-    rjags, testthat (>= 3.5.0)
+    knitr,
+    rjags,
+    rmarkdown,
+    testthat (>= 3.5.0)
 URL: https://github.com/kamataak/bspam
 BugReports: https://github.com/kamataak/bspam/issues
 RoxygenNote: 7.3.2
@@ -58,3 +61,4 @@ LazyData: yes
 Config/testthat/edition: 3
 NeedsCompilation: no
 Packaged: 2023-10-27 20:19:32 UTC; kuowang
+VignetteBuilder: knitr
