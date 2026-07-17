@@ -241,13 +241,15 @@ fit.model <- function(data=NA, person.id="",task.id="",sub.task.id="",max.counts
 #'      This column is necessary when censoring argument is TRUE.
 #' @param cases A vector of individual id for which scoring is desired. If no information is 
 #'      is specified, it will estimate scores for all cases in the \code{data}.
-#' @param est Quoted string, indicating the choice of the estimator. It has to be one of 
-#'      code/{"mle", "map", "eap", "bayes"}. Default is \code{"map"}.
-#' @param se Quoted string, indication the choice of the standard errors. It has to be one of
-#'      code/{"analytic", "bootstrap"}. Default is \code{"analytic"}.
+#' @param est Quoted string indicating the estimator. It has to be one of
+#'      \code{"mle"}, \code{"map"}, \code{"eap"}, or \code{"bayes"}.
+#'      Default is \code{"map"}.
+#' @param se Quoted string indicating the standard error method. It has to be
+#'      one of \code{"analytic"} or \code{"bootstrap"}.
+#'      Default is \code{"analytic"}.
 #' @param failsafe Numeric, indicating the number of retries for bootstrap, which can be set between
 #'      0 and 50. Default is 0.
-#' @param bootstrp Numeric, indicating the number of bootstrap iterations. Default is 100.
+#' @param bootstrap Numeric, indicating the number of bootstrap iterations. Default is 100.
 #' @param external An optional vector of task ID's in strings. If \code{NULL} (default), 
 #'      the wcpm scores are derived with the tasks the individuals were assigned to. 
 #'      If not \code{NULL}, wcpm scores are derived with the tasks provided in the vector, rather
@@ -279,7 +281,7 @@ fit.model <- function(data=NA, person.id="",task.id="",sub.task.id="",max.counts
 #'   
 #' @examples
 #' # example code
-#' WCPM_all <- scoring(calib.data=MCEM_run, 
+#' WCPM_all <- scoring(calib.data=passage.calib.mcem, 
 #'                    data = passage2,
 #'                    person.id = "id.student",
 #'                    occasion = "occasion",
