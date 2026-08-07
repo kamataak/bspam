@@ -511,7 +511,7 @@ Testlet_scoring_cens <-
           censoring = TRUE)
 ```
 
-Please see the [package website](https://github.com/kamataak/bspam/) for
+Please see the [package website](https://kamataak.github.io/bspam/) for
 more detailed usage of the package.
 
 ## Plotting
