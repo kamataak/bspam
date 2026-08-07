@@ -3,7 +3,12 @@ Type: Package
 Encoding: UTF-8
 Title: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R
 Version: 1.2.5
-Authors@R: c(person(given = "Akihito", family = "Kamata", 
+Authors@R: c(
+             person(given = "Kuo", family = "Wang", 
+                    role = c("aut", "ctb"), 
+                    email = "wangkuo@nifty.com", 
+                    comment = c(ORCID = "0000-0002-4925-0591")),
+             person(given = "Akihito", family = "Kamata", 
                     role = c("aut", "cre"), 
                     email = "akamata@smu.edu", 
                     comment = c(ORCID = "0000-0001-9570-1464")),
@@ -25,11 +30,7 @@ Authors@R: c(person(given = "Akihito", family = "Kamata",
                     comment = c(ORCID = "0000-0002-4974-7346")),
              person(given = "Xin", family = "Qiao", 
                     role = "aut", email = "xqiao@usf.edu", 
-                    comment = c(ORCID = "0000-0002-3248-7859")),
-             person(given = "Kuo", family = "Wang", 
-                    role = c("aut", "ctb"), 
-                    email = "wangkuo@nifty.com", 
-                    comment = c(ORCID = "0000-0002-4925-0591"))
+                    comment = c(ORCID = "0000-0002-3248-7859"))
             )
 Maintainer: Akihito Kamata <akamata@gmail.com>
 Description: This is an R package that contains functions to fit the speed-accuracy 
