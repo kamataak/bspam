@@ -89,7 +89,7 @@ The data set should minimally contain the following 5 variables: (1)
 individual ID, (2) task ID, (3)
 the maximum number of attempts in the task, (4) the number of successes
 in the task, and (5) the time took to complete the task. Two optional variables, `group ID` and `testing occasion ID`,
-can also be includes. However, note if the
+can also be included. However, note if the
 data are coming from only one testing occasion and one group, these two 
 variables should contain an
 arbitrary constant value, such as all 1’s.
