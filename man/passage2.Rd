@@ -21,7 +21,7 @@ A data frame with 847 rows and 7 variables.
 \url{https://jnese.github.io/core-blog/}
 }
 \usage{
-\code{data(passage2)}
+passage2
 }
 \description{
 This is an example data set. It is a passage-level Oral Reading Fluency 

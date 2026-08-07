@@ -3,7 +3,7 @@
 \docType{data}
 \name{sentence.cens.low}
 \alias{sentence.cens.low}
-\title{Sentence-level data set with high censoring}
+\title{Sentence-level data set with low censoring}
 \format{
 1334 rows and 9 variables:
 \describe{

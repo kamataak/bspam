@@ -13,7 +13,7 @@ fit.model(
   obs.counts = "",
   time = "",
   k.in = 5,
-  reps.in = 2,
+  reps.in = 50,
   ests.in = NA,
   est = "mcem",
   se = "none",
@@ -36,7 +36,7 @@ passage identifier.}
 
 \item{sub.task.id}{Quoted variable name in \code{data} that indicates 
 the unique sub task identifier. In the ORF assessment context, it is the
-sentence identifier.}
+sentence identifier. It is required when testlet is TRUE.}
 
 \item{max.counts}{Quoted variable name in \code{data} that indicates 
 the number of attempts in the task. In the ORF assessment context,
@@ -54,7 +54,7 @@ it is the time took to complete reading the passage.}
 Default is \code{5}.}
 
 \item{reps.in}{Numeric, indicating the number of Monte-Carlo iterations. 
-Default is \code{2}.}
+Default is \code{50}.}
 
 \item{ests.in}{An optional list of numeric vectors, indicating 
 initial values of the model parameters. If this argument is not given, 
@@ -90,6 +90,7 @@ Additional details...
 More & more additional note...
 }
 \examples{
+\donttest{
 # example code
 MCEM_run <- fit.model(data = passage2,
                       person.id = "id.student",
@@ -101,6 +102,7 @@ MCEM_run <- fit.model(data = passage2,
                       reps.in = 50,
                       est = "mcem")
 
+}
 }
 \references{
 Potgieter, N., Kamata, A., & Kara, Y. (2017). An EM algorithm for 

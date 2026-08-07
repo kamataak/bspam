@@ -8,11 +8,13 @@ prep(
   data = data,
   person.id = "",
   task.id = "",
+  sub.task.id = "",
   occasion = "",
   group = "",
   max.counts = "",
   obs.counts = "",
   time = "",
+  cens = "",
   sentence_level = FALSE
 )
 }
@@ -25,6 +27,10 @@ the unique person identifier.}
 \item{task.id}{Quoted variable name in \code{person.data} that indicates 
 the unique task identifier. In the ORF assessment context, it is the
 passage identifier.}
+
+\item{sub.task.id}{Quoted variable name in \code{person.data} that indicates 
+the unique sub task identifier. In the ORF assessment context, it is the
+sentence identifier. It is required when sentence_level is TRUE.}
 
 \item{occasion}{The column name in the data that represents the unique occasion.}
 
@@ -41,6 +47,9 @@ context, it is the number of words read correctly for the passage.}
 \item{time}{Quoted variable name in \code{person.data} that indicates 
 the time in seconds took to complete the task. In the ORF context, 
 it is the time took to complete reading the passage.}
+
+\item{cens}{The column name in the data that represents the censoring indicators 
+whether a specific task or sub task was censored (1) or fully observed (0).}
 
 \item{sentence_level}{flag for sentence or passage level data, default is FALSE}
 }

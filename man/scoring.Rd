@@ -44,7 +44,7 @@ context, it is the passage identifier.}
 
 \item{sub.task.id}{Quoted variable name in \code{data} that indicates 
 the unique sub task identifier. In the ORF assessment context, it is the
-sentence identifier.}
+sentence identifier. It is required when testlet is TRUE.}
 
 \item{occasion}{The column name in the data that represents the unique occasion.}
 
@@ -65,14 +65,18 @@ This column is necessary when censoring argument is TRUE.}
 \item{cases}{A vector of individual id for which scoring is desired. If no information is 
 is specified, it will estimate scores for all cases in the \code{data}.}
 
-\item{est}{Quoted string, indicating the choice of the estimator. It has to be one of 
-code/{"mle", "map", "eap", "bayes"}. Default is \code{"map"}.}
+\item{est}{Quoted string indicating the estimator. It has to be one of
+\code{"mle"}, \code{"map"}, \code{"eap"}, or \code{"bayes"}.
+Default is \code{"map"}.}
 
-\item{se}{Quoted string, indication the choice of the standard errors. It has to be one of
-code/{"analytic", "bootstrap"}. Default is \code{"analytic"}.}
+\item{se}{Quoted string indicating the standard error method. It has to be
+one of \code{"analytic"} or \code{"bootstrap"}.
+Default is \code{"analytic"}.}
 
 \item{failsafe}{Numeric, indicating the number of retries for bootstrap, which can be set between
 0 and 50. Default is 0.}
+
+\item{bootstrap}{Numeric, indicating the number of bootstrap iterations. Default is 100.}
 
 \item{external}{An optional vector of task ID's in strings. If \code{NULL} (default), 
 the wcpm scores are derived with the tasks the individuals were assigned to. 
@@ -87,8 +91,6 @@ Default is \code{FALSE}.}
 
 \item{testlet}{Boolean. If \code{TRUE}, runs with sub task level, otherwise, with task level.
 This argument is necessary when censoring is TRUE. Default is \code{FALSE}.}
-
-\item{bootstrp}{Numeric, indicating the number of bootstrap iterations. Default is 100.}
 }
 \value{
 scoring list or Bootstrap dataset or censoring list
@@ -108,7 +110,7 @@ More additional note...
 }
 \examples{
 # example code
-WCPM_all <- scoring(calib.data=MCEM_run, 
+WCPM_all <- scoring(calib.data=passage.calib.mcem, 
                    data = passage2,
                    person.id = "id.student",
                    occasion = "occasion",

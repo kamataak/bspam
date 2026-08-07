@@ -2,16 +2,7 @@
 % Please edit documentation in R/Testlet.R
 \name{fit.model.testlet}
 \alias{fit.model.testlet}
-\title{This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/}
+\title{Fit model with testlet}
 \usage{
 fit.model.testlet(
   data = NULL,
@@ -60,7 +51,9 @@ Additional details...
 Additional note...
 }
 \examples{
+\donttest{
 # example code
 fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts="", time="", task.id="", max.counts="")
+}
 
 }

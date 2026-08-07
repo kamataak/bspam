@@ -8,13 +8,19 @@ scoring.passage.censoring(
   Count = NULL,
   logT10 = NULL,
   N = NULL,
+  N_score = NULL,
   a = NULL,
+  a_score = NULL,
   b = NULL,
+  b_score = NULL,
   alpha = NULL,
+  alpha_score = NULL,
   beta = NULL,
+  beta_score = NULL,
   sigma = NULL,
   rho = NULL,
-  C = NULL
+  C = NULL,
+  type = NULL
 )
 }
 \arguments{

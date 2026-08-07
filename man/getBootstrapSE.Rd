@@ -10,6 +10,7 @@ getBootstrapSE(
   person.data,
   case = NA,
   perfect.cases,
+  zero.cases,
   est = "map",
   kappa = 1,
   bootstrap = 100,
@@ -19,11 +20,13 @@ getBootstrapSE(
 \arguments{
 \item{object}{- mcem class object}
 
-\item{person.data}{- individual response data}
+\item{person.data}{- Individual response data}
 
-\item{case}{- case number}
+\item{case}{- Case number}
 
-\item{perfect.cases}{- perfect accurate case}
+\item{perfect.cases}{- Perfect accurate case}
+
+\item{zero.cases}{- Zero accurate case}
 
 \item{est}{- SE type.(MLE, EAP, and MAP.) default MAP}
 
@@ -40,4 +43,8 @@ SE dataset
 Added MAP function 07/14/2021
 Modified a bug of MLE 07/23/2021
 Modified EAP 10/28/2021
+}
+\details{
+This function requires the optional package \pkg{MultiGHQuad}.
+Install it before using this function.
 }

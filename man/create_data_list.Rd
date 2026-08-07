@@ -4,7 +4,23 @@
 \alias{create_data_list}
 \title{Scoring.Passage function}
 \usage{
-create_data_list(Count, logT10, MaxN, a, b, alpha, beta, sigma, rho, C)
+create_data_list(
+  Count,
+  logT10,
+  MaxN,
+  MaxN_score,
+  a,
+  b,
+  alpha,
+  beta,
+  a_score,
+  b_score,
+  alpha_score,
+  beta_score,
+  sigma,
+  rho,
+  C
+)
 }
 \arguments{
 \item{a, }{b: Model parameters related to the count data model (K-dim)}

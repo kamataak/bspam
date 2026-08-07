@@ -3,7 +3,15 @@
 \docType{data}
 \name{testlet_scoring_multi_obs_multi_cens}
 \alias{testlet_scoring_multi_obs_multi_cens}
-\title{This program is free software; you can redistribute it and/or modify
+\title{Bayesian Sampling Models for Passage-Level Observations}
+\format{
+An object of class \code{character} of length 1.
+}
+\usage{
+testlet_scoring_multi_obs_multi_cens
+}
+\description{
+This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 3 of the License, or
 (at your option) any later version.
@@ -12,15 +20,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/}
-\format{
-An object of class \code{character} of length 1.
-}
-\usage{
-testlet_scoring_multi_obs_multi_cens
-}
-\description{
-Bayesian Sampling Models for Passage-Level Observations
+http://www.gnu.org/licenses/
 }
 \details{
 This code defines Bayesian sampling models for estimating latent variables
