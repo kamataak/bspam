@@ -192,106 +192,106 @@ bayes <- function(
 
     # ------------------------------------------------------------- STAN Syntax
     stan.syntax <- "
-data{
-  int <lower=0> J; //number of individuals
-  int <lower=0> I; //number of passages
-  int <lower=0> res[I,J]; //array of counts
-  real tim[I,J]; //array of times
-  int <lower=0> nw[I]; //vector of number of the words per passage
-}
-
-parameters{
-  vector <lower=0> [I] alpha; //time discrimintion
-  vector[I] beta_raw; //time intensity
-  vector <lower=0> [I] a; //accuracy discrimination
-  vector[I] b; //accuracy difficulty (threshold style)
-
-  real <lower=0> sigma_alpha; //sd of alpha's lognormal prior
-  real mu_beta; //mean of beta's normal prior
-  real <lower=0> sigma_beta; //sd of beta's normal prior
-  real <lower=0> sigma_a; //sd of a's lognormal prior
-  real mu_b; //mean of b's normal prior
-  real <lower=0> sigma_b; //sd of b's normal prior
-
-  real <lower=0> stau; //sd of tau[j]'s normal distribution in the model
-  real cvr; //covariance between theta and tau
-  real <lower=0> sigma_cvr; //sd of cvr's normal prior
-
-  vector[J] theta; //accuracy ability
-  vector[J] tau; //speed ability
-}
-
-transformed parameters{
-  real <lower=0> vartau; //Actaul variance of tau in the MVN distribution
-  real rho; //Correlation between theta and tau
-  vector[I] beta; //time intensity per 10 words;
-  vartau=square(stau) + square(cvr);
-  rho=cvr/sqrt(vartau);
-
-  for(i in 1:I){
-  beta[i]=beta_raw[i] - log(nw[i]/10.0);
+  data{
+    int <lower=0> J; //number of individuals
+    int <lower=0> I; //number of passages
+    int <lower=0> res[I,J]; //array of counts
+    real tim[I,J]; //array of times
+    int <lower=0> nw[I]; //vector of number of the words per passage
   }
-
-}
-
-model{
-  // Priors
-  alpha  ~ lognormal(0, sigma_alpha);
-  sigma_alpha ~ cauchy(0,5);
-  beta_raw ~ normal(mu_beta, sigma_beta);
-  mu_beta ~ normal(0,5);
-  sigma_beta ~ cauchy(0,5);
-  a ~ lognormal(0, sigma_a);
-  sigma_a ~ cauchy(0,5);
-  b ~ normal(mu_b, sigma_b);
-  mu_b ~ normal(0,5);
-  sigma_b ~ cauchy(0,5);
-
-  stau ~ cauchy(0,5);
-  cvr ~ normal(0, sigma_cvr);
-  sigma_cvr ~ cauchy(0,5);
-  theta ~ normal(0, 1);
-
-  tau ~ normal(cvr * theta, stau);
-
-
-// Likelihood
-  for(i in 1:I){
-  res[i] ~ binomial(nw[i], Phi(a[i] * theta - b[i]));
-  tim[i] ~ normal(beta_raw[i] - tau, 1/alpha[i]);
-              }
-}
-
-"
-# -------------------------------------------------------------------------------------------------------
-
-#Specify the parallel running or not!
-if(isTRUE(parallel)){
-  n.cores <- min(max(4), detectCores()-1)
-} else{
-  n.cores <- 1
-}
-
-stan_out <- rstan::stan(model_code = stan.syntax,
-                        pars = param_est,
-                        data = data.list,
-                        chains = n.chains,
-                        warmup  = 2e3, #for now, keep those values as default for stan
-                        iter = 1e4,
-                        thin = thin,
-                        cores = n.cores,
-                        init = inits,
-                        control = list(adapt_delta = 0.99)
-)
-
-par_est <- summary(stan_out)$summary %>%
-  as.data.frame() %>%
-  rownames_to_column(var = "Parameter") %>%
-  select(Parameter, Mean=mean, SD=sd, Lower95=`2.5%`, Upper95=`97.5%`, ESS=n_eff, BGR=Rhat) %>%
-  mutate(ESS=round(ESS)) %>%
-  filter(Parameter!="lp__")
-
+  
+  parameters{
+    vector <lower=0> [I] alpha; //time discrimintion
+    vector[I] beta_raw; //time intensity
+    vector <lower=0> [I] a; //accuracy discrimination
+    vector[I] b; //accuracy difficulty (threshold style)
+  
+    real <lower=0> sigma_alpha; //sd of alpha's lognormal prior
+    real mu_beta; //mean of beta's normal prior
+    real <lower=0> sigma_beta; //sd of beta's normal prior
+    real <lower=0> sigma_a; //sd of a's lognormal prior
+    real mu_b; //mean of b's normal prior
+    real <lower=0> sigma_b; //sd of b's normal prior
+  
+    real <lower=0> stau; //sd of tau[j]'s normal distribution in the model
+    real cvr; //covariance between theta and tau
+    real <lower=0> sigma_cvr; //sd of cvr's normal prior
+  
+    vector[J] theta; //accuracy ability
+    vector[J] tau; //speed ability
   }
+  
+  transformed parameters{
+    real <lower=0> vartau; //Actaul variance of tau in the MVN distribution
+    real rho; //Correlation between theta and tau
+    vector[I] beta; //time intensity per 10 words;
+    vartau=square(stau) + square(cvr);
+    rho=cvr/sqrt(vartau);
+  
+    for(i in 1:I){
+    beta[i]=beta_raw[i] - log(nw[i]/10.0);
+    }
+  
+  }
+  
+  model{
+    // Priors
+    alpha  ~ lognormal(0, sigma_alpha);
+    sigma_alpha ~ cauchy(0,5);
+    beta_raw ~ normal(mu_beta, sigma_beta);
+    mu_beta ~ normal(0,5);
+    sigma_beta ~ cauchy(0,5);
+    a ~ lognormal(0, sigma_a);
+    sigma_a ~ cauchy(0,5);
+    b ~ normal(mu_b, sigma_b);
+    mu_b ~ normal(0,5);
+    sigma_b ~ cauchy(0,5);
+  
+    stau ~ cauchy(0,5);
+    cvr ~ normal(0, sigma_cvr);
+    sigma_cvr ~ cauchy(0,5);
+    theta ~ normal(0, 1);
+  
+    tau ~ normal(cvr * theta, stau);
+  
+  
+  // Likelihood
+    for(i in 1:I){
+    res[i] ~ binomial(nw[i], Phi(a[i] * theta - b[i]));
+    tim[i] ~ normal(beta_raw[i] - tau, 1/alpha[i]);
+                }
+  }
+  
+  "
+  # -------------------------------------------------------------------------------------------------------
+  
+  #Specify the parallel running or not!
+  if(isTRUE(parallel)){
+    n.cores <- min(max(4), detectCores()-1)
+  } else{
+    n.cores <- 1
+  }
+  
+  stan_out <- rstan::stan(model_code = stan.syntax,
+                          pars = param_est,
+                          data = data.list,
+                          chains = n.chains,
+                          warmup  = 2e3, #for now, keep those values as default for stan
+                          iter = 1e4,
+                          thin = thin,
+                          cores = n.cores,
+                          init = inits,
+                          control = list(adapt_delta = 0.99)
+  )
+  
+  par_est <- rstan::summary(stan_out)$summary %>%
+    as.data.frame() %>%
+    rownames_to_column(var = "Parameter") %>%
+    select(Parameter, Mean=mean, SD=sd, Lower95=`2.5%`, Upper95=`97.5%`, ESS=n_eff, BGR=Rhat) %>%
+    mutate(ESS=round(ESS)) %>%
+    filter(Parameter!="lp__")
+
+}
 
 #Create an output as the same structure as mcem function
 par_est_list <- list(
