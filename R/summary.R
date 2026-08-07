@@ -123,66 +123,82 @@ summary.fit.model <- function(object, digits=4,...) {
 #' @return scoring dataset with task information and estimated score
 #' @method summary scoring
 #' @export
-summary.scoring <- function(object, digits=4,verbose=TRUE,factor.scores=TRUE, show="short") {
+summary.scoring <- function(object, digits=4, verbose=TRUE,
+                            factor.scores=TRUE, show="short") {
   
   z <- object
-  # try dataframe
-  tb <- as.data.frame(t(do.call(rbind, z))) # convert list to data frame
-  # print(colnames(tb)) for debug
+  tb <- as.data.frame(t(do.call(rbind, z)))
   
-  if("wcpm.obs" %in% colnames(tb)) {
-    if ("wcpm.jags" %in% colnames(tb)) {  # for bayes object
-      no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')  
-    } else if ("wcpm.stan" %in% colnames(tb)) { # for stan output
-      no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')  
-    } else {
-      no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs', 'wcpm.obs')
-    }
+  # Detect new testlet scoring format
+  is_testlet <- any(c("sub.task.n", "obs.counts.total") %in% colnames(tb))
+  
+  if (is_testlet) {
+    no_show_columns <- c(
+      "occasion", "group", "task.n", "sub.task.n",
+      "max.counts.total", "obs.counts.total",
+      "secs.obs", "wcpm.obs"
+    )
+    meta_cols <- 7
   } else {
-    no_show_columns <- c('occasion', 'group', 'task.n', 'max.counts.total', 'obs.counts.obs', 'secs.obs')
+    if ("wcpm.obs" %in% colnames(tb)) {
+      no_show_columns <- c(
+        "occasion", "group", "task.n",
+        "max.counts.total", "obs.counts.obs",
+        "secs.obs", "wcpm.obs"
+      )
+    } else {
+      no_show_columns <- c(
+        "occasion", "group", "task.n",
+        "max.counts.total", "obs.counts.obs",
+        "secs.obs"
+      )
+    }
+    meta_cols <- 6
   }
   
   # don't output theta and tau, if FALSE
-  if (factor.scores==FALSE) {
+  if (factor.scores == FALSE) {
     tb <- tb %>% select(-contains(c("tau", "theta")))
   }
   
   getNames <- colnames(tb)
-  
   cols_num <- ncol(tb)
-  #set screen print out to be short decimal
-  tt <- as.matrix(unlist(lapply(as.double(unlist((tb[,c(7:cols_num)]))),
-                                sprintf, fmt = "%6.3f")))
-  dim(tt) <- c(dim(tb)[1],(cols_num-6))
-  tt <- cbind(tb[,c(1:6)], tt)
+  
+  # screen print formatting
+  tt_num <- as.matrix(unlist(lapply(
+    as.double(unlist(tb[, (meta_cols + 1):cols_num])),
+    sprintf,
+    fmt = "%6.3f"
+  )))
+  
+  dim(tt_num) <- c(nrow(tb), cols_num - meta_cols)
+  tt <- cbind(tb[, 1:meta_cols], tt_num)
   colnames(tt) <- getNames
-  # prepare for data output
+  
+  # prepare invisible data output
   if (nrow(tb) == 1) {
-    tm1 <- t(sapply(tb %>% select(-contains(c("occasion"))), as.numeric))
+    tm1 <- t(sapply(tb %>% select(-contains("occasion")), as.numeric))
   } else {
-    tm1 <- sapply(tb %>% select(-contains(c("occasion"))), as.numeric)
+    tm1 <- sapply(tb %>% select(-contains("occasion")), as.numeric)
   }
-  #  tm1 <- sapply(tb %>% select(-contains(c("occasion"))), as.numeric)
+  
   tm2 <- tb %>% select("occasion")
-  tb <- cbind(tm1, tm2)[,c(1,cols_num,2:(cols_num-1))]
+  tb <- cbind(tm1, tm2)[, c(1, cols_num, 2:(cols_num - 1))]
   
   if (show == "short") {
-    tt <- tt %>% select(-all_of(c(no_show_columns)))
-    tb <- tb %>% select(-all_of(c(no_show_columns)))
+    tt <- tt %>% select(-any_of(no_show_columns))
+    tb <- tb %>% select(-any_of(no_show_columns))
   }
   
-  #exclude rownames
   rownames(tt) <- NULL
   rownames(tb) <- NULL
   
   if (verbose == TRUE) {
-    # only verbose TRUE will print out on screen
-    print(tt, row.names = F)
+    print(tt, row.names = FALSE)
     return(invisible(tb))
   } else {
     return(invisible(tb))
   }
-  
 }
 #' summary the information of bootstrap class
 #'
