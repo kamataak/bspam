@@ -66,12 +66,25 @@ scoring.sentence.censoring <- function(Count=NULL,
   
   flog.info("Begin scoring sentence censoring process", name = "orfrlog")
   
+  # suppress_output <- function(expr) {
+  #   sink(nullfile())
+  #   expr
+  #   sink()
+  # }
   suppress_output <- function(expr) {
-    sink(nullfile())
-    expr
-    sink()
+    con <- file(nullfile(), open = "w")
+
+    sink(con)
+    on.exit({
+      if (sink.number() > 0) {
+        sink()
+      }
+      close(con)
+    }, add = TRUE)
+
+    force(expr)
   }
-  
+
   Y <- data.matrix(Count) # e.g., [r:58,c:23], r->person, c->sentence
   logT10 <- data.matrix(logT10) # [r,c]
   Cens <- data.matrix(C)

@@ -60,10 +60,23 @@ scoring.passage.censoring <- function(Count=NULL,
   
   flog.info("Begin scoring passage process", name = "orfrlog")
   
+  # suppress_output <- function(expr) {
+  #   sink(nullfile())
+  #   expr
+  #   sink()
+  # }
   suppress_output <- function(expr) {
-    sink(nullfile())
-    expr
-    sink()
+    con <- file(nullfile(), open = "w")
+
+    sink(con)
+    on.exit({
+      if (sink.number() > 0) {
+        sink()
+      }
+      close(con)
+    }, add = TRUE)
+
+    force(expr)
   }
   
   Y <- data.matrix(Count) # [r,c], r->person, c->passage
