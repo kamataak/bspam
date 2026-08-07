@@ -277,7 +277,12 @@ In some circumstances, a test may be designed as a speeded test, such that many 
 
 Please see the [package website](https://github.com/kamataak/bspam/) for more detailed usage of the package.
 
-## Citations
+## Citation for bspam R package
+
+Wang K, Kamata A, Potgieter C, Nese J, Kara Y, Somsong S, Qiao X (2023). bspam: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R. R package version 1.2.5, [https://github.com/kamataak/bspam](https://github.com/kamataak/bspam)
+
+## Citations of References
+
 Kara, Y., Kamata, A., Potgieter, C., & Nese, J. F. (2020). Estimating model-based oral reading fluency: A bayesian approach with a binomial-lognormal joint latent model. Educational and Psychological Measurement, 1–25.
 
 Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. Institute of Education Sciences, U.S. Department of Education. https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492
@@ -287,7 +292,7 @@ Potgieter, N., Kamata, A., & Kara, Y. (2017). An EM algorithm for estimating an 
 Qiao, X, Potgieter, N., & Kamata, A. (2023). Likelihood Estimation of Model-based Oral Reading Fluency. Manuscript submitted for publication.
 
 ## Copyright Statement
-Copyright (C) 2022-2023 The ORF Project Team
+Copyright (C) 2022-2025 The ORF Project Team
 
 The bspam package is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

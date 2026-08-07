@@ -466,7 +466,24 @@ plot.task(MCEM_run, parameter = "a", sort = TRUE)
 plot.person(WCPM_all, parameter = "wcpm", show.se = TRUE)
 ```
 
-## Citations
+## Cite this software as:
+You can use citation("bspam") to get the following information. The current version is 1.2.5.
+
+To cite package ‘bspam’ in publications use:
+
+Wang K, Kamata A, Potgieter C, Nese J, Kara Y, Somsong S, Qiao X (2023). bspam: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R. R package version 1.2.5, [https://github.com/kamataak/bspam](https://github.com/kamataak/bspam)
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {bspam: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R},
+    author = {Kuo Wang and Akihito Kamata and Cornelis J. Potgieter and Joseph F. T. Nese and Yusuf Kara and Sarunya Somsong and Xin Qiao},
+    year = {2023},
+    note = {R package version 1.2.5},
+    url = {https://github.com/kamataak/bspam},
+  }
+  
+## References
 
 Kara, Y., Kamata, A., Potgieter, C., & Nese, J. F. (2020). Estimating
 model-based oral reading fluency: A bayesian approach with a
@@ -487,7 +504,7 @@ Model-based Oral Reading Fluency. Manuscript submitted for publication.
 
 ## Copyright Statement
 
-Copyright (C) 2022-2025 The ORF Project Team
+Copyright (C) 2022-2026 The ORF Project Team
 
 The bspam package is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as published
