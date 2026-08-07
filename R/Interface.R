@@ -32,7 +32,7 @@
 #' @param k.in    Numeric, indicating the number of imputations. 
 #'     Default is \code{5}.
 #' @param reps.in Numeric, indicating the number of Monte-Carlo iterations. 
-#'     Default is \code{2}.
+#'     Default is \code{50}.
 #' @param ests.in An optional list of numeric vectors, indicating 
 #'     initial values of the model parameters. If this argument is not given, 
 #'     \code{mom} function will be called to generate the initial values.
@@ -65,6 +65,7 @@
 #'   Educational and Psychological Measurement, 1–25.
 #'   
 #' @examples
+#' \donttest{
 #' # example code
 #' MCEM_run <- fit.model(data = passage2,
 #'                       person.id = "id.student",
@@ -76,9 +77,10 @@
 #'                       reps.in = 50,
 #'                       est = "mcem")
 #' 
+#' }
 #' @return MCEM list, bayes list
 #' @export
-fit.model <- function(data=NA, person.id="",task.id="",sub.task.id="",max.counts="",obs.counts="",time="", k.in=5,reps.in=2,ests.in=NA,
+fit.model <- function(data=NA, person.id="",task.id="",sub.task.id="",max.counts="",obs.counts="",time="", k.in=5,reps.in=50,ests.in=NA,
                       est="mcem",se="none",verbose=FALSE, testlet=FALSE) {
   # loading logger
   log.initiating()
@@ -762,6 +764,15 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
     } else if (se == "bootstrap"){ #for bootstrap
       # Check if there is a perfect accurate case
       perfect.cases <<- get.perfectcases(data)
+
+      # Check if there is a zero accurate case
+      zero.cases <<- get.zerocases(data)
+      
+      if (count(zero.cases) != 0) {
+        flog.info(paste("The zero accurate case: ", paste(zero.cases$zero.cases, collapse = ", ")), name="orfrlog")
+      } else {
+        flog.info("There is no zero accurate case.", name="orfrlog")
+      }    
       
       RE_TRY <- failsafe # Define retry, if 0, no retry
       j <- 0 # index for retry time
@@ -774,7 +785,9 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
         flog.info(paste("Boostrap running for case:", cases$cases[i]), name = "orfrlog")
         t_case = data.frame(cases=cases$cases[i])
         tryCatchLog(
-          temp <- getBootstrapSE(calib.data, data, case=t_case, perfect.cases, est, kappa=1,bootstrap=bootstrap),
+          # temp <- getBootstrapSE(calib.data, data, case=t_case, perfect.cases, est, kappa=1,bootstrap=bootstrap),
+          temp <- getBootstrapSE(calib.data, data, case=t_case, perfect.cases, zero.cases, est, kappa=1,bootstrap=bootstrap),
+
           error=function(e) {
             flog.info(paste("Running error:", e), name = "orfrlog")
           }

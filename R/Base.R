@@ -14,7 +14,7 @@
 #' @param N       Numeric vector of passage lengths in the length of n.
 #' @param I       Numeric, indicating the number of tasks.
 #' @param k.in    Numeric, indicating the number of imputations. Default is 5.
-#' @param reps.in Numeric, indicating the number of Monte-Carlo iterations. Default is 2.
+#' @param reps.in Numeric, indicating the number of Monte-Carlo iterations, should be 50 to 100. Default is 50.
 #' @param ests.in An optional list of numeric vectors, indicating initial values of 
 #'      the model param- eters. If this argument is not given, \code{mom} function will 
 #'      be called to generate the initial values.
@@ -45,7 +45,7 @@
 #'
 #' @return mcem list
 #' @export
-run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=2,ests.in=NA,verbose=FALSE) {
+run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=50,ests.in=NA,verbose=FALSE) {
   
   # loading logger
   log.initiating()
@@ -542,8 +542,9 @@ bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
 #' @param cases A vector of individual id for which scoring is desired. If no information is 
 #'      is specified, it will estimate scores for all cases in the \code{person.data}.
 #' @param est Quoted string, indicating the choice of the estimator. It has to be one of 
-#'      code/{"mle", "map", "eap", "bayes"}. Default is \code{"map"}.
-#' @param perfect.cases A list? A list of perfect cases.
+#'      \code{"mle"}, \code{"map"}, \code{"eap"}, \code{"bayes"}. Default is \code{"map"}.
+#' @param perfect.cases A list of perfect cases (Perfect accurate).
+#' @param zero.cases A list of zero cases (Zero accurate).
 #' @param lo Numeric, indicating the lower bound of the quadratures. Default is -12.
 #' @param hi Numeric, indicating the upper bound of the quadratures. Default is 12.
 #' @param q  Numeric, indicating the number of quadratures. Default is 100.
@@ -594,7 +595,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, ze
     person.dat01 <- person.data %>% filter(person.data$person.id==case_split[1], person.data$occasion==case_split[2])
     
     if (nrow(person.dat01) == 0) {
-      # flog.info(paste("No data for:", case), name = "orfrlog")
+      futile.logger::flog.info(paste("No data for:", case), name = "orfrlog")
       return(paste("No data for:", case))
     }
     task.read <- person.dat01 %>% dplyr::select(task.id)
@@ -1016,11 +1017,12 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, ze
   
   
   cl <- makeCluster(numCores)
+  on.exit(stopCluster(cl), add = TRUE)
   registerDoParallel(cl)
   
   seq_id_all <- nrow(cases)
  
-  theta.tau <- foreach(i=1:seq_id_all, .combine = 'rbind', .packages = c("tidyverse", "miscTools", "mvtnorm")) %dopar% #%dopar%
+  theta.tau <- foreach(i=1:seq_id_all, .combine = 'rbind', .packages = c("tidyverse", "miscTools", "mvtnorm", "futile.logger")) %dopar% #%dopar%
     { 
       # print(paste("i=", i)) # for debug
       est.theta.tau(person.data,

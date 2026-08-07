@@ -846,9 +846,8 @@ plot.information <- function(calib_data=NULL) {
   respon <- rbinom(n = N*I, size = nwords_rep, prob = prb)
   respon_mat <- matrix(respon, nc=I)
   
-  time_mat.l<-time_mat %>% 
-    exp()%>%
-    as.data.frame()%>%
+  time_mat.l <- exp(time_mat) %>% 
+    as.data.frame() %>%
     pivot_longer(cols = contains("V"), names_to = "secs")
   
   logtime_mat.l<-time_mat %>% 
