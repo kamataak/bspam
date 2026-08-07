@@ -768,9 +768,9 @@ generated quantities{
 
 "
 # Define Stan models
-model_multi_obs_multi_cens_sentence <- rstan::stan_model(model_code = testlet_scoring_multi_obs_multi_cens_sentence)
-model_multi_obs_one_cens_sentence <- rstan::stan_model(model_code = testlet_scoring_multi_obs_one_cens_sentence)
-model_one_obs_multi_cens_sentence <- rstan::stan_model(model_code = testlet_scoring_one_obs_multi_cens_sentence)
-model_multi_obs_no_cens_sentence <- rstan::stan_model(model_code = testlet_scoring_multi_obs_no_cens_sentence)
-model_no_obs_multi_cens_sentence <- rstan::stan_model(model_code = testlet_scoring_no_obs_multi_cens_sentence)
-model_one_obs_one_cens_sentence <- rstan::stan_model(model_code = testlet_scoring_one_obs_one_cens_sentence)
+# model_multi_obs_multi_cens_sentence <- rstan::stan_model(model_code = testlet_scoring_multi_obs_multi_cens_sentence)
+# model_multi_obs_one_cens_sentence <- rstan::stan_model(model_code = testlet_scoring_multi_obs_one_cens_sentence)
+# model_one_obs_multi_cens_sentence <- rstan::stan_model(model_code = testlet_scoring_one_obs_multi_cens_sentence)
+# model_multi_obs_no_cens_sentence <- rstan::stan_model(model_code = testlet_scoring_multi_obs_no_cens_sentence)
+# model_no_obs_multi_cens_sentence <- rstan::stan_model(model_code = testlet_scoring_no_obs_multi_cens_sentence)
+# model_one_obs_one_cens_sentence <- rstan::stan_model(model_code = testlet_scoring_one_obs_one_cens_sentence)

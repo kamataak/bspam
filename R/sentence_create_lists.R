@@ -138,7 +138,8 @@ score_testlet_sentence <- function(data_list) {
   C0 <- data_list$N_obs
   
   if (C0 >= 2 && C1 >= 2) {
-    fit <- rstan::sampling(model_multi_obs_multi_cens_sentence, 
+    fit <- rstan::sampling(#model_multi_obs_multi_cens_sentence, 
+      get_stan_model("model_multi_obs_multi_cens_sentence"),
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -160,7 +161,8 @@ score_testlet_sentence <- function(data_list) {
     wcpm_sd <- posterior_sd["wcpm"]
     
   } else if (C0 >= 2 && C1 == 1) { # C1 is cens, C0 is obs
-    fit <- rstan::sampling(model_multi_obs_one_cens_sentence, #model_one_obs_multi_cens_sentence, 
+    fit <- rstan::sampling(#model_multi_obs_one_cens_sentence, #model_one_obs_multi_cens_sentence, 
+      get_stan_model("model_multi_obs_one_cens_sentence"),
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -180,7 +182,8 @@ score_testlet_sentence <- function(data_list) {
     time_sd <- posterior_sd["exp_tim"]
     wcpm_sd <- posterior_sd["wcpm"]
   } else if (C0 >= 2 && C1 == 0) { ## -----> This is the testlet model!!!
-    fit <- rstan::sampling(model_multi_obs_no_cens_sentence, #model_no_obs_multi_cens_sentence, 
+    fit <- rstan::sampling(#model_multi_obs_no_cens_sentence, #model_no_obs_multi_cens_sentence, 
+      get_stan_model("model_multi_obs_no_cens_sentence"),
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -202,7 +205,8 @@ score_testlet_sentence <- function(data_list) {
     wcpm_sd <- posterior_sd["wcpm"]
     
   } else if (C0 == 1 && C1 >= 2) { # C1 is cens, C0 is obs
-    fit <- rstan::sampling(model_one_obs_multi_cens_sentence, #model_multi_obs_one_cens_sentence, 
+    fit <- rstan::sampling(#model_one_obs_multi_cens_sentence, #model_multi_obs_one_cens_sentence, 
+      get_stan_model("model_one_obs_multi_cens_sentence"),
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -222,7 +226,8 @@ score_testlet_sentence <- function(data_list) {
     time_sd <- posterior_sd["exp_tim"]
     wcpm_sd <- posterior_sd["wcpm"]
   } else if (C0 == 0 && C1 >= 2) {
-    fit <- rstan::sampling(model_no_obs_multi_cens_sentence, #model_multi_obs_no_cens_sentence, 
+    fit <- rstan::sampling(#model_no_obs_multi_cens_sentence, #model_multi_obs_no_cens_sentence, 
+      get_stan_model("model_no_obs_multi_cens_sentence"),
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -242,7 +247,8 @@ score_testlet_sentence <- function(data_list) {
     time_sd <- posterior_sd["exp_tim"]
     wcpm_sd <- posterior_sd["wcpm"]
   } else if (C0 == 1 && C1 == 1) {
-    fit <- rstan::sampling(model_one_obs_one_cens_sentence, 
+    fit <- rstan::sampling(#model_one_obs_one_cens_sentence, 
+      get_stan_model("model_one_obs_one_cens_sentence"),
                            data = data_list, chains = 4, 
                            iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)

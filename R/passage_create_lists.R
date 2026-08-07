@@ -95,7 +95,8 @@ score_testlet <- function(data_list) {
   
   # Below if statements determine which version of the Stan model to use
   if (C0 >= 2 && C1 >= 2) { # C0 is obs, C1 is cens
-    fit <- rstan::sampling(model_multi_obs_multi_cens, 
+    fit <- rstan::sampling(#model_multi_obs_multi_cens, 
+      get_stan_model("model_multi_obs_multi_cens"),
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -119,7 +120,8 @@ score_testlet <- function(data_list) {
     
     
   } else if (C0 >= 2 && C1 == 1) { # C0 is obs, C1 is cens
-    fit <- rstan::sampling(model_multi_obs_one_cens, # model_one_obs_multi_cens, 
+    fit <- rstan::sampling(#model_multi_obs_one_cens, # model_one_obs_multi_cens, 
+      get_stan_model("model_multi_obs_one_cens"),
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -141,7 +143,8 @@ score_testlet <- function(data_list) {
     wcpm_sd <- posterior_sd["wcpm"]
     
   } else if (C0 >= 2 && C1 == 0) { # C0 is obs, C1 is cens 
-    fit <- rstan::sampling(model_multi_obs_no_cens, #model_no_obs_multi_cens, 
+    fit <- rstan::sampling(#model_multi_obs_no_cens, #model_no_obs_multi_cens, 
+      get_stan_model("model_multi_obs_no_cens"),
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -163,7 +166,8 @@ score_testlet <- function(data_list) {
     wcpm_sd <- posterior_sd["wcpm"]
     
     } else if (C0 == 1 && C1 >= 2) { # C0 is obs, C1 is cens
-    fit <- rstan::sampling(model_one_obs_multi_cens, #model_multi_obs_one_cens, 
+    fit <- rstan::sampling(#model_one_obs_multi_cens, #model_multi_obs_one_cens, 
+      get_stan_model("model_one_obs_multi_cens"),
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -186,7 +190,8 @@ score_testlet <- function(data_list) {
     wcpm_sd <- posterior_sd["wcpm"]
     
   } else if (C0 == 0 && C1 >= 2) { # C0 is obs, C1 is cens
-    fit <- rstan::sampling(model_no_obs_multi_cens, #model_multi_obs_no_cens, 
+    fit <- rstan::sampling(#model_no_obs_multi_cens, #model_multi_obs_no_cens, 
+      get_stan_model("model_no_obs_multi_cens"),
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)
@@ -208,7 +213,8 @@ score_testlet <- function(data_list) {
     wcpm_sd <- posterior_sd["wcpm"]
     
   } else if (C0 == 1 && C1 == 1) { # C0 is obs, C1 is cens
-    fit <- rstan::sampling(model_one_obs_one_cens, 
+    fit <- rstan::sampling(#model_one_obs_one_cens, 
+      get_stan_model("model_one_obs_one_cens"),
                     data = data_list, chains = 4, 
                     iter = 2000, warmup = 1000)
     summary_info <- rstan::summary(fit)

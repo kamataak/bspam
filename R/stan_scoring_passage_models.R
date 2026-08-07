@@ -583,9 +583,9 @@ generated quantities{
 "
 
 # Define Stan models for different scenarios
-model_multi_obs_multi_cens <- rstan::stan_model(model_code = testlet_scoring_multi_obs_multi_cens)
-model_multi_obs_one_cens <- rstan::stan_model(model_code = testlet_scoring_multi_obs_one_cens)
-model_one_obs_multi_cens <- rstan::stan_model(model_code = testlet_scoring_one_obs_multi_cens)
-model_multi_obs_no_cens <- rstan::stan_model(model_code = testlet_scoring_multi_obs_no_cens)
-model_no_obs_multi_cens <- rstan::stan_model(model_code = testlet_scoring_no_obs_multi_cens)
-model_one_obs_one_cens <- rstan::stan_model(model_code = testlet_scoring_one_obs_one_cens)
+# model_multi_obs_multi_cens <- rstan::stan_model(model_code = testlet_scoring_multi_obs_multi_cens)
+# model_multi_obs_one_cens <- rstan::stan_model(model_code = testlet_scoring_multi_obs_one_cens)
+# model_one_obs_multi_cens <- rstan::stan_model(model_code = testlet_scoring_one_obs_multi_cens)
+# model_multi_obs_no_cens <- rstan::stan_model(model_code = testlet_scoring_multi_obs_no_cens)
+# model_no_obs_multi_cens <- rstan::stan_model(model_code = testlet_scoring_no_obs_multi_cens)
+# model_one_obs_one_cens <- rstan::stan_model(model_code = testlet_scoring_one_obs_one_cens)
