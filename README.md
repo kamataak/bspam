@@ -14,6 +14,23 @@ calibration and scoring for oral reading fluency (ORF) assessment data.
 This document demonstrates some uses of the `bspam` package by using an
 ORF assessment data set.
 
+### Main Functions
+
+| Function | Purpose |
+|---|---|
+| `prep()` | Prepare passage- or sentence-level data for analysis |
+| `fit.model()` | Estimate task parameters by MCEM or Bayesian estimation |
+| `scoring()` | Estimate latent factor scores and model-based WCPM scores |
+| `get.cases()` | Generate person-by-occasion case identifiers |
+| `summary()` | Summarize calibration and scoring results |
+| `plot.task()` | Visualize task parameter estimates |
+| `plot.person()` | Visualize person-level score estimates |
+| `plot.information()` | Visualize calibration information |
+
+Advanced users can also access lower-level functions such as
+`run.mcem()`, `run.scoring()`, `bayes()`, and `bayes.wcpm()`. See the
+package help pages for details.
+
 ## Installation:
 
 To install the `bspam` package, follow the steps below.
@@ -99,6 +116,18 @@ Although the 85 students were assigned to all 12 passages, the number of
 passages read by the 85 students varied from 2 to 12 passages. The
 number of students per passage were between 59 to 79. This is a small
 subset of the data collected by Nese and Kamata (2014-2018).
+
+The package also includes the following example data sets and output
+objects:
+
+| Object | Purpose |
+|---|---|
+| `passage2` | Passage-level ORF example data |
+| `sentence.level.data` | Sentence-level/testlet ORF example data |
+| `sentence.cens.low` | Sentence-level example data with low censoring |
+| `sentence.cens.high` | Sentence-level example data with high censoring |
+| `passage.calib.mcem` | Example MCEM calibration output |
+| `passage.calib.bayes` | Example Bayesian calibration output |
 
 ### Load Packages
 
@@ -195,6 +224,11 @@ There are several estimator options for scoring: maximum likelihood
 can be estimated analytically or via bootstrap, except when
 `est = "bayes"`, in which case posterior standard deviations are
 reported.
+
+When `se = "bootstrap"` is used, the number of bootstrap replications
+can be controlled with the `bootstrap` argument (default = 100). The
+`failsafe` argument can be used to specify the number of retry attempts
+for failed bootstrap samples.
 
 In addition to standard scoring, the `scoring()` function supports
 **censored (truncated) response data** by setting `censoring = TRUE` and
@@ -456,6 +490,27 @@ consisted of 250 words. In this case, many students do not finish
 reading the entire passage. The `bspam` R package can score such a data
 set by the censored model both for the regular and the testlet models.
 
+For example, the package includes `sentence.cens.low` and
+`sentence.cens.high` for demonstrating sentence-level scoring with
+censored observations. A censored testlet scoring analysis can be run
+as follows:
+
+``` r
+Testlet_scoring_cens <- 
+  scoring(calib.data = Testlet_run,
+          data = sentence.cens.low,
+          person.id = "id.student",
+          task.id = "id.passage",
+          sub.task.id = "id.sentence",
+          obs.counts = "wrc",
+          max.counts = "numwords.sent",
+          time = "sec",
+          cens = "cens",
+          type = "orf",
+          testlet = TRUE,
+          censoring = TRUE)
+```
+
 Please see the [package website](https://github.com/kamataak/bspam/) for
 more detailed usage of the package.
 
@@ -464,6 +519,15 @@ more detailed usage of the package.
 ``` r
 plot.task(MCEM_run, parameter = "a", sort = TRUE)
 plot.person(WCPM_all, parameter = "wcpm", show.se = TRUE)
+```
+
+Additional plotting functions documented in the package include
+`plot.information()` for calibration information and `plot.wcpm()` for
+comparing observed and model-based WCPM scores.
+
+``` r
+plot.information(MCEM_run)
+plot.wcpm(WCPM_all)
 ```
 
 ## Cite this software as:
