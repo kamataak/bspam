@@ -12,10 +12,10 @@ reference:
   desc: >
     Main functions for data preparation, model calibration, and scoring.
   contents:
-  - fit.model
-  - scoring
   - prep
   - get.cases
+  - fit.model
+  - scoring
 
 - title: "Plotting Functions"
   desc: >
