@@ -12,6 +12,8 @@ For example, the use of this modeling technique allows model-based calibration a
 ## Installation:
 To install the `bspam` package, follow the steps below.
 
+Before installation, make sure that R and the system tools required to build R packages are available on your computer. On Windows, this may require Rtools; on macOS, the Xcode Command Line Tools may be required. Some `bspam`  dependencies, particularly those used for Bayesian estimation, may require these compilation tools.
+
 1. Install `remotes` package, by running the following R code.
 ``` {r eval = F}
 if(!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")

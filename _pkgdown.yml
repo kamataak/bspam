@@ -6,3 +6,59 @@ navbar:
   structure:
     left:  [intro, reference, articles, tutorials]
     right: [search, github]
+    
+reference:
+- title: "Main Functions"
+  desc: >
+    Main functions for data preparation, model calibration, and scoring.
+  contents:
+  - fit.model
+  - scoring
+  - prep
+  - get.cases
+
+- title: "Plotting Functions"
+  desc: >
+    Functions for visualizing calibration and scoring results.
+  contents:
+  - plot.task
+  - plot.person
+  - plot.wcpm
+  - plot.information
+
+- title: "Advanced and Utility Functions"
+  desc: >
+    Additional exported functions for advanced analyses and data processing.
+  contents:
+  - fit.model.testlet
+  - run.mcem
+  - agg.word
+  - desc.data
+
+- title: "Example Data and Results"
+  desc: >
+    Example data sets and calibration results included with bspam.
+  contents:
+  - passage2
+  - sentence.level.data
+  - sentence.cens.low
+  - sentence.cens.high
+  - passage.calib.mcem
+  - passage.calib.bayes
+  
+- title: internal
+  contents:
+  - bayes
+  - bayes.wcpm
+  - create_data_list
+  - create_data_list_sentence
+  - getBootstrapSE
+  - run.scoring
+  - scoring.passage.censoring
+  - scoring.sentence.censoring
+  - summary.bootstrap
+  - summary.fit.model
+  - summary.fit.model.testlet
+  - summary.scoring
+  - testlet_scoring_multi_obs_multi_cens
+  - testlet_scoring_multi_obs_multi_cens_sentence

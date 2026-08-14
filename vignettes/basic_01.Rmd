@@ -4,7 +4,7 @@ author: "Akihito Kamata"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Basic Tuorial 1}
+  %\VignetteIndexEntry{bspam: Passage-level Calibration & Scoring for ORF Data 1}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

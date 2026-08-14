@@ -49,7 +49,7 @@ Suggests:
     rjags,
     rmarkdown,
     testthat (>= 3.0.0)
-URL: https://github.com/kamataak/bspam
+URL: https://kamataak.github.io/bspam/, https://github.com/kamataak/bspam
 BugReports: https://github.com/kamataak/bspam/issues
 RoxygenNote: 7.3.2
 LazyData: yes
