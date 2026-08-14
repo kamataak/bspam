@@ -622,3 +622,27 @@ desc.data <- function(data=NULL,
     }
   } 
 }
+
+.check_rstan <- function(context = "this analysis") {
+  if (!requireNamespace("rstan", quietly = TRUE)) {
+    stop(
+      context, " requires the 'rstan' package. ",
+      "Please install RStan before using this functionality.",
+      call. = FALSE
+    )
+  }
+  
+  invisible(TRUE)
+}
+
+.check_runjags <- function(context = "this analysis") {
+  if (!requireNamespace("runjags", quietly = TRUE)) {
+    stop(
+      context, " requires the 'runjags' package and a working JAGS installation. ",
+      "Please install JAGS and the 'runjags' package before using this functionality.",
+      call. = FALSE
+    )
+  }
+  
+  invisible(TRUE)
+}

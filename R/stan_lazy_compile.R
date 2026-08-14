@@ -30,6 +30,9 @@ get_stan_model <- function(model_name) {
   }
   
   if (!exists(model_name, envir = .bspam_stan_model_cache, inherits = FALSE)) {
+    
+    .check_rstan("Stan-based scoring")
+    
     message(
       "Compiling Stan model '", model_name,
       "' for the first time. This may take a few minutes. ",

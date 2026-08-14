@@ -40,6 +40,9 @@
 fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts="", time="", task.id="", max.counts="") {
   # loading logger
   log.initiating()
+  
+  .check_rstan("Testlet calibration")
+  
   if (is.null(data)) {
     flog.info("Dataset cannot be NULL!", name = "orfrlog")
     return

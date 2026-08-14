@@ -116,7 +116,9 @@ bayes <- function(
 
 
   if(bayes.soft=="jags"){
-
+    
+    .check_runjags("Bayesian calibration with JAGS")
+    
     runjags::runjags.options(force.summary=T)
 
     # -------------------------------------------------------- JAGS syntax
@@ -180,6 +182,8 @@ bayes <- function(
 
   }else if(bayes.soft=="stan"){
 
+    .check_rstan("Bayesian calibration with Stan")
+    
     rstan::rstan_options(auto_write = TRUE)
 
     #Transpose data matrices

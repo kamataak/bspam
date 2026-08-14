@@ -160,6 +160,9 @@ bayes.wcpm <- function(
     cat("==== Running the analysis with STAN ==== \n \n")
   }
   if (bayes.soft == "jags") {
+    
+    .check_runjags("Bayesian scoring with JAGS")
+    
     time.data <- time.data %>% as.vector()
     count.data <- count.data %>% as.vector()
     ind.per <- rep(1:J, I)
@@ -200,6 +203,9 @@ bayes.wcpm <- function(
     gc()
   }
   else if (bayes.soft == "stan") {
+    
+    .check_rstan("Bayesian scoring with Stan")
+    
     time.data <- time.data %>% t()
     count.data <- count.data %>% t()
     pas_est_ind <- pas_est_ind %>% t()
