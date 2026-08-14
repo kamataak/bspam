@@ -43,9 +43,11 @@ Depends: R (>= 3.5.0)
 Imports: 
     tibble, rootSolve, tidyverse, tidyr, magrittr, doParallel, foreach, 
     futile.logger, mvtnorm, nleqslv, tryCatchLog, parallel, miscTools, 
-    psych, rstan, dplyr, plotly, Matrix, runjags
+    psych, dplyr, plotly, Matrix
 Suggests: 
     knitr,
+    rstan,
+    runjags,
     rjags,
     rmarkdown,
     testthat (>= 3.0.0)
