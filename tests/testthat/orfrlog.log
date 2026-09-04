@@ -1,0 +1,232 @@
+INFO [2026-05-29 12:40:55] Begin mcem process
+INFO [2026-05-29 12:40:55] End mcem process
+INFO [2026-05-29 12:40:55] Begin mcem process
+INFO [2026-05-29 12:40:55] End mcem process
+INFO [2026-05-29 12:40:55] Begin mcem process
+INFO [2026-05-29 12:40:55] End mcem process
+INFO [2026-05-29 12:40:56] Begin bayes process
+INFO [2026-05-29 12:40:56] End bayes process
+INFO [2026-05-29 12:40:56] Begin preparing data process
+INFO [2026-05-29 12:40:56] End preparing data process
+INFO [2026-05-29 12:40:56] Begin mcem process
+INFO [2026-05-29 12:40:56] End mcem process
+INFO [2026-05-29 12:41:38] There is no perfect accurate case.
+INFO [2026-05-29 12:41:38] There is no zero accurate case.
+INFO [2026-05-29 12:41:38] There is no perfect accurate case.
+INFO [2026-05-29 12:41:38] There is no zero accurate case.
+INFO [2026-05-29 12:41:38] There is no perfect accurate case.
+INFO [2026-05-29 12:41:38] There is no zero accurate case.
+INFO [2026-05-29 12:41:38] There is no perfect accurate case.
+INFO [2026-05-29 12:41:38] There is no zero accurate case.
+INFO [2026-05-29 12:41:38] There is no perfect accurate case.
+INFO [2026-05-29 12:41:38] There is no zero accurate case.
+INFO [2026-05-29 12:41:38] There is no perfect accurate case.
+INFO [2026-05-29 12:41:38] There is no zero accurate case.
+INFO [2026-05-29 12:41:38] Missed fit.model object, end scoring process
+INFO [2026-05-29 12:41:38] Begin preparing data process
+INFO [2026-05-29 12:41:38] End preparing data process
+INFO [2026-05-29 12:42:10] There is no perfect accurate case.
+INFO [2026-05-29 12:42:10] There is no zero accurate case.
+INFO [2026-05-29 12:42:10] There is no perfect accurate case.
+INFO [2026-05-29 12:42:10] There is no zero accurate case.
+INFO [2026-05-29 12:42:10] There is no perfect accurate case.
+INFO [2026-05-29 12:42:10] There is no zero accurate case.
+INFO [2026-05-29 12:42:10] There is no perfect accurate case.
+INFO [2026-05-29 12:42:10] There is no zero accurate case.
+INFO [2026-05-29 12:42:10] There is no perfect accurate case.
+INFO [2026-05-29 12:42:10] There is no zero accurate case.
+INFO [2026-05-29 12:42:10] There is no perfect accurate case.
+INFO [2026-05-29 12:42:10] There is no zero accurate case.
+INFO [2026-05-29 12:42:10] Missed fit.model object, end scoring process
+INFO [2026-05-29 12:42:10] Begin preparing data process
+INFO [2026-05-29 12:42:10] End preparing data process
+INFO [2026-05-29 12:49:36] There is no perfect accurate case.
+INFO [2026-05-29 12:49:36] There is no zero accurate case.
+INFO [2026-05-29 12:49:36] There is no perfect accurate case.
+INFO [2026-05-29 12:49:36] There is no zero accurate case.
+INFO [2026-05-29 12:49:36] There is no perfect accurate case.
+INFO [2026-05-29 12:49:36] There is no zero accurate case.
+INFO [2026-05-29 12:49:37] There is no perfect accurate case.
+INFO [2026-05-29 12:49:37] There is no zero accurate case.
+INFO [2026-05-29 12:49:37] There is no perfect accurate case.
+INFO [2026-05-29 12:49:37] There is no zero accurate case.
+INFO [2026-05-29 12:49:37] There is no perfect accurate case.
+INFO [2026-05-29 12:49:37] There is no zero accurate case.
+INFO [2026-05-29 12:49:37] Missed fit.model object, end scoring process
+INFO [2026-05-29 12:49:37] Begin preparing data process
+INFO [2026-05-29 12:49:37] End preparing data process
+INFO [2026-05-29 12:55:34] Missed columns! Make sure person.id, sub.task.id, obs.counts, time, task.id, and max.counts are set.
+INFO [2026-05-29 12:55:34] Any passage should be read by at least two students.
+INFO [2026-05-29 12:55:34] The following passages are only read by one student: 1
+INFO [2026-05-29 12:55:34] Begin mcem process
+INFO [2026-05-29 12:55:34] End mcem process
+INFO [2026-05-29 12:55:34] Begin mcem process
+INFO [2026-05-29 12:55:34] End mcem process
+INFO [2026-05-29 12:55:34] Begin mcem process
+INFO [2026-05-29 12:55:34] End mcem process
+INFO [2026-05-29 12:55:34] Begin bayes process
+INFO [2026-05-29 12:55:34] End bayes process
+INFO [2026-05-29 12:55:34] Begin preparing data process
+INFO [2026-05-29 12:55:34] End preparing data process
+INFO [2026-05-29 12:55:34] Begin mcem process
+INFO [2026-05-29 12:55:34] End mcem process
+INFO [2026-05-29 12:55:35] No cases!
+INFO [2026-05-29 12:55:35] Begin preparing data process
+INFO [2026-05-29 12:55:35] End preparing data process
+INFO [2026-05-29 12:55:35] Begin preparing data process
+INFO [2026-05-29 12:55:35] There was an error message. Something is wrong!
+INFO [2026-05-29 12:55:35] Error in Y[, i]: subscript out of bounds
+
+INFO [2026-05-29 12:55:35] There is no perfect accurate case.
+INFO [2026-05-29 12:55:35] There is no zero accurate case.
+INFO [2026-05-29 12:55:35] There is no perfect accurate case.
+INFO [2026-05-29 12:55:35] There is no zero accurate case.
+INFO [2026-05-29 12:55:35] There is no perfect accurate case.
+INFO [2026-05-29 12:55:35] There is no zero accurate case.
+INFO [2026-05-29 12:55:35] There is no perfect accurate case.
+INFO [2026-05-29 12:55:35] There is no zero accurate case.
+INFO [2026-05-29 12:55:35] There is no perfect accurate case.
+INFO [2026-05-29 12:55:36] There is no zero accurate case.
+INFO [2026-05-29 12:55:36] There is no perfect accurate case.
+INFO [2026-05-29 12:55:36] There is no zero accurate case.
+INFO [2026-05-29 12:55:36] Missed fit.model object, end scoring process
+INFO [2026-05-29 12:55:36] Begin preparing data process
+INFO [2026-05-29 12:55:36] End preparing data process
+INFO [2026-05-29 13:19:48] No cases!
+INFO [2026-05-29 13:19:48] Begin preparing data process
+INFO [2026-05-29 13:19:48] End preparing data process
+INFO [2026-05-29 13:25:43] Missed columns! Make sure person.id, sub.task.id, obs.counts, time, task.id, and max.counts are set.
+INFO [2026-05-29 13:25:43] Any passage should be read by at least two students.
+INFO [2026-05-29 13:25:43] The following passages are only read by one student: 1
+INFO [2026-05-29 13:25:43] Begin mcem process
+INFO [2026-05-29 13:25:43] End mcem process
+INFO [2026-05-29 13:25:43] Begin mcem process
+INFO [2026-05-29 13:25:43] End mcem process
+INFO [2026-05-29 13:25:43] Begin mcem process
+INFO [2026-05-29 13:25:43] End mcem process
+INFO [2026-05-29 13:25:43] Begin bayes process
+INFO [2026-05-29 13:25:43] End bayes process
+INFO [2026-05-29 13:25:43] Begin preparing data process
+INFO [2026-05-29 13:25:43] End preparing data process
+INFO [2026-05-29 13:25:43] Begin mcem process
+INFO [2026-05-29 13:25:43] End mcem process
+INFO [2026-05-29 13:25:43] No cases!
+INFO [2026-05-29 13:25:44] Begin preparing data process
+INFO [2026-05-29 13:25:44] End preparing data process
+INFO [2026-05-29 13:25:44] There is no perfect accurate case.
+INFO [2026-05-29 13:25:44] There is no zero accurate case.
+INFO [2026-05-29 13:25:44] There is no perfect accurate case.
+INFO [2026-05-29 13:25:44] There is no zero accurate case.
+INFO [2026-05-29 13:25:44] There is no perfect accurate case.
+INFO [2026-05-29 13:25:44] There is no zero accurate case.
+INFO [2026-05-29 13:25:44] There is no perfect accurate case.
+INFO [2026-05-29 13:25:44] There is no zero accurate case.
+INFO [2026-05-29 13:25:44] There is no perfect accurate case.
+INFO [2026-05-29 13:25:44] There is no zero accurate case.
+INFO [2026-05-29 13:25:44] There is no perfect accurate case.
+INFO [2026-05-29 13:25:44] There is no zero accurate case.
+INFO [2026-05-29 13:25:44] Missed fit.model object, end scoring process
+INFO [2026-05-29 13:25:44] Begin preparing data process
+INFO [2026-05-29 13:25:44] End preparing data process
+INFO [2026-05-29 13:53:08] Missed columns! Make sure person.id, sub.task.id, obs.counts, time, task.id, and max.counts are set.
+INFO [2026-05-29 13:53:08] Any passage should be read by at least two students.
+INFO [2026-05-29 13:53:08] The following passages are only read by one student: 1
+INFO [2026-05-29 13:53:08] Begin mcem process
+INFO [2026-05-29 13:53:08] End mcem process
+INFO [2026-05-29 13:53:08] Begin mcem process
+INFO [2026-05-29 13:53:08] End mcem process
+INFO [2026-05-29 13:53:08] Begin mcem process
+INFO [2026-05-29 13:53:08] End mcem process
+INFO [2026-05-29 13:53:08] Begin bayes process
+INFO [2026-05-29 13:53:08] End bayes process
+INFO [2026-05-29 13:53:08] Begin preparing data process
+INFO [2026-05-29 13:53:08] End preparing data process
+INFO [2026-05-29 13:53:08] Begin mcem process
+INFO [2026-05-29 13:53:08] End mcem process
+INFO [2026-05-29 13:53:09] No cases!
+INFO [2026-05-29 13:53:09] Begin preparing data process
+INFO [2026-05-29 13:53:09] End preparing data process
+INFO [2026-05-29 13:53:09] There is no perfect accurate case.
+INFO [2026-05-29 13:53:09] There is no zero accurate case.
+INFO [2026-05-29 13:53:09] There is no perfect accurate case.
+INFO [2026-05-29 13:53:09] There is no zero accurate case.
+INFO [2026-05-29 13:53:09] There is no perfect accurate case.
+INFO [2026-05-29 13:53:09] There is no zero accurate case.
+INFO [2026-05-29 13:53:09] There is no perfect accurate case.
+INFO [2026-05-29 13:53:09] There is no zero accurate case.
+INFO [2026-05-29 13:53:09] There is no perfect accurate case.
+INFO [2026-05-29 13:53:09] There is no zero accurate case.
+INFO [2026-05-29 13:53:09] There is no perfect accurate case.
+INFO [2026-05-29 13:53:09] There is no zero accurate case.
+INFO [2026-05-29 13:53:09] Missed fit.model object, end scoring process
+INFO [2026-05-29 13:53:09] Begin preparing data process
+INFO [2026-05-29 13:53:09] End preparing data process
+INFO [2026-05-29 14:08:23] Missed columns! Make sure person.id, sub.task.id, obs.counts, time, task.id, and max.counts are set.
+INFO [2026-05-29 14:08:23] Any passage should be read by at least two students.
+INFO [2026-05-29 14:08:23] The following passages are only read by one student: 1
+INFO [2026-05-29 14:08:23] Begin mcem process
+INFO [2026-05-29 14:08:23] End mcem process
+INFO [2026-05-29 14:08:23] Begin mcem process
+INFO [2026-05-29 14:08:23] End mcem process
+INFO [2026-05-29 14:08:23] Begin mcem process
+INFO [2026-05-29 14:08:23] End mcem process
+INFO [2026-05-29 14:08:23] Begin bayes process
+INFO [2026-05-29 14:08:23] End bayes process
+INFO [2026-05-29 14:08:23] Begin preparing data process
+INFO [2026-05-29 14:08:23] End preparing data process
+INFO [2026-05-29 14:08:23] Begin mcem process
+INFO [2026-05-29 14:08:23] End mcem process
+INFO [2026-05-29 14:08:23] No cases!
+INFO [2026-05-29 14:08:23] Begin preparing data process
+INFO [2026-05-29 14:08:23] End preparing data process
+INFO [2026-05-29 14:08:24] There is no perfect accurate case.
+INFO [2026-05-29 14:08:24] There is no zero accurate case.
+INFO [2026-05-29 14:08:24] There is no perfect accurate case.
+INFO [2026-05-29 14:08:24] There is no zero accurate case.
+INFO [2026-05-29 14:08:24] There is no perfect accurate case.
+INFO [2026-05-29 14:08:24] There is no zero accurate case.
+INFO [2026-05-29 14:08:24] There is no perfect accurate case.
+INFO [2026-05-29 14:08:24] There is no zero accurate case.
+INFO [2026-05-29 14:08:24] There is no perfect accurate case.
+INFO [2026-05-29 14:08:24] There is no zero accurate case.
+INFO [2026-05-29 14:08:24] There is no perfect accurate case.
+INFO [2026-05-29 14:08:24] There is no zero accurate case.
+INFO [2026-05-29 14:08:24] Missed fit.model object, end scoring process
+INFO [2026-05-29 14:08:24] Begin preparing data process
+INFO [2026-05-29 14:08:24] End preparing data process
+INFO [2026-06-05 16:50:13] Missed columns! Make sure person.id, sub.task.id, obs.counts, time, task.id, and max.counts are set.
+INFO [2026-06-05 16:50:13] Any passage should be read by at least two students.
+INFO [2026-06-05 16:50:13] The following passages are only read by one student: 1
+INFO [2026-06-05 16:50:13] Begin mcem process
+INFO [2026-06-05 16:50:13] End mcem process
+INFO [2026-06-05 16:50:13] Begin mcem process
+INFO [2026-06-05 16:50:13] End mcem process
+INFO [2026-06-05 16:50:13] Begin mcem process
+INFO [2026-06-05 16:50:13] End mcem process
+INFO [2026-06-05 16:50:13] Begin bayes process
+INFO [2026-06-05 16:50:13] End bayes process
+INFO [2026-06-05 16:50:13] Begin preparing data process
+INFO [2026-06-05 16:50:13] End preparing data process
+INFO [2026-06-05 16:50:13] Begin mcem process
+INFO [2026-06-05 16:50:13] End mcem process
+INFO [2026-06-05 16:50:13] No cases!
+INFO [2026-06-05 16:50:14] Begin preparing data process
+INFO [2026-06-05 16:50:14] End preparing data process
+INFO [2026-06-05 16:50:14] There is no perfect accurate case.
+INFO [2026-06-05 16:50:14] There is no zero accurate case.
+INFO [2026-06-05 16:50:14] There is no perfect accurate case.
+INFO [2026-06-05 16:50:14] There is no zero accurate case.
+INFO [2026-06-05 16:50:14] There is no perfect accurate case.
+INFO [2026-06-05 16:50:14] There is no zero accurate case.
+INFO [2026-06-05 16:50:14] There is no perfect accurate case.
+INFO [2026-06-05 16:50:14] There is no zero accurate case.
+INFO [2026-06-05 16:50:14] There is no perfect accurate case.
+INFO [2026-06-05 16:50:14] There is no zero accurate case.
+INFO [2026-06-05 16:50:14] There is no perfect accurate case.
+INFO [2026-06-05 16:50:14] There is no zero accurate case.
+INFO [2026-06-05 16:50:14] Missed fit.model object, end scoring process
+INFO [2026-06-05 16:50:14] Begin preparing data process
+INFO [2026-06-05 16:50:14] End preparing data process
+INFO [2026-06-05 16:51:09] No cases!
+INFO [2026-06-05 16:51:09] Begin preparing data process
+INFO [2026-06-05 16:51:09] End preparing data process
