@@ -23,12 +23,15 @@ This is an R package that contains functions to fit the speed-accuracy psychomet
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://kamataak.github.io/bspam/}
   \item \url{https://github.com/kamataak/bspam}
   \item Report bugs at \url{https://github.com/kamataak/bspam/issues}
 }
 
 }
 \author{
+Kuo Wang <wangkuo@nifty.com>
+
 Akihito Kamata <akamata@smu.edu>
 
 Cornelis J. Potgieter <c.potgieter@tcu.edu>
@@ -41,18 +44,16 @@ Sarunya Somsong <sarunya.ss@hotmail.com>
 
 Xin Qiao <xqiao@usf.edu>
 
-Kuo Wang <wangkuo@nifty.com>
-
 \strong{Maintainer}: Akihito Kamata \email{akamata@smu.edu} (\href{https://orcid.org/0000-0001-9570-1464}{ORCID})
 
 Authors:
 \itemize{
+  \item Kuo Wang \email{wangkuo@nifty.com} (\href{https://orcid.org/0000-0002-4925-0591}{ORCID}) [contributor]
   \item Cornelis J. Potgieter \email{c.potgieter@tcu.edu} (\href{https://orcid.org/0000-0002-1995-6817}{ORCID})
   \item Joseph F. T. Nese \email{jnese@uoregon.edu} (\href{https://orcid.org/0000-0002-9878-7395}{ORCID})
   \item Yusuf Kara \email{ykara@mail.smu.edu} (\href{https://orcid.org/0000-0003-0691-0630}{ORCID})
   \item Sarunya Somsong \email{sarunya.ss@hotmail.com} (\href{https://orcid.org/0000-0002-4974-7346}{ORCID})
   \item Xin Qiao \email{xqiao@usf.edu} (\href{https://orcid.org/0000-0002-3248-7859}{ORCID})
-  \item Kuo Wang \email{wangkuo@nifty.com} (\href{https://orcid.org/0000-0002-4925-0591}{ORCID}) [contributor]
 }
 
 }

@@ -4,16 +4,18 @@
 \alias{plot.task}
 \title{Plot function to show graph of fit.model class}
 \usage{
-\method{plot}{task}(object, task = NULL, parameter, sort = F)
+\method{plot}{task}(x, task = NULL, parameter, sort = F, ...)
 }
 \arguments{
-\item{object}{fit.model object}
+\item{x}{A fit.model object}
 
 \item{task}{task ids for plotting}
 
 \item{parameter}{model parameter for plotting, a,b,alpha,beta}
 
 \item{sort}{sorting flag, TRUE or FALSE}
+
+\item{...}{Additional arguments passed to the method.}
 }
 \description{
 Copyright (C) 2021-2024 The ORF Project Team

@@ -29,34 +29,73 @@ scoring.sentence.censoring(
 )
 }
 \arguments{
-\item{a, }{b: Model parameters related to the count data model (K-dim)}
+\item{Count}{A vector of observed counts, such as the number of words
+read correctly, for each sentence.}
 
-\item{alpha, }{beta: Model parameters related to the time data model (K-dim)}
+\item{logT10}{A vector of log-transformed reading times per 10 words
+for each sentence.}
 
-\item{gamma1, }{gamma2: Hyperparameters related to the testlet model}
+\item{N}{A vector containing the maximum possible counts, such as
+the number of words, for each observed sentence.}
 
-\item{Count:}{A vector with the number of words correct per passage
-It should be K-dimensional}
+\item{N_score}{A vector containing the maximum possible counts,
+such as the number of words, for each sentence to be scored.}
 
-\item{logT10:}{The log-scale reading time per 10 words per passage
-It should be K-dimensional}
+\item{Passage}{A vector of passage indicators identifying the passage
+to which each observed sentence belongs.}
 
-\item{N:}{A vector of passage lengths
-It should be K-dimensional}
+\item{Passage_score}{A vector of passage indicators identifying the
+passage to which each sentence to be scored belongs.}
 
-\item{Passage:}{Task ids}
+\item{a}{A Model parameters related to the count model for the
+observed sentences.}
 
-\item{sigma:}{The latent standard deviation of the time latent component}
+\item{a_score}{A Model parameters related to the count model
+for the sentences to be scored.}
 
-\item{rho:}{The correlation between count and time latent components}
+\item{b}{A Model parameters related to the count model for the
+observed sentences.}
 
-\item{rhoTestlet:}{The testlet-based reliability}
+\item{b_score}{A Model parameters related to the count model
+for the sentences to be scored.}
 
-\item{C:}{A vector of indicators whether a specific sentence was 
-censored (1) or fully observed (0) -- K-dim}
+\item{alpha}{A Model parameters related to the time model for the
+observed sentences.}
+
+\item{alpha_score}{A Model parameters related to the time
+model for the sentences to be scored.}
+
+\item{beta}{A Model parameters related to the time model for the
+observed sentences.}
+
+\item{beta_score}{A Model parameters related to the time
+model for the sentences to be scored.}
+
+\item{gamma1}{Hyperparameters related to the testlet effects
+in the count and time models, respectively.}
+
+\item{gamma2}{Hyperparameters related to the testlet effects
+in the count and time models, respectively.}
+
+\item{sigma}{The standard deviation parameter for the latent speed
+component.}
+
+\item{rho}{The correlation between the latent accuracy and speed
+components.}
+
+\item{rhoTestlet}{The correlation between the count and time testlet
+effects.}
+
+\item{C}{A vector of censoring indicators for the observed sentences,
+where 0 indicates a fully observed sentence and 1 indicates a
+censored sentence.}
+
+\item{type}{Output type. Use `"general"` for latent accuracy and speed
+estimates and `"orf"` to additionally return model-based WCPM estimates.}
 }
 \value{
-list
+A list containing data and model parameters formatted for
+    sentence-level Stan scoring models.
 }
 \description{
 Copyright (C) 2021-2024 The ORF Project Team

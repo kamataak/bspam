@@ -24,28 +24,42 @@ scoring.passage.censoring(
 )
 }
 \arguments{
-\item{a, }{b: Model parameters related to the count data model (K-dim)}
+\item{Count}{A vector of observed count outcomes for the passages used for scoring the person.}
 
-\item{alpha, }{beta: Model parameters related to the time data model (K-dim)}
+\item{logT10}{A vector of log-transformed reading times per 10 words for the passages used for scoring the person.}
 
-\item{Count:}{A vector with the number of words correct per passage
-It should be K-dimensional}
+\item{N}{A vector containing the maximum possible counts, such as passage lengths, for the observed passages.}
 
-\item{logT10:}{The log-scale reading time per 10 words per passage
-It should be K-dimensional}
+\item{N_score}{A vector containing the maximum possible counts, such as passage lengths, for the passages to be scored.}
 
-\item{N:}{A vector of passage lengths
-It should be K-dimensional}
+\item{a}{A Model parameters related to the count model for the observed passages.}
 
-\item{sigma:}{The latent standard deviation of the time latent component}
+\item{a_score}{A Model parameters related to the count model for the passages to be scored.}
 
-\item{rho:}{The correlation between count and time latent components}
+\item{b}{A Model parameters related to the count model for the observed passages.}
 
-\item{C:}{A vector of indicators whether a specific passage was 
-censored (1) or fully observed (0) -- K-dim}
+\item{b_score}{A Model parameters related to the count model for the passages to be scored.}
+
+\item{alpha}{A Model parameters related to the time model for the observed passages.}
+
+\item{alpha_score}{A Model parameters related to the time model for the passages to be scored.}
+
+\item{beta}{A Model parameters related to the time model for the observed passages.}
+
+\item{beta_score}{A Model parameters related to the time model for the passages to be scored.}
+
+\item{sigma}{The standard deviation parameter for the latent speed component.}
+
+\item{rho}{The correlation between the latent accuracy and speed components.}
+
+\item{C}{A vector of censoring indicators for the observed passages, where 0 indicates a fully observed passage and 1 indicates a censored passage.}
+
+\item{type}{Output type. Use `"general"` for latent accuracy and speed
+estimates and `"orf"` to additionally return model-based WCPM estimates.}
 }
 \value{
-list
+A list containing data and model parameters formatted for
+    passage-level Stan scoring models.
 }
 \description{
 Copyright (C) 2021-2024 The ORF Project Team

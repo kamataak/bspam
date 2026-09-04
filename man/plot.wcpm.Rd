@@ -4,16 +4,18 @@
 \alias{plot.wcpm}
 \title{Plot function to show graph of wcpm information from scoring class}
 \usage{
-\method{plot}{wcpm}(object, person = NULL, show.se = T, show.abline = T)
+\method{plot}{wcpm}(x, person = NULL, show.se = T, show.abline = T, ...)
 }
 \arguments{
-\item{object}{scoring object}
+\item{x}{A scoring object}
 
-\item{person}{person ids for plotting}
+\item{person}{Person ids for plotting}
 
-\item{show.se}{standard error bar flag, TRUE (default) for showing or FALSE for no showing}
+\item{show.se}{tandard error bar flag, TRUE (default) for showing or FALSE for no showing}
 
 \item{show.abline}{abline flag, TRUE (default) for showing or FALSE for no showing}
+
+\item{...}{Additional arguments passed to the method.}
 }
 \description{
 Copyright (C) 2021-2024 The ORF Project Team

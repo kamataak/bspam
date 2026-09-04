@@ -45,6 +45,5 @@ Modified a bug of MLE 07/23/2021
 Modified EAP 10/28/2021
 }
 \details{
-This function requires the optional package \pkg{MultiGHQuad}.
-Install it before using this function.
+EAP bootstrap SE uses Gauss-Hermite quadrature from \pkg{statmod}.
 }

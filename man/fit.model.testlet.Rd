@@ -51,9 +51,8 @@ Additional details...
 Additional note...
 }
 \examples{
-\donttest{
-# example code
-fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts="", time="", task.id="", max.counts="")
+\dontrun{
+# See the package vignette for an example of testlet calibration.
 }
 
 }

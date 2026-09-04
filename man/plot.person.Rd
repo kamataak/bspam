@@ -4,10 +4,10 @@
 \alias{plot.person}
 \title{Plot function to show graph of scoring class}
 \usage{
-\method{plot}{person}(object, person = NULL, parameter, show.se = T, sort = F)
+\method{plot}{person}(x, person = NULL, parameter, show.se = T, sort = F, ...)
 }
 \arguments{
-\item{object}{scoring object}
+\item{x}{A scoring object}
 
 \item{person}{person ids for plotting}
 
@@ -16,6 +16,8 @@
 \item{show.se}{standard error bar flag, TRUE for showing or FALSE for no showing}
 
 \item{sort}{sorting flag, TRUE or FALSE}
+
+\item{...}{Additional arguments passed to the method.}
 }
 \description{
 Copyright (C) 2021-2024 The ORF Project Team

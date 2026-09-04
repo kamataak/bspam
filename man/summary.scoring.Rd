@@ -9,19 +9,22 @@
   digits = 4,
   verbose = TRUE,
   factor.scores = TRUE,
-  show = "short"
+  show = "short",
+  ...
 )
 }
 \arguments{
-\item{object}{= object}
+\item{object}{object}
 
-\item{digits}{= print out numeric with specific digits}
+\item{digits}{print out numeric with specific digits}
 
-\item{verbose}{- boolean, if TRUE, shows the summary, default is TRUE}
+\item{verbose}{boolean, if TRUE, shows the summary, default is TRUE}
 
-\item{factor.scores}{- theta and tau output flag, default is TRUE # before was FALSE}
+\item{factor.scores}{theta and tau output flag, default is TRUE # before was FALSE}
 
-\item{show}{- output flag, "long" and "short", default "short" only output estimate result. "long" will output estimate result and data.}
+\item{show}{output flag, "long" and "short", default "short" only output estimate result. "long" will output estimate result and data.}
+
+\item{...}{Additional arguments.}
 }
 \value{
 scoring dataset with task information and estimated score

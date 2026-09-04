@@ -4,10 +4,12 @@
 \alias{plot.information}
 \title{Plot function to show information of calibration}
 \usage{
-\method{plot}{information}(calib_data = NULL)
+\method{plot}{information}(x, ...)
 }
 \arguments{
-\item{calib_data}{calibration object}
+\item{x}{A calibrated object.}
+
+\item{...}{Additional arguments passed to the method.}
 }
 \description{
 Copyright (C) 2021-2024 The ORF Project Team

@@ -9,19 +9,22 @@
   digits = 4,
   geterror = FALSE,
   verbose = TRUE,
-  factor.scores = FALSE
+  factor.scores = FALSE,
+  ...
 )
 }
 \arguments{
-\item{object}{= bootstrap object}
+\item{object}{bootstrap object}
 
-\item{digits}{= print out numeric with specific digits}
+\item{digits}{print out numeric with specific digits}
 
-\item{geterror, }{summary error case, default FALSE}
+\item{geterror}{summary error case, default FALSE}
 
 \item{verbose}{show summary on screen, default TRUE}
 
-\item{factor.scores}{- theta and tau output flag, default is FALSE}
+\item{factor.scores}{theta and tau output flag, default is FALSE}
+
+\item{...}{Additional arguments}
 }
 \value{
 table

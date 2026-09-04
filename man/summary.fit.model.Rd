@@ -7,11 +7,11 @@
 \method{summary}{fit.model}(object, digits = 4, ...)
 }
 \arguments{
-\item{object}{= object}
+\item{object}{object}
 
-\item{digits}{= print out numeric with specific digits}
+\item{digits}{print out numeric with specific digits}
 
-\item{...}{= parameter}
+\item{...}{Additional arguments}
 }
 \value{
 printing information
