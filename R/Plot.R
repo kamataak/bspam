@@ -699,111 +699,9 @@ plot.information <- function(calib_data=NULL) {
   vartau<-hyperprms$vartau
   rho<-hyperprms$rho
   
-  #plot theta/tau item-level and test-level information functions
-  th_try <- seq(-3, 3, 0.01)
-  pdf("thetaiteminf.pdf", width = 15, height = 10, family = "serif")
-  row.num<-floor(task_size/3)+1*(task_size%%3>0)
-  lmat <- matrix(c(1:task_size,rep(0,3*row.num-task_size)), floor(task_size/3)+1*(task_size%%3>0), 3, byrow = T)
-  lmat <- rbind( cbind(0, lmat), 0)
-  layout(lmat, c( 0.2, rep(1, 3) ), c(rep(1, floor(task_size/3)+1*(task_size%%3>0)), 0.2) )
-  par( mar = c(0.5, 0.5, 0.5, 0.5), mgp = c(1.1, 0.5, 0), tcl = -0.2 )
-  test.info <- numeric(length(th_try))
-  for (j in 1:task_size)
-  {
-    a.par<-prms$task.param$a[j]
-    b.par<-prms$task.param$b[j]
-    amax<-max(prms$task.param$a)
-    numwords.p<-prms$task.param$max.counts[j]
-    wrcmax<-numwords.p*(pnorm(amax*th_try-b.par))
-    ymax<-max(-{-1/(1-rho^2)+((amax^2*wrcmax*(ddnorm(amax*th_try-b.par)*pnorm(amax*th_try-b.par)-dnorm(amax*th_try-b.par)^2))/((pnorm(amax*th_try-b.par))^2))-
-        (((numwords.p-wrcmax)*amax^2*(ddnorm(amax*th_try-b.par)*(1-pnorm(amax*th_try-b.par))+dnorm(amax*th_try-b.par)^2))/((1-pnorm(amax*th_try-b.par))^2))})
-    plot(0, 0, type = 'n', xlim = c(-3, 3), ylim = c(0,ymax+5),
-         xlab = '', ylab = '', axes = F)
-    wrc<-numwords.p*(pnorm(a.par*th_try-b.par))
-    points(th_try, item.info <- -{-1/(1-rho^2)+((a.par^2*wrc*(ddnorm(a.par*th_try-b.par)*pnorm(a.par*th_try-b.par)-dnorm(a.par*th_try-b.par)^2))/((pnorm(a.par*th_try-b.par))^2))-
-        (((numwords.p-wrc)*a.par^2*(ddnorm(a.par*th_try-b.par)*(1-pnorm(a.par*th_try-b.par))+dnorm(a.par*th_try-b.par)^2))/((1-pnorm(a.par*th_try-b.par))^2))}, type = 'l', col = "black")
-    test.info <- test.info + item.info
-    text(3, ymax, paste("Passage", j), pos = 2, cex = 1.5)
-    box()
-    # x axis
-    if (j > task_size-3)
-    {
-      axis(1, at = c(-3, -2, -1, 0, 1, 2, 3), cex.axis = 1.5)
-      mtext(expression( paste("Latent variable ", theta) ), 1, line = 2, cex = 1.5)
-    }
-    # y axis
-    if (j %% 3 == 1)
-    {
-      axis(2, at = c(0, 5,10,15,20,25,30,35,40,45,50,55,60,65), cex.axis = 1.5)
-      mtext("Information", 2, line = 2, cex = 1.5)
-    }
-  }
-  dev.off()
-  
-  pdf("thetatestinfo.pdf", width = 6, height = 3.5, family = "serif")
-  par( mar = c(2, 2, 0.5, 2), mgp = c(1.1, 0.3, 0), tcl = -0.2 )
-  plot(th_try, test.info, type = 'l', xlim = c(-3, 3), ylim = c(0,max(test.info)+5),
-       xlab = '', ylab = '', lwd = 1.5)
-  mtext(expression( paste("Latent variable ", theta) ), 1, line = 1.1, cex = 0.9)
-  mtext("Information", 2, line = 1.1, cex = 0.9)
-  par(new = T)
-  plot(th_try, test.info^(-0.5), type = 'l', xlim = c(-3, 3), ylim = c(0,max(test.info^(-0.5))+0.5),
-       xlab = '', ylab = '', lwd = 1.5, lty = 2, axes = F)
-  
-  axis(4)
-  mtext("SE", 4, line = 1.1, cex = 0.9)
-  legend(1, max(test.info^(-0.5))+0.2, c("Information", "SE"), lty = 1:2, bty = 'n')
-  dev.off()
-  
-  
-  tau_try <- seq(-1, 1, 0.01)
-  pdf("tauiteminfo.pdf", width = 15, height = 10, family = "serif")
-  row.num<-floor(task_size/3)+1*(task_size%%3>0)
-  lmat <- matrix(c(1:task_size,rep(0,3*row.num-task_size)), floor(task_size/3)+1*(task_size%%3>0), 3, byrow = T)
-  lmat <- rbind( cbind(0, lmat), 0)
-  layout(lmat, c( 0.2, rep(1, 3) ), c(rep(1, floor(task_size/3)+1*(task_size%%3>0)), 0.2) )
-  par( mar = c(0.5, 0.5, 0.5, 0.5), mgp = c(1.1, 0.5, 0), tcl = -0.2 )
-  test.info <- numeric(length(tau_try))
-  for (j in 1:task_size)
-  {
-    alpha.par<-prms$task.param$alpha[j]
-    ymax<-max(prms$task.param$alpha)^2+1/((1-rho^2)*vartau)+5
-    plot(0, 0, type = 'n', xlim = c(-1, 1), ylim = c(0,ymax),
-         xlab = '', ylab = '', axes = F)
-    
-    points(tau_try, item.info <- rep((alpha.par^2)+1/((1-rho^2)*vartau),length(tau_try)), type = 'l', col = "black")
-    test.info <- test.info + item.info
-    text(1, 5, paste("Passage", j), pos = 2, cex = 1.5)
-    box()
-    # x axis
-    if (j> task_size-3)
-    {
-      axis(1, at = c(-1, -0.5,  0, 0.5, 1), cex.axis = 1.5)
-      mtext(expression( paste("Latent variable ", tau) ), 1, line = 2, cex = 1.5)
-    }
-    # y axis
-    if (j %% 3 == 1)
-    {
-      axis(2, at = seq(0,ymax,5), cex.axis = 1.5)
-      mtext("Information", 2, line = 2, cex = 1.5)
-    }
-  }
-  dev.off()
-  
-  pdf("tautestinfo.pdf", width = 6, height = 3.5, family = "serif")
-  par( mar = c(2, 2, 0.5, 2), mgp = c(1.1, 0.3, 0), tcl = -0.2 )
-  plot(tau_try, test.info, type = 'l', xlim = c(-1, 1), ylim = c(0, max(test.info)+5),
-       xlab = '', ylab = '', lwd = 1.5)
-  mtext(expression( paste("Latent variable ", tau) ), 1, line = 1.1, cex = 0.9)
-  mtext("Information", 2, line = 1.1, cex = 0.9)
-  par(new = T)
-  plot(tau_try, test.info^(-0.5), type = 'l', xlim = c(-1, 1), ylim = c(0, max(test.info^(-0.5))+1),
-       xlab = '', ylab = '', lwd = 1.5, lty = 2, axes = F)
-  
-  axis(4)
-  mtext("SE", 4, line = 1.1, cex = 0.9)
-  legend(0.3, max(test.info^(-0.5))+0.5, c("Information", "SE"), lty = 1:2, bty = 'n')
-  dev.off()
+  # Theta/tau item-level and test-level PDF plots were removed here.
+  # They were legacy static-file outputs and are not required for the
+  # interactive WCPM information visualization returned by this function.
   
   #plot WCPM information
   prms$b_irt<-prms$task.param$b/prms$task.param$a
@@ -846,8 +744,9 @@ plot.information <- function(calib_data=NULL) {
   respon <- rbinom(n = N*I, size = nwords_rep, prob = prb)
   respon_mat <- matrix(respon, nc=I)
   
-  time_mat.l <- exp(time_mat) %>% 
-    as.data.frame() %>%
+  time_mat.l<-time_mat %>% 
+    exp()%>%
+    as.data.frame()%>%
     pivot_longer(cols = contains("V"), names_to = "secs")
   
   logtime_mat.l<-time_mat %>% 
