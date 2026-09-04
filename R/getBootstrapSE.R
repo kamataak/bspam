@@ -6,8 +6,7 @@
 #' Modified EAP 10/28/2021
 #'
 #' @details
-#' This function requires the optional package \pkg{MultiGHQuad}.
-#' Install it before using this function.
+#' EAP bootstrap SE uses Gauss-Hermite quadrature from \pkg{statmod}.
 #' 
 #' @param object - mcem class object
 #' @param person.data - Individual response data
@@ -23,13 +22,7 @@
 getBootstrapSE <- function (object, person.data, case=NA, perfect.cases, zero.cases, est="map", kappa=1, bootstrap=100, external=NULL) {
   log.initiating()
   flog.info("Begin getBootstrapSE process", name = "orfrlog")
-
-  if (!requireNamespace("MultiGHQuad", quietly = TRUE)) {
-    stop(
-      "Package 'MultiGHQuad' is required for bootstrap SE function. Please install it first.",
-      call. = FALSE
-    )
-  }
+  
   
   # datasim_fixedZ is a modified version of the simulation code
   # that lets you specify the latent values (theta and tau).
@@ -62,13 +55,13 @@ getBootstrapSE <- function (object, person.data, case=NA, perfect.cases, zero.ca
   # Run wcpm function and get ALL estimator
   task.data <- MCEM$task.param
   WCPM <- MCEM %>% run.scoring(person.data, task.data=task.data, cases=case, perfect.cases, zero.cases, est=Estimator, lo = -4, hi = 4, q = 100, kappa = 1, external=external, type="orf")
-
+  
   if (length(WCPM) != 18) { # When there is a error case, end the process
     flog.info("Missed scoring, please check the case, end scoring process", name = "orfrlog")
     return(NULL)
   }
   # run.scoring <- function(object, person.data, task.data, cases, perfect.cases, est="map", lo = -4, hi = 4, q = 100, kappa = 1, external=NULL, type=NULL) {
-    
+  
   # Extract relevant parameters for given case
   # person.dat01 <- person.data %>% filter(stu_season_id2==case)
   # task.read <- person.dat01 %>% select(passage_id)
@@ -204,18 +197,104 @@ getBootstrapSE <- function (object, person.data, case=NA, perfect.cases, zero.ca
     
     new.data <- datasim.fixedZ(a.par,b.par,alpha.par,beta.par,vartau,rho,max.counts.task,I,Z.in,K)
     
-    # Bivariate EAP for theta and tau
-    cov <- rho*sqrt(vartau)
-    prior <- list(mu = c(0,0), Sigma = matrix(c(1,cov,cov,vartau),2,2))
-    #grid <- init.quad(Q = 2, prior, ip = 100, prune = TRUE)
-    # ip should be 500, but set as 100 for test
-    grid <- MultiGHQuad::init.quad(Q = 2, prior, ip = 500, prune = F)
+    # Bivariate EAP for theta and tau.
+    # This reproduces the former quadrature implementation using
+    # statmod's normal-probability Gauss-Hermite rule and the same
+    # eigen-decomposition transform of the bivariate normal prior.
+    if (!requireNamespace("statmod", quietly = TRUE)) {
+      stop(
+        "Package 'statmod' is required for EAP bootstrap SE. Please install it first.",
+        call. = FALSE
+      )
+    }
     
-    loglik <- function(z) {
-      theta <- z[1]
-      tau <- z[2]
-      loglik.bi <- sum(dbinom(obs.counts, max.counts.task, pnorm((a.par*theta)-b.par), log = T)) +
-        sum(dnorm(lgsec10, beta.par-tau, 1/alpha.par, log = T))
+    cov <- rho*sqrt(vartau)
+    prior.mu <- c(0,0)
+    prior.Sigma <- matrix(c(1,cov,cov,vartau),2,2)
+    
+    eap_gh_statmod <- function(obs.counts, lgsec10, n.nodes = 500L) {
+      gh <- statmod::gauss.quad.prob(
+        n = n.nodes,
+        dist = "normal",
+        mu = 0,
+        sigma = 1
+      )
+      
+      keep <- is.finite(gh$nodes) & is.finite(gh$weights) & gh$weights > 0
+      nodes <- gh$nodes[keep]
+      weights <- gh$weights[keep]
+      n.gh <- length(nodes)
+      
+      eig <- eigen(prior.Sigma)
+      if (any(eig$values < -sqrt(.Machine$double.eps))) {
+        stop("Prior covariance matrix is not positive semidefinite.")
+      }
+      eig$values[eig$values < 0] <- 0
+      lambda <- eig$vectors %*% diag(sqrt(eig$values), nrow = 2L)
+      
+      n.grid <- n.gh * n.gh
+      log.post.w <- numeric(n.grid)
+      theta.grid <- numeric(n.grid)
+      tau.grid <- numeric(n.grid)
+      
+      pos <- 1L
+      for (i in seq_len(n.gh)) {
+        idx <- pos:(pos + n.gh - 1L)
+        z <- cbind(rep(nodes[i], n.gh), nodes)
+        x <- sweep(z %*% t(lambda), 2, prior.mu, FUN = "+")
+        
+        theta <- x[,1]
+        tau <- x[,2]
+        
+        ll.count <- vapply(
+          theta,
+          function(th) {
+            sum(dbinom(
+              obs.counts,
+              max.counts.task,
+              pnorm(a.par*th - b.par),
+              log = TRUE
+            ))
+          },
+          numeric(1)
+        )
+        
+        ll.time <- vapply(
+          tau,
+          function(ta) {
+            sum(dnorm(
+              lgsec10,
+              beta.par - ta,
+              1/alpha.par,
+              log = TRUE
+            ))
+          },
+          numeric(1)
+        )
+        
+        log.post.w[idx] <- log(weights[i]) + log(weights) + ll.count + ll.time
+        theta.grid[idx] <- theta
+        tau.grid[idx] <- tau
+        pos <- pos + n.gh
+      }
+      
+      finite <- is.finite(log.post.w)
+      if (!any(finite)) {
+        stop("EAP quadrature failed: all posterior quadrature weights are zero or non-finite.")
+      }
+      
+      log.post.w <- log.post.w[finite]
+      theta.grid <- theta.grid[finite]
+      tau.grid <- tau.grid[finite]
+      
+      m <- max(log.post.w)
+      post.w <- exp(log.post.w - m)
+      post.w <- post.w / sum(post.w)
+      
+      c(
+        theta = sum(post.w * theta.grid),
+        tau = sum(post.w * tau.grid)
+      )
     }
     
     for (k in 1:K) {
@@ -224,7 +303,7 @@ getBootstrapSE <- function (object, person.data, case=NA, perfect.cases, zero.ca
       obs.counts <- as.array(new.data$Y[k,])
       lgsec10 <- as.array(new.data$logT10[k,])
       
-      ests.quad <- MultiGHQuad::eval.quad(loglik, grid)
+      ests.quad <- eap_gh_statmod(obs.counts, lgsec10, n.nodes = 500L)
       # QUAD WCPM score
       if (is.null(external)) { #internal
         obs.counts.quad <- sum(max.counts.task*pnorm(a.par*ests.quad[1] - b.par))
