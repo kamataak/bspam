@@ -277,7 +277,7 @@ Testlet_scoring <-
 ### Scoring for Truncated Response Data
 In some circumstances, a test may be designed as a speeded test, such that many examinees do not complete all the tasks in the test. For example, the traditional administration of the ORF test only gives the student 60 seconds to read aloud the given passage, which is typically consisted of 250 words. In this case, many students do not finish reading the entire passage. The `bspam` R package can score such a data set by the censored model both for the regular and the testlet models.
 
-Please see the [package website](https://github.com/kamataak/bspam/) for more detailed usage of the package.
+Please see the [package website](https://kamataak.github.io/bspam/) for more detailed usage of the package.
 
 ## Citation for bspam R package
 

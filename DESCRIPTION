@@ -5,11 +5,11 @@ Title: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with
 Version: 1.2.5
 Authors@R: c(
              person(given = "Kuo", family = "Wang", 
-                    role = c("aut", "ctb"), 
+                    role = c("aut", "cre"), 
                     email = "wangkuo@nifty.com", 
                     comment = c(ORCID = "0000-0002-4925-0591")),
              person(given = "Akihito", family = "Kamata", 
-                    role = c("aut", "cre"), 
+                    role = c("aut", "ctb"), 
                     email = "akamata@smu.edu", 
                     comment = c(ORCID = "0000-0001-9570-1464")),
              person(given = "Cornelis J.", family = "Potgieter", 
@@ -41,9 +41,9 @@ Description: This is an R package that contains functions to fit the speed-accur
 License: GPL (>= 3)
 Depends: R (>= 3.5.0)
 Imports: 
-    tibble, rootSolve, tidyverse, tidyr, magrittr, doParallel, foreach, 
+    tibble, rootSolve, tidyverse, tidyr, magrittr, doParallel, foreach, stringr,
     futile.logger, mvtnorm, nleqslv, tryCatchLog, parallel, miscTools, 
-    psych, dplyr, plotly, Matrix
+    psych, dplyr, plotly, Matrix, statmod
 Suggests: 
     knitr,
     rstan,

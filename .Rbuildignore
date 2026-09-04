@@ -3,3 +3,11 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^\.positai$
+^\.claude$
+^backup$
+^CopyOfDESCRIPTION$
+^CopyOfNAMESPACE$
+^.*\.pdf$
+^orfrlog\.log$
+^README\.Rmd$
