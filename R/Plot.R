@@ -16,19 +16,20 @@
 #' A copy of the GNU General Public License is available at
 #' http://www.gnu.org/licenses/
 #'
-#' @param object    fit.model object
+#' @param x         A fit.model object
 #' @param task      task ids for plotting
 #' @param parameter model parameter for plotting, a,b,alpha,beta
 #' @param sort      sorting flag, TRUE or FALSE
-#'
+#' @param ... Additional arguments passed to the method.
 #'
 #' @import plotly
 #' 
 #' @export plot.task
 #' @export
-plot.task <- function(object, task=NULL, parameter, sort=F){
+plot.task <- function(x, task = NULL, parameter, sort = F, ...) {
+  object <- x
   
-  if(class(object)!="fit.model" & class(object)!="fit.model.testlet")
+  if (!inherits(object, c("fit.model", "fit.model.testlet")))
     stop("Error: It seems like your object is not obtained through bspam. Make sure you use the calibration output from the `fit.model()` function!")
   
   if(F %in% (parameter %in% c("a", "b", "alpha", "beta")))
@@ -109,33 +110,34 @@ plot.task <- function(object, task=NULL, parameter, sort=F){
 #' A copy of the GNU General Public License is available at
 #' http://www.gnu.org/licenses/
 #'
-#' @param object    scoring object
+#' @param x         A scoring object
 #' @param person    person ids for plotting
 #' @param parameter model parameter for plotting, a,b,alpha,beta
 #' @param show.se   standard error bar flag, TRUE for showing or FALSE for no showing
 #' @param sort      sorting flag, TRUE or FALSE
-#'
+#' @param ... Additional arguments passed to the method.
 #'
 #' @import plotly
 #' 
 #' @export plot.person
 #' @export
-plot.person <- function(object, person=NULL, parameter, show.se=T, sort=F){
+plot.person <- function(x, person=NULL, parameter, show.se=T, sort=F, ...) {
+  object <- x
   
-  if(class(object)!="scoring")
+  if (!inherits(object, "scoring"))
     stop("Error: It seems like your object is not obtained through bspam. Make sure you use the scoring output from the `scoring()` function!")
   
   if(F %in% (parameter %in% c("theta", "tau", "wcpm")))
     stop("Error: Please check your parameter name(s)! Make sure they are entered correctly.")
   
-  class(object) = "list"
+  object <- unclass(object)
   object <- as.data.frame(object)
   
   #Selection of persons (if any)
   if(is.null(person)){
     person.sel <- object
   }else{
-    if(F %in% (person %in% object$person.id))
+    if(FALSE %in% (person %in% object$person.id))
       stop("Error: Please check your person IDs! Make sure they are entered correctly.")
     person.sel <- object %>%
       filter(person.id %in% person)
@@ -257,16 +259,18 @@ plot.person <- function(object, person=NULL, parameter, show.se=T, sort=F){
 #' A copy of the GNU General Public License is available at
 #' http://www.gnu.org/licenses/
 #'
-#' @param calib_data    calibration object
-#'
 #' @import plotly
 #' @import mvtnorm
 #' @import tidyverse
 #' @import nleqslv
 #' 
+#' @param x A calibrated object.
+#' @param ... Additional arguments passed to the method.
+#' 
 #' @export plot.information
 #' @export
-plot.information <- function(calib_data=NULL) {
+plot.information <- function(x, ...) {
+  calib_data <- x
   
   # functions for this function
   # Required functions
@@ -737,12 +741,12 @@ plot.information <- function(calib_data=NULL) {
   mu_time <- beta_rep - tau_rep
   sd_time <- 1/alpha_rep
   time_data <- rnorm(n=N*I, mean=mu_time, sd=sd_time)
-  time_mat <- matrix(time_data, nc=I)
+  time_mat <- matrix(time_data, ncol=I)
   time10_mat <- time_mat - log(nwords_matrix) + log(10)
   
   prb <- pnorm(a_rep*(theta_rep-b_rep))
   respon <- rbinom(n = N*I, size = nwords_rep, prob = prb)
-  respon_mat <- matrix(respon, nc=I)
+  respon_mat <- matrix(respon, ncol=I)
   
   time_mat.l<-time_mat %>% 
     exp()%>%
@@ -854,25 +858,26 @@ plot.information <- function(calib_data=NULL) {
 #' A copy of the GNU General Public License is available at
 #' http://www.gnu.org/licenses/
 #'
-#' @param object        scoring object
-#' @param person        person ids for plotting
-#' @param show.se       standard error bar flag, TRUE (default) for showing or FALSE for no showing
+#' @param x             A scoring object
+#' @param person        Person ids for plotting
+#' @param show.se       tandard error bar flag, TRUE (default) for showing or FALSE for no showing
 #' @param show.abline   abline flag, TRUE (default) for showing or FALSE for no showing
-#'
+#' @param ... Additional arguments passed to the method.
 #'
 #' @import plotly
 #' 
 #' @export plot.wcpm
 #' @export
-plot.wcpm <- function(object, person=NULL, show.se=T, show.abline=T){
+plot.wcpm <- function(x, person=NULL, show.se=T, show.abline=T, ...) {
+  object <- x
   
-  if(class(object)!="scoring")
+  if (!inherits(object, "scoring"))
     stop("Error: It seems like your object is not obtained through bspam. Make sure you used the scoring output from the `scoring()` function!")
   
   if(!"wcpm.obs" %in% names(object))
     stop("Error: It seems like you did not use type='orf' in the scoring function.")
   
-  class(object) = "list"
+  object <- unclass(object)
   object <- as.data.frame(object)
   
   #Selection of persons (if any)

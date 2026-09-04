@@ -68,9 +68,9 @@ summary.fit.model.testlet <- function(object, digits=4,...) {
 #' A copy of the GNU General Public License is available at
 #' http://www.gnu.org/licenses/
 #'
-#' @param object = object
-#' @param digits = print out numeric with specific digits
-#' @param ... = parameter
+#' @param object object
+#' @param digits print out numeric with specific digits
+#' @param ... Additional arguments
 #'
 #' @import mvtnorm
 #' @import tidyverse
@@ -79,6 +79,7 @@ summary.fit.model.testlet <- function(object, digits=4,...) {
 #' @method summary fit.model
 #' @export
 summary.fit.model <- function(object, digits=4,...) {
+  
   z <- object
   tb <- as.data.frame(t(do.call(rbind, z[[1]])))
   tb <- tb[,(1:4)]
@@ -114,17 +115,18 @@ summary.fit.model <- function(object, digits=4,...) {
 #' A copy of the GNU General Public License is available at
 #' http://www.gnu.org/licenses/
 #'
-#' @param object = object
-#' @param digits = print out numeric with specific digits
-#' @param verbose - boolean, if TRUE, shows the summary, default is TRUE
-#' @param factor.scores - theta and tau output flag, default is TRUE # before was FALSE
-#' @param show - output flag, "long" and "short", default "short" only output estimate result. "long" will output estimate result and data. 
-#'
+#' @param object object
+#' @param digits print out numeric with specific digits
+#' @param verbose boolean, if TRUE, shows the summary, default is TRUE
+#' @param factor.scores theta and tau output flag, default is TRUE # before was FALSE
+#' @param show output flag, "long" and "short", default "short" only output estimate result. "long" will output estimate result and data. 
+#' @param ... Additional arguments.
+#' 
 #' @return scoring dataset with task information and estimated score
 #' @method summary scoring
 #' @export
 summary.scoring <- function(object, digits=4, verbose=TRUE,
-                            factor.scores=TRUE, show="short") {
+                            factor.scores=TRUE, show="short",...) {
   
   z <- object
   tb <- as.data.frame(t(do.call(rbind, z)))
@@ -218,16 +220,17 @@ summary.scoring <- function(object, digits=4, verbose=TRUE,
 #' A copy of the GNU General Public License is available at
 #' http://www.gnu.org/licenses/
 #'
-#' @param object = bootstrap object
-#' @param digits = print out numeric with specific digits
-#' @param geterror, summary error case, default FALSE
+#' @param object bootstrap object
+#' @param digits print out numeric with specific digits
+#' @param geterror summary error case, default FALSE
 #' @param verbose show summary on screen, default TRUE
-#' @param factor.scores - theta and tau output flag, default is FALSE
+#' @param factor.scores theta and tau output flag, default is FALSE
+#' @param ... Additional arguments 
 #'
 #' @return table
 #' @method summary bootstrap
 #' @export
-summary.bootstrap <- function(object, digits=4, geterror=FALSE,verbose=TRUE,factor.scores=FALSE) {
+summary.bootstrap <- function(object, digits=4, geterror=FALSE,verbose=TRUE,factor.scores=FALSE,...) {
   z <- object
   
   tb <- z$bootstrap.out

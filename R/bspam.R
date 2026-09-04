@@ -13,13 +13,16 @@
 #' 
 #' Write Design philosophy
 #' 
+#' @importFrom stats cov dbinom dnorm na.omit optim pnorm qnorm rbinom rnorm runif sd time uniroot var 
+#' @importFrom stringr str_split
+#' 
+#' @author Kuo Wang <wangkuo@nifty.com>
 #' @author Akihito Kamata <akamata@smu.edu>
 #' @author Cornelis J. Potgieter <c.potgieter@tcu.edu>
 #' @author Joseph F. T. Nese <jnese@uoregon.edu>
 #' @author Yusuf Kara <ykara@mail.smu.edu>
 #' @author Sarunya Somsong <sarunya.ss@hotmail.com>
 #' @author Xin Qiao <xqiao@usf.edu>
-#' @author Kuo Wang <wangkuo@nifty.com>
 #' 
 #' @aliases bspam-package
 #' @name bspam-package

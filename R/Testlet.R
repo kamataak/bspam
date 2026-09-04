@@ -30,9 +30,8 @@
 #' 
 #' 
 #' @examples
-#' \donttest{
-#' # example code
-#' fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts="", time="", task.id="", max.counts="")
+#' \dontrun{
+#' # See the package vignette for an example of testlet calibration.
 #' }
 #' 
 #' @return list
@@ -45,7 +44,7 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts
   
   if (is.null(data)) {
     flog.info("Dataset cannot be NULL!", name = "orfrlog")
-    return
+    return(NULL)
   } else {
     if (person.id == "" | sub.task.id == "" | obs.counts == ""  | time == "" | task.id == ""  | max.counts == "") {
       flog.info("Missed columns! Make sure person.id, sub.task.id, obs.counts, time, task.id, and max.counts are set.", name = "orfrlog")

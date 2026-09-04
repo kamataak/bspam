@@ -577,7 +577,7 @@ desc.data <- function(data=NULL,
     
     if(type=="general"){
       data.person <- data %>%
-        unq.subtask=paste(task.id, sub.task.id, sep = "_") %>%
+        mutate(unq.subtask=paste(task.id, sub.task.id, sep = "_")) %>%
           group_by(person.id) %>%
           summarise(n.task=n_distinct(task.id),
                     n.subtask=n_distinct(unq.subtask), 

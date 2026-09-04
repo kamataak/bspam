@@ -702,7 +702,7 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
         }
         
         # Check if there is a perfect accurate case
-        perfect.cases <<- get.perfectcases(data)
+        perfect.cases <- get.perfectcases(data)
         
         if (count(perfect.cases) != 0) {
           flog.info(paste("The perfect accurate case: ", paste(perfect.cases$perfect.cases, collapse = ", ")), name="orfrlog")
@@ -711,7 +711,7 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
         }
         
         # Check if there is a zero accurate case
-        zero.cases <<- get.zerocases(data)
+        zero.cases <- get.zerocases(data)
         
         if (count(zero.cases) != 0) {
           flog.info(paste("The zero accurate case: ", paste(zero.cases$zero.cases, collapse = ", ")), name="orfrlog")
@@ -763,10 +763,10 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
       }
     } else if (se == "bootstrap"){ #for bootstrap
       # Check if there is a perfect accurate case
-      perfect.cases <<- get.perfectcases(data)
+      perfect.cases <- get.perfectcases(data)
 
       # Check if there is a zero accurate case
-      zero.cases <<- get.zerocases(data)
+      zero.cases <- get.zerocases(data)
       
       if (count(zero.cases) != 0) {
         flog.info(paste("The zero accurate case: ", paste(zero.cases$zero.cases, collapse = ", ")), name="orfrlog")

@@ -22,18 +22,23 @@
 #' 
 #' Assume a student has read K >= 2 passages
 #' 
-#' @param Count: A vector with the number of words correct per passage
-#' It should be K-dimensional
-#' @param logT10: The log-scale reading time per 10 words per passage
-#' It should be K-dimensional
-#' @param MaxN: A vector of passage lengths
-#' It should be K-dimensional
-#' @param a, b: Model parameters related to the count data model (K-dim)
-#' @param alpha, beta: Model parameters related to the time data model (K-dim)
-#' @param sigma: The latent standard deviation of the time latent component
-#' @param rho: The correlation between count and time latent components
-#' @param C: A vector of indicators whether a specific passage was 
-#' censored (1) or fully observed (0) -- K-dim
+#' @param Count A vector of observed count outcomes for the passages used for scoring the person.
+#' @param logT10 A vector of log-transformed reading times per 10 words for the passages used for scoring the person.
+#' @param MaxN A vector containing the maximum possible counts, such as passage lengths, for the observed passages.
+#' @param MaxN_score A vector containing the maximum possible counts, such as passage lengths, for the passages to be scored.
+#' @param a A Model parameters related to the count model for the observed passages.
+#' @param b A Model parameters related to the count model for the observed passages.
+#' @param alpha A Model parameters related to the time model for the observed passages.
+#' @param beta A Model parameters related to the time model for the observed passages.
+#' @param a_score A Model parameters related to the count model for the passages to be scored.
+#' @param b_score A Model parameters related to the count model for the passages to be scored.
+#' @param alpha_score A Model parameters related to the time model for the passages to be scored.
+#' @param beta_score A Model parameters related to the time model for the passages to be scored.
+#' @param sigma The standard deviation parameter for the latent speed component.
+#' @param rho The correlation between the latent accuracy and speed components.
+#' @param C A vector of censoring indicators for the observed passages, where 0 indicates a fully observed passage and 1 indicates a censored passage.
+#' @return A list containing data and model parameters formatted for
+#'     passage-level Stan scoring models.
 #'  
 create_data_list <- function(Count, logT10, MaxN, MaxN_score,
                              a, b, alpha,beta,

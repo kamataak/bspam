@@ -27,7 +27,7 @@
 #' @details
 #' If the user is desired to use this function, note that the response
 #' data file needs to be in the wide format, which can be reshaped from
-#' a long-format response data by the \code{\link{prep.wide}} function.
+#' a long-format response data by the \code{\link{prep}} function.
 #' 
 #' @note
 #' Update Memo:
@@ -40,8 +40,7 @@
 #'   Potgieter, N., Kamata, A., & Kara, Y. (2017). An EM algorithm for 
 #'   estimating an oral reading speed and accuracy model. Manuscript submitted 
 #'   for publication.  
-
-#' @seealso \code{\link{prep.wide}} \code{\link{fit.model}}.
+#' @seealso \code{\link{prep}} \code{\link{fit.model}}.
 #'
 #' @return mcem list
 #' @export
