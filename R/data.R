@@ -57,7 +57,6 @@
 #' Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 
 #'      Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. 
 #'      Institute of Education Sciences, U.S. Department of Education. 
-#'      \url{https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492}
 "passage.calib.mcem"
 
 #' @title Task calibration example output object by Bayes
@@ -94,7 +93,6 @@
 #' Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 
 #'      Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. 
 #'      Institute of Education Sciences, U.S. Department of Education. 
-#'      \url{https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492}
 "passage.calib.bayes"
 
 #' @title Sentence-level Oral Reading Fluency assessment data set
@@ -119,7 +117,6 @@
 #' Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 
 #'      Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. 
 #'      Institute of Education Sciences, U.S. Department of Education. 
-#'      \url{https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492}
 #' @source \url{https://jnese.github.io/core-blog/}
 "sentence.level.data"
 
@@ -146,7 +143,6 @@
 #' Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 
 #'      Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. 
 #'      Institute of Education Sciences, U.S. Department of Education. 
-#'      \url{https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492}
 #' @source \url{https://jnese.github.io/core-blog/}
 "sentence.cens.high"
 
@@ -173,6 +169,5 @@
 #' Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 
 #'      Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. 
 #'      Institute of Education Sciences, U.S. Department of Education. 
-#'      \url{https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492}
 #' @source \url{https://jnese.github.io/core-blog/}
 "sentence.cens.low"

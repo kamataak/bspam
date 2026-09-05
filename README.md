@@ -568,7 +568,7 @@ Measurement, 1–25.
 Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency:
 Computerized Oral Reading Evaluation (Project No. R305A140203)
 $$Grant$$. Institute of Education Sciences, U.S. Department of
-Education. <https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492>
+Education. 
 
 Potgieter, N., Kamata, A., & Kara, Y. (2017). An EM algorithm for
 estimating an oral reading speed and accuracy model. Manuscript
