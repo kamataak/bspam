@@ -6,17 +6,11 @@
 \alias{bspam-package}
 \title{bspam : A package for fitting the speed-accuracy psychometric model for repeatedly measured count outcome data.}
 \description{
-\strong{Purpose of this package} 
-
 `bspam` is an R package that contains functions to fit the speed-accuracy 
 psychometric model for repeatedly measured count outcome data (Potgieter, Kamata & Kara, 2017; 
 Kara, Kamata, Potgieter & Nese, 2020), where the accuracy is modeled by a binomial 
 count latent variable model. For example, the use of this modeling technique 
-allows model-based calibration and scoring for oral reading fluency (ORF) assessment data. 
-
-\strong{Design philosophy} 
-
-Write Design philosophy
+allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.
 
 This is an R package that contains functions to fit the speed-accuracy psychometric model for count outcome data (Potgieter, Kamata & Kara, 2017; Kara, Kamata, Potgieter & Nese, 2020), where the accuracy is modeled by a binomial count latent variable model. For example, the use of this modeling technique allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.
 }
@@ -44,11 +38,11 @@ Sarunya Somsong <sarunya.ss@hotmail.com>
 
 Xin Qiao <xqiao@usf.edu>
 
-\strong{Maintainer}: Akihito Kamata \email{akamata@smu.edu} (\href{https://orcid.org/0000-0001-9570-1464}{ORCID})
+\strong{Maintainer}: Kuo Wang \email{wangkuo@nifty.com} (\href{https://orcid.org/0000-0002-4925-0591}{ORCID})
 
 Authors:
 \itemize{
-  \item Kuo Wang \email{wangkuo@nifty.com} (\href{https://orcid.org/0000-0002-4925-0591}{ORCID}) [contributor]
+  \item Akihito Kamata \email{akamata@smu.edu} (\href{https://orcid.org/0000-0001-9570-1464}{ORCID}) [contributor]
   \item Cornelis J. Potgieter \email{c.potgieter@tcu.edu} (\href{https://orcid.org/0000-0002-1995-6817}{ORCID})
   \item Joseph F. T. Nese \email{jnese@uoregon.edu} (\href{https://orcid.org/0000-0002-9878-7395}{ORCID})
   \item Yusuf Kara \email{ykara@mail.smu.edu} (\href{https://orcid.org/0000-0003-0691-0630}{ORCID})
