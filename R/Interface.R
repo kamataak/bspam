@@ -62,7 +62,7 @@
 #'   Kara, Y., Kamata, A., Potgieter, C., & Nese, J. F. (2020). Estimating 
 #'   model-based oral reading fluency: A bayesian approach with a 
 #'   binomial-lognormal joint latent model. 
-#'   Educational and Psychological Measurement, 1–25.
+#'   Educational and Psychological Measurement, 1-25.
 #'   
 #' @examples
 #' \donttest{
@@ -279,7 +279,7 @@ fit.model <- function(data=NA, person.id="",task.id="",sub.task.id="",max.counts
 #'   Kara, Y., Kamata, A., Potgieter, C., & Nese, J. F. (2020). Estimating 
 #'   model-based oral reading fluency: A bayesian approach with a 
 #'   binomial-lognormal joint latent model. 
-#'   Educational and Psychological Measurement, 1–25.
+#'   Educational and Psychological Measurement, 1-25.
 #'   
 #' @examples
 #' # example code
