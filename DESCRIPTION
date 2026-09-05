@@ -53,7 +53,7 @@ Suggests:
     testthat (>= 3.0.0)
 URL: https://kamataak.github.io/bspam/, https://github.com/kamataak/bspam
 BugReports: https://github.com/kamataak/bspam/issues
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 LazyData: yes
 Config/testthat/edition: 3
 NeedsCompilation: no

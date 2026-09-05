@@ -11,3 +11,5 @@
 ^.*\.pdf$
 ^orfrlog\.log$
 ^README\.Rmd$
+^\.github$
+^git$
