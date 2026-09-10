@@ -2,7 +2,7 @@
 % Please edit documentation in R/Utility.R
 \name{prep}
 \alias{prep}
-\title{This file includes utilities of bspam package.}
+\title{Prepare response data for bspam analyses}
 \usage{
 prep(
   data = data,
@@ -19,59 +19,107 @@ prep(
 )
 }
 \arguments{
-\item{data}{= student response data}
+\item{data}{A data frame containing the response data in long format.}
 
-\item{person.id}{Quoted variable name in \code{person.data} that indicates 
-the unique person identifier.}
+\item{person.id}{Quoted variable name in \code{data} identifying persons.}
 
-\item{task.id}{Quoted variable name in \code{person.data} that indicates 
-the unique task identifier. In the ORF assessment context, it is the
-passage identifier.}
+\item{task.id}{Quoted variable name in \code{data} identifying tasks.
+In the ORF assessment context, this is the passage identifier.}
 
-\item{sub.task.id}{Quoted variable name in \code{person.data} that indicates 
-the unique sub task identifier. In the ORF assessment context, it is the
-sentence identifier. It is required when sentence_level is TRUE.}
+\item{sub.task.id}{Quoted variable name in \code{data} identifying
+sub-tasks. In the ORF assessment context, this is the sentence
+identifier. This argument is required when
+\code{sentence_level = TRUE}.}
 
-\item{occasion}{The column name in the data that represents the unique occasion.}
+\item{occasion}{Quoted variable name in \code{data} identifying measurement
+occasions. If omitted, all observations are assigned to a single
+occasion.}
 
-\item{group}{The column name in the data that represents the unique group.}
+\item{group}{Quoted variable name in \code{data} identifying groups.
+If omitted, all observations are assigned to a single group.}
 
-\item{max.counts}{Quoted variable name in \code{person.data} that indicates 
-the number of attempts in the task. In the ORF assessment context,
-it is the number of words in the passage.}
+\item{max.counts}{Quoted variable name in \code{data} giving the maximum
+possible count for each task or sub-task. In the ORF assessment
+context, this is the number of words in the passage or sentence.}
 
-\item{obs.counts}{Quoted variable name in \code{person.data} that indicates 
-the number of successful attempts in each task. In the ORF assessment
-context, it is the number of words read correctly for the passage.}
+\item{obs.counts}{Quoted variable name in \code{data} giving the observed
+number of successful outcomes. In the ORF assessment context, this is
+the number of words read correctly.}
 
-\item{time}{Quoted variable name in \code{person.data} that indicates 
-the time in seconds took to complete the task. In the ORF context, 
-it is the time took to complete reading the passage.}
+\item{time}{Quoted variable name in \code{data} giving the observed
+completion time, in seconds.}
 
-\item{cens}{The column name in the data that represents the censoring indicators 
-whether a specific task or sub task was censored (1) or fully observed (0).}
+\item{cens}{Optional quoted variable name in \code{data} containing
+censoring indicators. For sentence-level data, if this argument is
+omitted, all observations are treated as fully observed and a
+censoring indicator equal to \code{0} is created internally.}
 
-\item{sentence_level}{flag for sentence or passage level data, default is FALSE}
+\item{sentence_level}{Logical. If \code{FALSE}, task-level data are
+prepared. If \code{TRUE}, sub-task-level data are prepared.
+Default is \code{FALSE}.}
 }
 \value{
-data list (data.long: data frame,
-                   data.wide: list of Y, logT10, N, I)
+A prepared-data object containing two components:
+    \describe{
+      \item{\code{data.long}}{A standardized long-format data frame using
+      the variable names expected internally by \pkg{bspam}.}
+      \item{\code{data.wide}}{A list of matrices and vectors used by the
+      model-fitting and scoring functions.}
+    }
+
+    For task-level data, the returned object has class
+    \code{"prepared.task"}. Its \code{data.wide} component contains
+    \code{Y}, the observed count matrix; \code{logT10}, the matrix of
+    log-transformed completion times standardized to 10 units;
+    \code{N}, the vector of task maximum counts; and \code{I}, the number
+    of tasks.
+
+    For sub-task-level data, the returned object has class
+    \code{"prepared.sub.task"}. Its \code{data.wide} component contains
+    the corresponding count, time, and maximum-count structures used for
+    sentence-level analyses.
 }
 \description{
-Copyright (C) 2021-2023 The ORF Project Team
+Prepares long-format response data for model fitting and scoring with
+\pkg{bspam}. The function standardizes the required variable names and
+constructs the data structures used internally by the package.
 }
 \details{
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/
+Both task-level and sub-task-level data are supported. In oral reading
+fluency (ORF) applications, task-level data correspond to passage-level
+observations, whereas sub-task-level data correspond to sentence-level
+observations nested within passages.
 
 
-prep function prepares input data for fit.model function
+For task-level data, \code{prep()} reshapes the observed count and time
+variables into person-by-task structures used by the task-level
+speed-accuracy model. Reading or completion times are transformed to the
+natural logarithm of time standardized to 10 task units. In ORF
+applications, this corresponds to log reading time per 10 words.
+
+For sub-task-level data, the function preserves the task and sub-task
+structure in the standardized long-format data and constructs corresponding
+person-by-observation matrices for sentence-level analyses.
+
+If \code{occasion} or \code{group} is not supplied, a constant value of
+\code{1} is created for that variable. For sentence-level data, if
+\code{cens} is not supplied, a censoring variable containing zeros is
+created, indicating that all observations are treated as fully observed.
+}
+\examples{
+prepared <- prep(
+  data = passage2,
+  person.id = "id.student",
+  task.id = "id.passage",
+  occasion = "occasion",
+  group = "grade",
+  max.counts = "numwords.pass",
+  obs.counts = "wrc",
+  time = "sec"
+)
+
+}
+\seealso{
+\code{\link{fit.model}} for model calibration and
+\code{\link{scoring}} for person-level scoring.
 }

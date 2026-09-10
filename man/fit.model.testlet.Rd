@@ -2,7 +2,7 @@
 % Please edit documentation in R/Testlet.R
 \name{fit.model.testlet}
 \alias{fit.model.testlet}
-\title{Fit model with testlet}
+\title{Fit the speed-accuracy testlet model}
 \usage{
 fit.model.testlet(
   data = NULL,
@@ -15,44 +15,90 @@ fit.model.testlet(
 )
 }
 \arguments{
-\item{data}{A data frame. It has the information of student, passage, sentence, obs.counts and time.}
+\item{data}{A data frame containing sub-task-level response data.}
 
-\item{person.id}{each student's id.}
+\item{person.id}{Quoted variable name in \code{data} identifying persons.}
 
-\item{sub.task.id}{each sentence's id.}
+\item{sub.task.id}{Quoted variable name in \code{data} identifying
+sub-tasks. In the ORF assessment context, this is the sentence
+identifier.}
 
-\item{obs.counts}{The column name in the data that represents the words read correctly for each sentence}
+\item{obs.counts}{Quoted variable name in \code{data} giving the observed
+number of successful outcomes for each sub-task. In the ORF assessment
+context, this is the number of words read correctly in the sentence.}
 
-\item{time}{The column name in the data that represents the reading time for the sentence.}
+\item{time}{Quoted variable name in \code{data} giving the completion time,
+in seconds, for each sub-task.}
 
-\item{task.id}{The column name in the data that represents the unique passage identifier.}
+\item{task.id}{Quoted variable name in \code{data} identifying the task to
+which each sub-task belongs. In the ORF assessment context, this is the
+passage identifier.}
 
-\item{max.counts}{The column name in the data that represents the number of words in a sentence.}
+\item{max.counts}{Quoted variable name in \code{data} giving the maximum
+possible count for each sub-task. In the ORF assessment context, this
+is the number of words in the sentence.}
 }
 \value{
-list
+An object of class \code{"fit.model.testlet"} containing:
+    \describe{
+      \item{\code{task.param}}{A data frame containing the estimated
+      sub-task parameters \code{a}, \code{b}, \code{alpha}, and
+      \code{beta}, together with \code{task.id} and
+      \code{sub.task.id}.}
+      \item{\code{hyper.param}}{A data frame containing the estimated
+      population-level parameters \code{sigma}, \code{gamma1},
+      \code{gamma2}, \code{rho.theta}, and \code{rho.testlet}.}
+      \item{\code{Y}}{The person-by-sub-task observed count matrix used
+      for calibration.}
+      \item{\code{logT10}}{The person-by-sub-task matrix of natural-log
+      completion times standardized to 10 units.}
+      \item{\code{N}}{The vector of maximum counts for the sub-tasks.}
+    }
 }
 \description{
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/
+Fits a sub-task-level speed-accuracy psychometric model that accounts for
+the nesting of sub-tasks within tasks. In oral reading fluency (ORF)
+applications, sub-tasks correspond to sentences and tasks correspond to
+passages.
 }
 \details{
-Additional details...
-}
-\note{
-Additional note...
+The model jointly describes accuracy and completion time at the sentence
+level while incorporating passage-level testlet effects. It estimates
+sentence parameters together with population-level parameters describing
+the latent accuracy, speed, and testlet components.
+
+
+\code{fit.model.testlet()} is the sub-task-level calibration routine used
+by \code{\link{fit.model}} when \code{testlet = TRUE}. The input data are
+converted to person-by-sub-task count and time structures, with completion
+times expressed as natural-log time standardized to 10 units.
+
+The model includes sentence-level accuracy parameters \code{a} and
+\code{b}, sentence-level time parameters \code{alpha} and \code{beta},
+and passage-level testlet effects for the accuracy and speed components.
+Population-level parameters include \code{sigma}, \code{gamma1},
+\code{gamma2}, \code{rho.theta}, and \code{rho.testlet}.
+
+Each task must be represented by observations from at least two persons.
+If a task is represented by only one person, or if required column names
+are not supplied, the function stops the calibration procedure and returns
+without a fitted model.
 }
 \examples{
-\dontrun{
-# See the package vignette for an example of testlet calibration.
+\donttest{
+fit_testlet <- fit.model.testlet(
+  data = sentence.level.data,
+  person.id = "id.student",
+  sub.task.id = "id.sentence",
+  obs.counts = "wrc",
+  time = "sec",
+  task.id = "id.passage",
+  max.counts = "numwords.sent"
+)
 }
 
+}
+\seealso{
+\code{\link{fit.model}} for the main model-fitting interface and
+\code{\link{prep}} for preparing task- or sub-task-level response data.
 }

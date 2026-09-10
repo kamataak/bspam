@@ -16,6 +16,10 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/basic_01.html">bspam: Passage-level Calibration &amp; Scoring for ORF Data 1</a></li>
+  </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/kamataak/bspam/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -31,9 +35,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="main-functions">Main Functions<a class="anchor" aria-label="anchor" href="#main-functions"></a></h2>
 
-
+      <div class="section-desc"><p>Main functions for data preparation, model calibration, and scoring.</p></div>
 
 
     </div><div class="section level2">
@@ -43,16 +47,10 @@
 
       <dl><dt>
 
-          <code><a href="fit.model.html">fit.model()</a></code>
+          <code><a href="prep.html">prep()</a></code>
 
         </dt>
-        <dd>Estimate the model parameters</dd>
-      </dl><dl><dt>
-
-          <code><a href="fit.model.testlet.html">fit.model.testlet()</a></code>
-
-        </dt>
-        <dd>Fit model with testlet</dd>
+        <dd>This file includes utilities of bspam package.</dd>
       </dl><dl><dt>
 
           <code><a href="get.cases.html">get.cases()</a></code>
@@ -61,16 +59,33 @@
         <dd>Returns cases (person and occasion) applied in [fit.model] function.</dd>
       </dl><dl><dt>
 
-          <code><a href="passage2.html">passage2</a></code>
+          <code><a href="fit.model.html">fit.model()</a></code>
 
         </dt>
-        <dd>Passage-level Oral Reading Fluency assessment data set</dd>
+        <dd>Estimate the model parameters</dd>
       </dl><dl><dt>
 
-          <code><a href="plot.information.html">plot(<i>&lt;information&gt;</i>)</a></code>
+          <code><a href="scoring.html">scoring()</a></code>
 
         </dt>
-        <dd>Plot function to show information of calibration</dd>
+        <dd>Estimate factor scores with task-level model</dd>
+      </dl></div><div class="section level2">
+      <h2 id="plotting-functions">Plotting Functions<a class="anchor" aria-label="anchor" href="#plotting-functions"></a></h2>
+
+      <div class="section-desc"><p>Functions for visualizing calibration and scoring results.</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="plot.task.html">plot(<i>&lt;task&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Plot function to show graph of fit.model class</dd>
       </dl><dl><dt>
 
           <code><a href="plot.person.html">plot(<i>&lt;person&gt;</i>)</a></code>
@@ -79,40 +94,68 @@
         <dd>Plot function to show graph of scoring class</dd>
       </dl><dl><dt>
 
-          <code><a href="plot.task.html">plot(<i>&lt;task&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Plot function to show graph of fit.model class</dd>
-      </dl><dl><dt>
-
           <code><a href="plot.wcpm.html">plot(<i>&lt;wcpm&gt;</i>)</a></code>
 
         </dt>
         <dd>Plot function to show graph of wcpm information from scoring class</dd>
       </dl><dl><dt>
 
-          <code><a href="prep.html">prep()</a></code>
+          <code><a href="plot.information.html">plot(<i>&lt;information&gt;</i>)</a></code>
 
         </dt>
-        <dd>This file includes utilities of bspam package.</dd>
+        <dd>Plot function to show information of calibration</dd>
+      </dl></div><div class="section level2">
+      <h2 id="advanced-and-utility-functions">Advanced and Utility Functions<a class="anchor" aria-label="anchor" href="#advanced-and-utility-functions"></a></h2>
+
+      <div class="section-desc"><p>Additional exported functions for advanced analyses and data processing.</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="fit.model.testlet.html">fit.model.testlet()</a></code>
+
+        </dt>
+        <dd>Fit model with testlet</dd>
       </dl><dl><dt>
 
-          <code><a href="scoring.html">scoring()</a></code>
+          <code><a href="run.mcem.html">run.mcem()</a></code>
 
         </dt>
-        <dd>Estimate factor scores with task-level model</dd>
+        <dd>Base function for fitting the speed-accuracy model by MCEM</dd>
       </dl><dl><dt>
 
-          <code><a href="sentence.cens.high.html">sentence.cens.high</a></code>
+          <code><a href="agg.word.html">agg.word()</a></code>
 
         </dt>
-        <dd>Sentence-level data set with high censoring</dd>
+        <dd>agg.word function to aggregate word information to sentence or passage level</dd>
       </dl><dl><dt>
 
-          <code><a href="sentence.cens.low.html">sentence.cens.low</a></code>
+          <code><a href="desc.data.html">desc.data()</a></code>
 
         </dt>
-        <dd>Sentence-level data set with low censoring</dd>
+        <dd>desc.data function to describe data information</dd>
+      </dl></div><div class="section level2">
+      <h2 id="example-data-and-results">Example Data and Results<a class="anchor" aria-label="anchor" href="#example-data-and-results"></a></h2>
+
+      <div class="section-desc"><p>Example data sets and calibration results included with bspam.</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="passage2.html">passage2</a></code>
+
+        </dt>
+        <dd>Passage-level Oral Reading Fluency assessment data set</dd>
       </dl><dl><dt>
 
           <code><a href="sentence.level.data.html">sentence.level.data</a></code>
@@ -121,34 +164,35 @@
         <dd>Sentence-level Oral Reading Fluency assessment data set</dd>
       </dl><dl><dt>
 
-          <code><a href="summary.bootstrap.html">summary(<i>&lt;bootstrap&gt;</i>)</a></code>
+          <code><a href="sentence.cens.low.html">sentence.cens.low</a></code>
 
         </dt>
-        <dd>summary the information of bootstrap class</dd>
+        <dd>Sentence-level data set with low censoring</dd>
       </dl><dl><dt>
 
-          <code><a href="summary.fit.model.html">summary(<i>&lt;fit.model&gt;</i>)</a></code>
+          <code><a href="sentence.cens.high.html">sentence.cens.high</a></code>
 
         </dt>
-        <dd>summary the information of fit.model class</dd>
+        <dd>Sentence-level data set with high censoring</dd>
       </dl><dl><dt>
 
-          <code><a href="summary.fit.model.testlet.html">summary(<i>&lt;fit.model.testlet&gt;</i>)</a></code>
+          <code><a href="passage.calib.mcem.html">passage.calib.mcem</a></code>
 
         </dt>
-        <dd>summary the information of fit.model.testlet class</dd>
+        <dd>Task calibration example output object by MCEM</dd>
       </dl><dl><dt>
 
-          <code><a href="summary.scoring.html">summary(<i>&lt;scoring&gt;</i>)</a></code>
+          <code><a href="passage.calib.bayes.html">passage.calib.bayes</a></code>
 
         </dt>
-        <dd>summary the information of wcpm class</dd>
+        <dd>Task calibration example output object by Bayes</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Akihito Kamata, Cornelis J. Potgieter, Joseph F. T. Nese, Yusuf Kara, Sarunya Somsong, Xin Qiao, Kuo Wang.</p>
+  <p>Developed by Kuo Wang, Akihito Kamata, Cornelis J. Potgieter, Joseph F. T. Nese, Yusuf Kara, Sarunya Somsong, Xin Qiao.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -2,32 +2,34 @@
 % Please edit documentation in R/summary.R
 \name{summary.fit.model}
 \alias{summary.fit.model}
-\title{summary the information of fit.model class}
+\title{Summarize a fitted bspam model}
 \usage{
 \method{summary}{fit.model}(object, digits = 4, ...)
 }
 \arguments{
-\item{object}{object}
+\item{object}{A fitted model object of class \code{"fit.model"}, typically
+returned by \code{\link{fit.model}}.}
 
-\item{digits}{print out numeric with specific digits}
+\item{digits}{Integer passed to the table-printing method. The current
+implementation formats reported parameter estimates to three decimal
+places before printing. Default is \code{4}.}
 
-\item{...}{Additional arguments}
+\item{...}{Additional arguments for the summary method. Currently not used.}
 }
 \value{
-printing information
+Invisibly returns \code{NULL} after printing the model summary.
 }
 \description{
-Copyright (C) 2021-2023 The ORF Project Team
+Prints the calibrated task parameters and population-level hyperparameters
+from an object of class \code{"fit.model"}.
 }
 \details{
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/
+The printed output first reports the first four calibrated task parameters,
+corresponding to \code{a}, \code{b}, \code{alpha}, and \code{beta}.
+It then reports \code{vartau}, the variance of the latent speed component,
+and \code{rho}, the correlation between latent accuracy and speed.
+}
+\seealso{
+\code{\link{fit.model}} and
+    \code{\link{summary.fit.model.testlet}}.
 }

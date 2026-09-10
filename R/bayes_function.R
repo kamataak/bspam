@@ -1,22 +1,22 @@
 ##################################################################################################
 ##### THIS IS THE FUNCTION TO ESTIMATE PASSAGE PARAMETERS AND PERSON-LEVEL HYPERPARAMETERS########
 ##################################################################################################
-#' Bayes function when running mcem with bayes setting
-#'
-#' @param person.data - student reading data
-#' @param person.id The column name in the data that represents the unique individual identifier.
-#' @param task.id The column name in the data that represents the unique task identifier.
-#' @param max.counts The column name in the data that represents the number of words in a task.
-#' @param obs.counts The column name in the data that represents the words read correctly for each case.
-#' @param time The column name in the data that represents the time, in seconds, for each case.
-#' @param parallel parallel=T, #logical, run in parallel? "T" or "F"
-#' @param n.chains int., number of the chains
-#' @param thin int, thinning interval, a.k.a, period of saving samples
-#' @param iter int., number of the iterations after the burn-in period
-#' @param burn int., number of the burn-in iterations
-#'
-#'
-#' @return list
+# Bayes function when running mcem with bayes setting
+#
+# @param person.data - student reading data
+# @param person.id The column name in the data that represents the unique individual identifier.
+# @param task.id The column name in the data that represents the unique task identifier.
+# @param max.counts The column name in the data that represents the number of words in a task.
+# @param obs.counts The column name in the data that represents the words read correctly for each case.
+# @param time The column name in the data that represents the time, in seconds, for each case.
+# @param parallel parallel=T, #logical, run in parallel? "T" or "F"
+# @param n.chains int., number of the chains
+# @param thin int, thinning interval, a.k.a, period of saving samples
+# @param iter int., number of the iterations after the burn-in period
+# @param burn int., number of the burn-in iterations
+#
+#
+# @return list
 bayes <- function(
     person.data=NA,   # data frame, long format, required columns: person.id, task.id, max.counts, obs.counts, time
     person.id = "",

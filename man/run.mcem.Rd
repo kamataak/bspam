@@ -2,7 +2,7 @@
 % Please edit documentation in R/Base.R
 \name{run.mcem}
 \alias{run.mcem}
-\title{Base function for fitting the speed-accuracy model by MCEM}
+\title{Fit the speed-accuracy model by Monte Carlo EM}
 \usage{
 run.mcem(
   Y,
@@ -16,54 +16,75 @@ run.mcem(
 )
 }
 \arguments{
-\item{Y}{Numeric data matrix of accuracy scores in the size of n x I, 
-where n is the number of tasks and I is the number of persons. 
-Missing data are allowed.}
+\item{Y}{Numeric matrix of observed accuracy counts with persons in rows
+and tasks in columns. Missing values are allowed.}
 
-\item{logT10}{Numeric data matrix of time in the size of n x I matrix, where
-n and I are defined above. The time data should be in the scale of 
-log10(times). Missing data are allowed.}
+\item{logT10}{Numeric matrix of completion times with the same dimensions
+as \code{Y}. Values are natural-log completion times standardized to
+10 task units. In oral reading fluency (ORF) applications, this is the
+natural logarithm of reading time per 10 words. Missing values are
+allowed.}
 
-\item{N}{Numeric vector of passage lengths in the length of n.}
+\item{N}{Numeric vector giving the maximum possible count for each task.
+In the ORF assessment context, this is the number of words in each
+passage.}
 
-\item{I}{Numeric, indicating the number of tasks.}
+\item{I}{Numeric value giving the number of tasks, corresponding to the
+number of columns in \code{Y} and \code{logT10}.}
 
-\item{k.in}{Numeric, indicating the number of imputations. Default is 5.}
+\item{k.in}{Numeric value or vector specifying the number of Monte Carlo
+imputations used at each stage of the MCEM procedure. Default is
+\code{5}.}
 
-\item{reps.in}{Numeric, indicating the number of Monte-Carlo iterations, should be 50 to 100. Default is 50.}
+\item{reps.in}{Numeric value or vector specifying the number of MCEM
+iterations associated with each value of \code{k.in}. Values of
+approximately 50 to 100 are generally recommended. Default is
+\code{50}.}
 
-\item{ests.in}{An optional list of numeric vectors, indicating initial values of 
-the model param- eters. If this argument is not given, \code{mom} function will 
-be called to generate the initial values.}
+\item{ests.in}{Optional list containing initial values for the model
+parameters. If initial values are not supplied, they are generated
+internally using the method-of-moments procedure.}
 
-\item{verbose}{Boolean. If TRUE, the summary will be output. Default is FALSE.}
+\item{verbose}{Logical. If \code{TRUE}, progress information is printed.
+Default is \code{FALSE}.}
 }
 \value{
-mcem list
+A list containing the estimated task and population-level
+    parameters, including \code{a}, \code{b}, \code{alpha}, \code{beta},
+    \code{vartau}, and \code{rho}.
 }
 \description{
-This is a base function for fitting the speed-accuracy model to 
-estimate the model parameters by the Monte Carlo EM algorithm 
-described in Potgieter et al. (2017). This function is used by the
-\code{\link{fit.model}} function, which is recommended for the users to use.
+Lower-level routine for estimating parameters of the task-level
+speed-accuracy psychometric model using the Monte Carlo EM (MCEM)
+algorithm described in Potgieter et al. (2017). Most users should use
+\code{\link{fit.model}}, which provides the main model-fitting interface.
 }
 \details{
-If the user is desired to use this function, note that the response
-data file needs to be in the wide format, which can be reshaped from
-a long-format response data by the \code{\link{prep}} function.
-}
-\note{
-Update Memo:
-10/24/2024 For test
-04/29/2021 Modified the mcem function
-           based on Nelis's updated.
-10/28/2021 Modified the mcem output
+The model jointly describes task accuracy and completion time through two
+correlated latent person variables. For each task, the count component is
+parameterized by accuracy parameters \code{a} and \code{b}, and the time
+component is parameterized by \code{alpha} and \code{beta}. The
+population-level parameters include \code{vartau}, the variance of the
+latent speed component, and \code{rho}, the correlation between the latent
+accuracy and speed components.
+
+The MCEM algorithm alternates between Monte Carlo imputation of the latent
+person variables and updates of the task and population-level parameters.
+The arguments \code{k.in} and \code{reps.in} may be vectors, allowing the
+number of Monte Carlo imputations to change across stages of the algorithm.
+
+This function expects the wide-format matrices used internally by
+\pkg{bspam}. Users with long-format response data should generally call
+\code{\link{fit.model}} directly or first prepare the data using
+\code{\link{prep}}.
 }
 \references{
-Potgieter, N., Kamata, A., & Kara, Y. (2017). An EM algorithm for 
-  estimating an oral reading speed and accuracy model. Manuscript submitted 
-  for publication.
+Potgieter, C. J., Kamata, A., & Kara, Y. (2017).
+An EM algorithm for estimating an oral reading speed and accuracy model.
+\emph{arXiv preprint arXiv:1705.10446}.
+\url{https://arxiv.org/abs/1705.10446}
 }
 \seealso{
-\code{\link{prep}} \code{\link{fit.model}}.
+\code{\link{fit.model}} for the main model-fitting interface and
+\code{\link{prep}} for preparing response data.
 }

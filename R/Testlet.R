@@ -1,47 +1,104 @@
-#' Fit model with testlet
-#' 
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
+# This file contains functions for fitting the bspam testlet model.
 #
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
+# Copyright (C) 2021-2026 The ORF Project Team
 #
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# A copy of the GNU General Public License is available at
+# http://www.gnu.org/licenses/
+#
+
+#' Fit the speed-accuracy testlet model
 #'
+#' Fits a sub-task-level speed-accuracy psychometric model that accounts for
+#' the nesting of sub-tasks within tasks. In oral reading fluency (ORF)
+#' applications, sub-tasks correspond to sentences and tasks correspond to
+#' passages.
 #'
-#' @param data A data frame. It has the information of student, passage, sentence, obs.counts and time.  
-#' @param person.id each student's id.
-#' @param sub.task.id each sentence's id.
-#' @param obs.counts The column name in the data that represents the words read correctly for each sentence
-#' @param time The column name in the data that represents the reading time for the sentence.
-#' @param task.id The column name in the data that represents the unique passage identifier.
-#' @param max.counts The column name in the data that represents the number of words in a sentence.
+#' The model jointly describes accuracy and completion time at the sentence
+#' level while incorporating passage-level testlet effects. It estimates
+#' sentence parameters together with population-level parameters describing
+#' the latent accuracy, speed, and testlet components.
+#'
+#' @param data A data frame containing sub-task-level response data.
+#' @param person.id Quoted variable name in \code{data} identifying persons.
+#' @param sub.task.id Quoted variable name in \code{data} identifying
+#'     sub-tasks. In the ORF assessment context, this is the sentence
+#'     identifier.
+#' @param obs.counts Quoted variable name in \code{data} giving the observed
+#'     number of successful outcomes for each sub-task. In the ORF assessment
+#'     context, this is the number of words read correctly in the sentence.
+#' @param time Quoted variable name in \code{data} giving the completion time,
+#'     in seconds, for each sub-task.
+#' @param task.id Quoted variable name in \code{data} identifying the task to
+#'     which each sub-task belongs. In the ORF assessment context, this is the
+#'     passage identifier.
+#' @param max.counts Quoted variable name in \code{data} giving the maximum
+#'     possible count for each sub-task. In the ORF assessment context, this
+#'     is the number of words in the sentence.
 #'
 #' @details
-#' Additional details...
-#' 
-#' @note
-#' Additional note...
-#' 
-#' 
+#' \code{fit.model.testlet()} is the sub-task-level calibration routine used
+#' by \code{\link{fit.model}} when \code{testlet = TRUE}. The input data are
+#' converted to person-by-sub-task count and time structures, with completion
+#' times expressed as natural-log time standardized to 10 units.
+#'
+#' The model includes sentence-level accuracy parameters \code{a} and
+#' \code{b}, sentence-level time parameters \code{alpha} and \code{beta},
+#' and passage-level testlet effects for the accuracy and speed components.
+#' Population-level parameters include \code{sigma}, \code{gamma1},
+#' \code{gamma2}, \code{rho.theta}, and \code{rho.testlet}.
+#'
+#' Each task must be represented by observations from at least two persons.
+#' If a task is represented by only one person, or if required column names
+#' are not supplied, the function stops the calibration procedure and returns
+#' without a fitted model.
+#'
+#' @return An object of class \code{"fit.model.testlet"} containing:
+#'     \describe{
+#'       \item{\code{task.param}}{A data frame containing the estimated
+#'       sub-task parameters \code{a}, \code{b}, \code{alpha}, and
+#'       \code{beta}, together with \code{task.id} and
+#'       \code{sub.task.id}.}
+#'       \item{\code{hyper.param}}{A data frame containing the estimated
+#'       population-level parameters \code{sigma}, \code{gamma1},
+#'       \code{gamma2}, \code{rho.theta}, and \code{rho.testlet}.}
+#'       \item{\code{Y}}{The person-by-sub-task observed count matrix used
+#'       for calibration.}
+#'       \item{\code{logT10}}{The person-by-sub-task matrix of natural-log
+#'       completion times standardized to 10 units.}
+#'       \item{\code{N}}{The vector of maximum counts for the sub-tasks.}
+#'     }
+#'
+#' @seealso
+#' \code{\link{fit.model}} for the main model-fitting interface and
+#' \code{\link{prep}} for preparing task- or sub-task-level response data.
+#'
 #' @examples
-#' \dontrun{
-#' # See the package vignette for an example of testlet calibration.
+#' \donttest{
+#' fit_testlet <- fit.model.testlet(
+#'   data = sentence.level.data,
+#'   person.id = "id.student",
+#'   sub.task.id = "id.sentence",
+#'   obs.counts = "wrc",
+#'   time = "sec",
+#'   task.id = "id.passage",
+#'   max.counts = "numwords.sent"
+#' )
 #' }
-#' 
-#' @return list
+#'
 #' @export
 fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts="", time="", task.id="", max.counts="") {
   # loading logger
   log.initiating()
-  
-  .check_rstan("Testlet calibration")
-  
   if (is.null(data)) {
     flog.info("Dataset cannot be NULL!", name = "orfrlog")
     return(NULL)
@@ -257,6 +314,7 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts
 }
 
 
+# Internal method-of-moments initialization for the testlet model.
 # n is the number of students in the sample
 # 
 # Passage indicates the passage that each sentence belongs to
@@ -649,6 +707,7 @@ Parms.NegLogLLH.Testlet <- function(par,n,K,U1,U2) {
   return(NegLogLLH)
 }
 
+# Internal MCEM iteration routine for the testlet model.
 iterate_full_testlet_MCEM <- function(Y,logT10,Passage,N,n.iter,M.iter,par.in,m,n.It) {
   
   if (missing(par.in)) {par.in <- testlet_parms_mom(Y,logT10,Passage,N)}

@@ -1,29 +1,47 @@
-#' summary the information of fit.model.testlet class
-#'
-#'
-#' Copyright (C) 2021-2023 The ORF Project Team
-#'
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
+# Summary methods for the bspam package.
 #
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
+# Copyright (C) 2021-2026 The ORF Project Team
 #
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# A copy of the GNU General Public License is available at
+# http://www.gnu.org/licenses/
+#
+
+#' Summarize a fitted testlet model
 #'
-#' @param object = object
-#' @param digits = print out numeric with specific digits
-#' @param ... = parameter
+#' Prints the estimated sub-task parameters and population-level
+#' hyperparameters from an object of class \code{"fit.model.testlet"}.
+#'
+#' @param object A fitted testlet-model object of class
+#'     \code{"fit.model.testlet"}, typically returned by
+#'     \code{\link{fit.model.testlet}} or by \code{\link{fit.model}} with
+#'     \code{testlet = TRUE}.
+#' @param digits Integer passed to the table-printing method. The current
+#'     implementation formats reported parameter estimates to three decimal
+#'     places before printing. Default is \code{4}.
+#' @param ... Additional arguments for the summary method. Currently not used.
+#'
+#' @details
+#' The printed output first reports the first four estimated sub-task
+#' parameters from the fitted model. It then prints \code{sigma},
+#' \code{gamma1}, \code{gamma2}, \code{rho.theta}, and
+#' \code{rho.testlet}.
+#'
+#' @return Invisibly returns \code{NULL} after printing the model summary.
+#'
+#' @seealso \code{\link{fit.model.testlet}} and \code{\link{fit.model}}.
 #'
 #' @import mvtnorm
 #' @import tidyverse
-#' @return printing information
-#'
 #' @method summary fit.model.testlet
 #' @export
 summary.fit.model.testlet <- function(object, digits=4,...) {
@@ -50,32 +68,32 @@ summary.fit.model.testlet <- function(object, digits=4,...) {
   cat("rho.testlet:")
   cat(paste(sprintf(fmt = "%6.3f", z$hyper.param$rho.testlet), "\n")) # CHANGE TO .3f
 }
-#' summary the information of fit.model class
+
+#' Summarize a fitted bspam model
 #'
+#' Prints the calibrated task parameters and population-level hyperparameters
+#' from an object of class \code{"fit.model"}.
 #'
-#' Copyright (C) 2021-2023 The ORF Project Team
+#' @param object A fitted model object of class \code{"fit.model"}, typically
+#'     returned by \code{\link{fit.model}}.
+#' @param digits Integer passed to the table-printing method. The current
+#'     implementation formats reported parameter estimates to three decimal
+#'     places before printing. Default is \code{4}.
+#' @param ... Additional arguments for the summary method. Currently not used.
 #'
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
-#
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
-#
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
+#' @details
+#' The printed output first reports the first four calibrated task parameters,
+#' corresponding to \code{a}, \code{b}, \code{alpha}, and \code{beta}.
+#' It then reports \code{vartau}, the variance of the latent speed component,
+#' and \code{rho}, the correlation between latent accuracy and speed.
 #'
-#' @param object object
-#' @param digits print out numeric with specific digits
-#' @param ... Additional arguments
+#' @return Invisibly returns \code{NULL} after printing the model summary.
+#'
+#' @seealso \code{\link{fit.model}} and
+#'     \code{\link{summary.fit.model.testlet}}.
 #'
 #' @import mvtnorm
 #' @import tidyverse
-#' @return printing information
-#'
 #' @method summary fit.model
 #' @export
 summary.fit.model <- function(object, digits=4,...) {
@@ -97,32 +115,45 @@ summary.fit.model <- function(object, digits=4,...) {
   cat(paste("Rho"), "            :     ")
   cat(paste(sprintf(fmt = "%6.3f", z$hyper.param$rho), "\n")) # CHANGE TO .3f
 }
-#' summary the information of wcpm class
+
+#' Summarize bspam scoring results
 #'
+#' Prints and returns a person-level summary from an object of class
+#' \code{"scoring"}. The method supports both task-level and testlet scoring
+#' output.
 #'
-#' Copyright (C) 2021-2023 The ORF Project Team
+#' @param object A scoring object of class \code{"scoring"}, typically
+#'     returned by \code{\link{scoring}}.
+#' @param digits Integer retained for compatibility with the summary method.
+#'     The current screen output is formatted to three decimal places.
+#'     Default is \code{4}.
+#' @param verbose Logical. If \code{TRUE}, the formatted summary is printed.
+#'     The processed summary data are returned invisibly regardless of this
+#'     setting. Default is \code{TRUE}.
+#' @param factor.scores Logical. If \code{FALSE}, columns whose names contain
+#'     \code{"theta"} or \code{"tau"} are removed. Default is \code{TRUE}.
+#' @param show Character string controlling the amount of information.
+#'     With \code{"short"} (default), observed-data and design-summary columns
+#'     are omitted. With \code{"long"}, those columns are retained.
+#' @param ... Additional arguments for the summary method. Currently not used.
 #'
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
-#
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
-#
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
+#' @details
+#' The method automatically distinguishes task-level scoring output from
+#' testlet scoring output. For task-level results, the short display removes
+#' occasion, group, task count, maximum-count total, observed-count total,
+#' observed time, and observed WCPM when present. For testlet results, the
+#' corresponding sub-task and testlet-specific fields are handled as well.
 #'
-#' @param object object
-#' @param digits print out numeric with specific digits
-#' @param verbose boolean, if TRUE, shows the summary, default is TRUE
-#' @param factor.scores theta and tau output flag, default is TRUE # before was FALSE
-#' @param show output flag, "long" and "short", default "short" only output estimate result. "long" will output estimate result and data. 
-#' @param ... Additional arguments.
-#' 
-#' @return scoring dataset with task information and estimated score
+#' When \code{verbose = TRUE}, a formatted table is printed. The invisibly
+#' returned object contains the corresponding numeric summary data rather than
+#' the display-formatted values.
+#'
+#' @return Invisibly returns a data frame containing the processed person-level
+#'     scoring summary. Included columns depend on \code{factor.scores},
+#'     \code{show}, scoring type, and whether ORF/WCPM output is present.
+#'
+#' @seealso \code{\link{scoring}} and \code{\link{summary.bootstrap}}.
+#'
 #' @method summary scoring
 #' @export
 summary.scoring <- function(object, digits=4, verbose=TRUE,
@@ -202,32 +233,44 @@ summary.scoring <- function(object, digits=4, verbose=TRUE,
     return(invisible(tb))
   }
 }
-#' summary the information of bootstrap class
+
+#' Summarize bootstrap scoring results
 #'
+#' Prints and returns bootstrap-based scoring results from an object of class
+#' \code{"bootstrap"}. The method can alternatively report cases for which the
+#' bootstrap procedure produced an error.
 #'
-#' Copyright (C) 2021-2023 The ORF Project Team
+#' @param object A bootstrap scoring object of class \code{"bootstrap"}.
+#' @param digits Integer retained for compatibility with the summary method.
+#'     The current screen output is formatted to three decimal places.
+#'     Default is \code{4}.
+#' @param geterror Logical. If \code{TRUE}, the method reports
+#'     \code{object$error_case} instead of the bootstrap scoring table.
+#'     Default is \code{FALSE}.
+#' @param verbose Logical. If \code{TRUE}, the formatted bootstrap summary is
+#'     printed. Processed results are returned invisibly. Default is
+#'     \code{TRUE}.
+#' @param factor.scores Logical. If \code{FALSE}, columns whose names contain
+#'     \code{"theta"} or \code{"tau"} are removed. Default is \code{FALSE}.
+#' @param ... Additional arguments for the summary method. Currently not used.
 #'
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
-#
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
-#
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
+#' @details
+#' With \code{geterror = FALSE}, the method summarizes
+#' \code{object$bootstrap.out}. Numeric scoring columns are formatted to three
+#' decimal places for screen display, while returned values remain numeric.
 #'
-#' @param object bootstrap object
-#' @param digits print out numeric with specific digits
-#' @param geterror summary error case, default FALSE
-#' @param verbose show summary on screen, default TRUE
-#' @param factor.scores theta and tau output flag, default is FALSE
-#' @param ... Additional arguments 
+#' With \code{geterror = TRUE}, existing error cases are printed and returned
+#' invisibly. If no error cases are present, the method prints a message.
+#' If the bootstrap output contains no columns, it prints
+#' \code{"Bootstrap has 0 obs."}.
 #'
-#' @return table
+#' @return With nonempty bootstrap output, invisibly returns the processed
+#'     bootstrap scoring table. With \code{geterror = TRUE} and available
+#'     error cases, invisibly returns \code{object$error_case}. Otherwise an
+#'     informative message is printed.
+#'
+#' @seealso \code{\link{scoring}} and \code{\link{summary.scoring}}.
+#'
 #' @method summary bootstrap
 #' @export
 summary.bootstrap <- function(object, digits=4, geterror=FALSE,verbose=TRUE,factor.scores=FALSE,...) {
@@ -278,3 +321,4 @@ summary.bootstrap <- function(object, digits=4, geterror=FALSE,verbose=TRUE,fact
     }
   }
 }
+

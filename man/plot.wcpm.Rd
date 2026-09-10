@@ -2,33 +2,43 @@
 % Please edit documentation in R/Plot.R
 \name{plot.wcpm}
 \alias{plot.wcpm}
-\title{Plot function to show graph of wcpm information from scoring class}
+\title{Plot observed versus model-based WCPM}
 \usage{
 \method{plot}{wcpm}(x, person = NULL, show.se = T, show.abline = T, ...)
 }
 \arguments{
-\item{x}{A scoring object}
+\item{x}{A scoring object of class \code{"scoring"} containing
+\code{wcpm.obs} and a model-based WCPM estimate.}
 
-\item{person}{Person ids for plotting}
+\item{person}{Optional vector of person identifiers. If \code{NULL}, all
+persons are included.}
 
-\item{show.se}{tandard error bar flag, TRUE (default) for showing or FALSE for no showing}
+\item{show.se}{Logical. If \code{TRUE}, vertical error bars show
+approximately 95 percent intervals based on \code{1.96} standard errors.}
 
-\item{show.abline}{abline flag, TRUE (default) for showing or FALSE for no showing}
+\item{show.abline}{Logical. If \code{TRUE}, the identity line \code{y = x}
+is added.}
 
-\item{...}{Additional arguments passed to the method.}
+\item{...}{Additional arguments reserved for the plotting function.}
+}
+\value{
+A \code{plotly} scatter plot.
 }
 \description{
-Copyright (C) 2021-2024 The ORF Project Team
+Creates an interactive scatter plot comparing observed WCPM with model-based
+WCPM estimates from a \code{"scoring"} object produced with
+\code{type = "orf"}.
 }
 \details{
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/
+The x-axis is observed WCPM and the y-axis is model-based WCPM. The function
+requires scoring results generated with \code{type = "orf"}.
+
+This function is intended to be called directly as \code{plot.wcpm(...)}.
+It is not designed for automatic dispatch through \code{plot()}.
+}
+\examples{
+\dontrun{
+plot.wcpm(scores)
+}
+
 }

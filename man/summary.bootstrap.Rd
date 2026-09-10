@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{summary.bootstrap}
 \alias{summary.bootstrap}
-\title{summary the information of bootstrap class}
+\title{Summarize bootstrap scoring results}
 \usage{
 \method{summary}{bootstrap}(
   object,
@@ -14,33 +14,46 @@
 )
 }
 \arguments{
-\item{object}{bootstrap object}
+\item{object}{A bootstrap scoring object of class \code{"bootstrap"}.}
 
-\item{digits}{print out numeric with specific digits}
+\item{digits}{Integer retained for compatibility with the summary method.
+The current screen output is formatted to three decimal places.
+Default is \code{4}.}
 
-\item{geterror}{summary error case, default FALSE}
+\item{geterror}{Logical. If \code{TRUE}, the method reports
+\code{object$error_case} instead of the bootstrap scoring table.
+Default is \code{FALSE}.}
 
-\item{verbose}{show summary on screen, default TRUE}
+\item{verbose}{Logical. If \code{TRUE}, the formatted bootstrap summary is
+printed. Processed results are returned invisibly. Default is
+\code{TRUE}.}
 
-\item{factor.scores}{theta and tau output flag, default is FALSE}
+\item{factor.scores}{Logical. If \code{FALSE}, columns whose names contain
+\code{"theta"} or \code{"tau"} are removed. Default is \code{FALSE}.}
 
-\item{...}{Additional arguments}
+\item{...}{Additional arguments for the summary method. Currently not used.}
 }
 \value{
-table
+With nonempty bootstrap output, invisibly returns the processed
+    bootstrap scoring table. With \code{geterror = TRUE} and available
+    error cases, invisibly returns \code{object$error_case}. Otherwise an
+    informative message is printed.
 }
 \description{
-Copyright (C) 2021-2023 The ORF Project Team
+Prints and returns bootstrap-based scoring results from an object of class
+\code{"bootstrap"}. The method can alternatively report cases for which the
+bootstrap procedure produced an error.
 }
 \details{
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/
+With \code{geterror = FALSE}, the method summarizes
+\code{object$bootstrap.out}. Numeric scoring columns are formatted to three
+decimal places for screen display, while returned values remain numeric.
+
+With \code{geterror = TRUE}, existing error cases are printed and returned
+invisibly. If no error cases are present, the method prints a message.
+If the bootstrap output contains no columns, it prints
+\code{"Bootstrap has 0 obs."}.
+}
+\seealso{
+\code{\link{scoring}} and \code{\link{summary.scoring}}.
 }

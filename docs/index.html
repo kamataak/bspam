@@ -32,6 +32,12 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/basic_01.html">bspam: Passage-level Calibration &amp; Scoring for ORF Data 1</a></li>
+  </ul>
+</li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -54,6 +60,55 @@
 </h1>
 <p><code>bspam</code> is an R package that contains functions to fit the speed-accuracy psychometric model for repeatedly measured count outcome data (Potgieter, Kamata &amp; Kara, 2017; Kara, Kamata, Potgieter &amp; Nese, 2020), where the accuracy and speed are modeled by a binomial count and a log-normal latent variable models, respectively.</p>
 <p>For example, the use of this modeling technique allows model-based calibration and scoring for oral reading fluency (ORF) assessment data. This document demonstrates some uses of the <code>bspam</code> package by using an ORF assessment data set.</p>
+<div class="section level3">
+<h3 id="main-functions">Main Functions<a class="anchor" aria-label="anchor" href="#main-functions"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Function</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code><a href="reference/prep.html">prep()</a></code></td>
+<td>Prepare passage- or sentence-level data for analysis</td>
+</tr>
+<tr>
+<td><code><a href="reference/fit.model.html">fit.model()</a></code></td>
+<td>Estimate task parameters by MCEM or Bayesian estimation</td>
+</tr>
+<tr>
+<td><code><a href="reference/scoring.html">scoring()</a></code></td>
+<td>Estimate latent factor scores and model-based WCPM scores</td>
+</tr>
+<tr>
+<td><code><a href="reference/get.cases.html">get.cases()</a></code></td>
+<td>Generate person-by-occasion case identifiers</td>
+</tr>
+<tr>
+<td><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code></td>
+<td>Summarize calibration and scoring results</td>
+</tr>
+<tr>
+<td><code><a href="reference/plot.task.html">plot.task()</a></code></td>
+<td>Visualize task parameter estimates</td>
+</tr>
+<tr>
+<td><code><a href="reference/plot.person.html">plot.person()</a></code></td>
+<td>Visualize person-level score estimates</td>
+</tr>
+<tr>
+<td><code><a href="reference/plot.information.html">plot.information()</a></code></td>
+<td>Visualize calibration information</td>
+</tr>
+</tbody>
+</table>
+<p>Advanced users can also access lower-level functions such as <code><a href="reference/run.mcem.html">run.mcem()</a></code>, <code><a href="reference/run.scoring.html">run.scoring()</a></code>, <code><a href="reference/bayes.html">bayes()</a></code>, and <code><a href="reference/bayes.wcpm.html">bayes.wcpm()</a></code>. See the package help pages for details.</p>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation:<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -84,7 +139,8 @@
 </h3>
 <p>It is required that the data are prepared as a long-format data, where each row is data for a unique case, namely, a specific task from a specific person in a specific testing occasion. In the context of ORF assessment, each row is data for a specific passage from a specific student in a specific testing occasion. A data file can be prepared in any file format that is readable into R.</p>
 <p>For example, a CSV formatted data can be read into R by using the <code><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv()</a></code> function that is part of the base packages. Also, data files in some statistical software formats can be read in to R with functions in packages, such as the <code>haven</code> package. For example, <code>read_spss()</code> function can be used to read in an SPSS formatted data file into R.</p>
-<p>The data set should minimally contain the following 7 variables: (1) individual ID, (2) group ID, (3) testing occasion ID, (4) task ID, (5) the maximum number of attempts in the task, (6) the number of successes in the task, and (7) the time took to complete the task. Note if the data are coming from only one testing occasion and one group, the variables (2) group ID, and (3) testing occasion ID should contain an arbitrary constant value, such as all 1’s.</p>
+<p>The data set should minimally contain the following 5 variables: (1) individual ID, (2) task ID, (3) the maximum number of attempts in the task, (4) the number of successes in the task, and (5) the time took to complete the task. Two optional variables, <code>group ID</code> and <code>testing occasion ID</code>, can also be included. However, note if the data are coming from only one testing occasion and one group, these two variables should contain an arbitrary constant value, such as all 1’s.</p>
+<p><strong>Note:</strong> The <code>occasion</code> and <code>group</code> variables are optional when using the <code>bspam</code> prep() functions. If the data do not contain an occasion variable, <code>bspam</code> internally assigns all observations to a default occasion (<code>occasion = 1</code>). Similarly, if the data do not contain a group variable, all observations are assigned to a default group (<code>group = 1</code>). Therefore, users do not need to manually create these columns when their data contain only one occasion or when group information is not available.</p>
 <p>Variable names and the order of the variables can be flexible in the data frame. When running functions in this package, variable names for required variables need to be specified, as shown in examples below.</p>
 <p>Then, the data need to be read into R as a data frame.</p>
 </div>
@@ -93,6 +149,43 @@
 </h3>
 <p>The <code>bspam</code> package comes with several example data sets in the ORF assessment context. To demonstrate some basic usage of key functions in the package, a sample ORF assessment data set is used here. In the context of an ORF assessment, a task is a passage given to the student to read aloud, and an attempt is student’s reading on a word in the passage, which is scored correct (i.e., success) or not. Accordingly, the number of successes in the task is the number of words correctly read in the passage.</p>
 <p>The data set <code>passage2</code> is a passage-level student data and consisted of reading accuracy and time data for 12 passages from 85 students. Although the 85 students were assigned to all 12 passages, the number of passages read by the 85 students varied from 2 to 12 passages. The number of students per passage were between 59 to 79. This is a small subset of the data collected by Nese and Kamata (2014-2018).</p>
+<p>The package also includes the following example data sets and output objects:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Object</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>passage2</code></td>
+<td>Passage-level ORF example data</td>
+</tr>
+<tr>
+<td><code>sentence.level.data</code></td>
+<td>Sentence-level/testlet ORF example data</td>
+</tr>
+<tr>
+<td><code>sentence.cens.low</code></td>
+<td>Sentence-level example data with low censoring</td>
+</tr>
+<tr>
+<td><code>sentence.cens.high</code></td>
+<td>Sentence-level example data with high censoring</td>
+</tr>
+<tr>
+<td><code>passage.calib.mcem</code></td>
+<td>Example MCEM calibration output</td>
+</tr>
+<tr>
+<td><code>passage.calib.bayes</code></td>
+<td>Example Bayesian calibration output</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level3">
 <h3 id="load-packages">Load Packages<a class="anchor" aria-label="anchor" href="#load-packages"></a>
@@ -100,7 +193,7 @@
 <p>Load required packages, and view the example data set <code>passage2</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kamataak/bspam" class="external-link">bspam</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://kamataak.github.io/bspam/">bspam</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">passage2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -118,6 +211,14 @@
 <span>                      reps.in <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>                      est <span class="op">=</span> <span class="st">"mcem"</span><span class="op">)</span></span>
 <span><span class="va">MCEM_run</span></span></code></pre></div>
+<p>The <code><a href="reference/fit.model.html">fit.model()</a></code> function supports two calibration modes:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Task-level (passage-level) calibration</strong> (default), where each task is modeled independently.</li>
+<li>
+<strong>Testlet (sentence-level) calibration</strong>, enabled by setting <code>testlet = TRUE</code> and providing a <code>sub.task.id</code>, which models local dependence among sub-tasks (e.g., sentences within a passage).</li>
+</ol>
+<p>For Bayesian calibration (<code>est = "bayes"</code>), <code>bspam</code> automatically selects the estimation engine: Stan is used when the data are complete, and JAGS is used when missing observations are present.</p>
 <p>By default, the standard errors for the model parameters are not estimated. This will allow one to increase the number of Monte-Carlo iterations <code>reps.in</code> to improve the quality of the model parameter estimates, while minimizing the computation time. The number of <code>reps.in</code> should be 50 to 100 in realistic calibrations. Also note that <code>k.in</code> is the number of imputations for the MCEM algorithm, where the default is 5. Note that SE’s for model parameters are not required for running the <code><a href="reference/scoring.html">scoring()</a></code> function to estimate latent factor scores and WCPM scores in the next step. If standard errors for model parameters are desired, an additional argument <code>se = "analytic"</code> or <code>se = "bootstrap"</code> needs to be added to the <code><a href="reference/fit.model.html">fit.model()</a></code> function.</p>
 <p>Passage calibration can also be done by using the <code>est = "bayes"</code> option, which implements a fully Bayesian approach through Gibbs sampling or Hamiltonian Monte Carlo with JAGS and Stan, respectively. Currently, Stan will be used with complete data, that is, if all students have data on all passages. Otherwise, JAGS will be used as it provides faster computations with missing observations. Note that <code>bspam</code> runs JAGS in the auto mode, which does not require the user to supply any specifications for Bayesian estimation (e.g., number of the iterations) or monitor convergence. The standard deviations of the posterior distributions are reported as the standard errors. A specification for the <code><a href="reference/fit.model.html">fit.model()</a></code> function can look like as follows.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -136,7 +237,9 @@
 </h3>
 <p>In order to estimate latent factor scores and/or WCPM scores, the <code><a href="reference/scoring.html">scoring()</a></code> function needs to be run.</p>
 <p>Note that we use the output object <code>MCEM_run</code> from the previous passage calibration phase. By default (<code>type = "general"</code>), only factor scores (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>τ</mi><annotation encoding="application/x-tex">\tau</annotation></semantics></math>) and their standard errors are reported. By providing an argument <code>type = "orf"</code>, WCPM scores and their standard errors are also reported. Also, WCPM scores and/or factor scores, and their standard errors will be estimated for all cases in the data by default.</p>
-<p>There are several estimator options and standard error estimation options: maximum likelihood (MLE), maximum a posteriori (MAP), expected a posteriori (EAP), and fully Bayesian approach. In this example, maximum a priori (MAP) estimators for scoring and analytic approach for estimating standard errors are used.</p>
+<p>There are several estimator options for scoring: maximum likelihood (<code>"mle"</code>), maximum a posteriori (<code>"map"</code>), expected a posteriori (<code>"eap"</code>), and a fully Bayesian approach (<code>"bayes"</code>). Standard errors can be estimated analytically or via bootstrap, except when <code>est = "bayes"</code>, in which case posterior standard deviations are reported.</p>
+<p>When <code>se = "bootstrap"</code> is used, the number of bootstrap replications can be controlled with the <code>bootstrap</code> argument (default = 100). The <code>failsafe</code> argument can be used to specify the number of retry attempts for failed bootstrap samples.</p>
+<p>In addition to standard scoring, the <code><a href="reference/scoring.html">scoring()</a></code> function supports <strong>censored (truncated) response data</strong> by setting <code>censoring = TRUE</code> and supplying a censoring indicator via the <code>cens</code> argument. Sentence-level testlet scoring also uses the censoring framework internally.</p>
 <div class="section level4">
 <h4 id="scoring-for-all-cases">Scoring for All Cases<a class="anchor" aria-label="anchor" href="#scoring-for-all-cases"></a>
 </h4>
@@ -160,6 +263,8 @@
 <h4 id="scoring-for-selected-cases">Scoring for Selected Cases<a class="anchor" aria-label="anchor" href="#scoring-for-selected-cases"></a>
 </h4>
 <p>If the computations of WCPM scores and/or factor scores for only selected cases are desired, a list of cases needs to be provided by the <code>cases =</code> argument. The list of cases has to be a one-variable data frame with a variable name <code>cases</code>. The format of case values should be: <code>personid_occasion</code>. This one-variable data frame can be created manually, just like shown below. Also, it can be generated by the <code><a href="reference/get.cases.html">get.cases()</a></code> function, which will be shown later in this document.</p>
+<p>A case is identified by the combination of the person ID and testing occasion, separated by an underscore (for example, 2033_Fall). The group variable is not part of the case identifier. It is treated as descriptive information associated with the person-occasion case and is retained in the scoring output.</p>
+<p>If no occasion variable is supplied, bspam internally creates a single default occasion with the value 1. Thus, all observations for a person belong to the same occasion.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample.cases</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>cases <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2033_fall"</span>, <span class="st">"2043_fall"</span>, <span class="st">"2089_fall"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">WCPM_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data <span class="op">=</span> <span class="va">MCEM_run</span>, </span>
@@ -220,7 +325,11 @@
 <h3 id="scoring-estimating-latent-factor-scores-and-wcpm-scores-2">Scoring: Estimating Latent Factor Scores and WCPM Scores 2<a class="anchor" aria-label="anchor" href="#scoring-estimating-latent-factor-scores-and-wcpm-scores-2"></a>
 </h3>
 <p>Alternatively, we can run the <code><a href="reference/scoring.html">scoring()</a></code> in two steps.</p>
-<p><strong>Step 1:</strong> Prepare the data using the <code><a href="reference/prep.html">prep()</a></code> function, where required data set for the <code><a href="reference/scoring.html">scoring()</a></code> function is prepared, including changing variable names and a generation of the natural-logarithm of the time data.</p>
+<p><strong>Step 1:</strong> Prepare the data using the <code><a href="reference/prep.html">prep()</a></code> function. The function standardizes variable names, computes the natural logarithm of time, and creates analysis-ready long and wide data structures.</p>
+<p>For passage-level data, use the default setting (<code>sentence_level = FALSE</code>).<br>
+For sentence-level data, set <code>sentence_level = TRUE</code> and provide a <code>sub.task.id</code>.</p>
+<p>If <code>occasion</code> or <code>group</code> variables are not provided, <code><a href="reference/prep.html">prep()</a></code> will create default constant values automatically.</p>
+<p>The automatically created values are occasion = 1 and group = 1, so users should leave these arguments unspecified rather than manually adding dummy columns when the corresponding information is not present in their data.</p>
 <p>The output from the <code><a href="reference/prep.html">prep()</a></code> function is a list of two components. The <code>data.long</code> component is a data frame, which is a long format of student response data, and the <code>data.wide</code> is list that contains four components, including a wide format of the data, as well as other information such as the number of passages and the number of words for each passage.</p>
 <p>One benefit of this two-step approach is that we can use another utility function <code><a href="reference/get.cases.html">get.cases()</a></code> to generate a list of unique cases with the output of the <code><a href="reference/prep.html">prep()</a></code> function. This list can be useful when our interest is to estimate WCPM scores only for selected cases.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -259,26 +368,35 @@
 <h2 id="other-features">Other Features<a class="anchor" aria-label="anchor" href="#other-features"></a>
 </h2>
 <div class="section level3">
-<h3 id="fitting-and-scoring-by-the-testlet-model">Fitting and Scoring by the Testlet Model<a class="anchor" aria-label="anchor" href="#fitting-and-scoring-by-the-testlet-model"></a>
+<h3 id="fitting-and-scoring-by-the-testlet-model-sentence-level">Fitting and Scoring by the Testlet Model (Sentence-level)<a class="anchor" aria-label="anchor" href="#fitting-and-scoring-by-the-testlet-model-sentence-level"></a>
 </h3>
-<p>For example, when an ORF data is consisted of sentence-level data, it is reasonable to think that the data on sentences within the same passage are more similar than data on sentences from other passages. Thus, the use of a testlet-version of the model is reasonable to implement. The <code>bspam</code> R package can fit and score the data by the testlet model both by the MCEM and Bayes.</p>
+<p>When ORF data are collected at the sentence level, sentences are nested within passages and may exhibit local dependence. In this case, a testlet-version of the model can be fitted and scored using <code>bspam</code>.</p>
 <p>The example data set <code>sentence.level.data</code> is a sentence-level student data and consisted of reading accuracy and time data for 4 passages from 58 students. The 4 passages were consisted of 4 to 8 sentences, totalling 23 sentences. All 58 students read all 4 passages completely. This is a small subset of the data collected by Nese and Kamata (2014-2018).</p>
-<p>For example the testlet model can be fitted to this data set by the MCEM by:</p>
+<div class="section level4">
+<h4 id="testlet-calibration">Testlet Calibration<a class="anchor" aria-label="anchor" href="#testlet-calibration"></a>
+</h4>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Testlet_run</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit.model.html">fit.model</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sentence.level.data</span>,</span>
-<span>                                 person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
-<span>                                 task.id <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
-<span>                                 sub.task.id <span class="op">=</span> <span class="st">"id.sentence"</span>,</span>
-<span>                                 obs.count <span class="op">=</span> <span class="st">"wrc"</span>, </span>
-<span>                                 max.counts <span class="op">=</span> <span class="st">"numwords.sent"</span>,</span>
-<span>                                 time <span class="op">=</span> <span class="st">"sec"</span>,</span>
-<span>                                 testlet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">Testlet_run</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit.model.html">fit.model</a></span><span class="op">(</span></span>
+<span>  data        <span class="op">=</span> <span class="va">sentence.level.data</span>,</span>
+<span>  person.id   <span class="op">=</span> <span class="st">"id.student"</span>,</span>
+<span>  task.id     <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
+<span>  sub.task.id <span class="op">=</span> <span class="st">"id.sentence"</span>,</span>
+<span>  max.counts  <span class="op">=</span> <span class="st">"numwords.sent"</span>,</span>
+<span>  obs.counts  <span class="op">=</span> <span class="st">"wrc"</span>,</span>
+<span>  time        <span class="op">=</span> <span class="st">"sec"</span>,</span>
+<span>  testlet     <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose     <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>The estimated testlet parameter is reported as part of the hyper-parameters.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Testlet_run</span><span class="op">$</span><span class="va">hyper.param</span></span></code></pre></div>
-<p>The estimated model paramters can be extracted by:</p>
+<p>Task- and sentence-level parameters can be extracted by:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Testlet_run</span><span class="op">$</span><span class="va">task.param</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="testlet-scoring">Testlet Scoring<a class="anchor" aria-label="anchor" href="#testlet-scoring"></a>
+</h4>
 <p>The scoring by the MAP can be done for this data set by:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Testlet_scoring</span> <span class="op">&lt;-</span> </span>
@@ -287,32 +405,68 @@
 <span>          person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
 <span>          task.id <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
 <span>          sub.task.id <span class="op">=</span> <span class="st">"id.sentence"</span>,</span>
-<span>          obs.count <span class="op">=</span> <span class="st">"wrc"</span>, </span>
+<span>          obs.counts <span class="op">=</span> <span class="st">"wrc"</span>, </span>
 <span>          max.counts <span class="op">=</span> <span class="st">"numwords.sent"</span>,</span>
 <span>          time <span class="op">=</span> <span class="st">"sec"</span>,</span>
 <span>          type <span class="op">=</span> <span class="st">"orf"</span>,</span>
 <span>          testlet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>          censoring <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
 <div class="section level3">
 <h3 id="scoring-for-truncated-response-data">Scoring for Truncated Response Data<a class="anchor" aria-label="anchor" href="#scoring-for-truncated-response-data"></a>
 </h3>
 <p>In some circumstances, a test may be designed as a speeded test, such that many examinees do not complete all the tasks in the test. For example, the traditional administration of the ORF test only gives the student 60 seconds to read aloud the given passage, which is typically consisted of 250 words. In this case, many students do not finish reading the entire passage. The <code>bspam</code> R package can score such a data set by the censored model both for the regular and the testlet models.</p>
-<p>Please see the <a href="https://github.com/kamataak/bspam/" class="external-link">package website</a> for more detailed usage of the package.</p>
+<p>For example, the package includes <code>sentence.cens.low</code> and <code>sentence.cens.high</code> for demonstrating sentence-level scoring with censored observations. A censored testlet scoring analysis can be run as follows:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Testlet_scoring_cens</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="reference/scoring.html">scoring</a></span><span class="op">(</span>calib.data <span class="op">=</span> <span class="va">Testlet_run</span>,</span>
+<span>          data <span class="op">=</span> <span class="va">sentence.cens.low</span>,</span>
+<span>          person.id <span class="op">=</span> <span class="st">"id.student"</span>,</span>
+<span>          task.id <span class="op">=</span> <span class="st">"id.passage"</span>,</span>
+<span>          sub.task.id <span class="op">=</span> <span class="st">"id.sentence"</span>,</span>
+<span>          obs.counts <span class="op">=</span> <span class="st">"wrc"</span>,</span>
+<span>          max.counts <span class="op">=</span> <span class="st">"numwords.sent"</span>,</span>
+<span>          time <span class="op">=</span> <span class="st">"sec"</span>,</span>
+<span>          cens <span class="op">=</span> <span class="st">"cens"</span>,</span>
+<span>          type <span class="op">=</span> <span class="st">"orf"</span>,</span>
+<span>          testlet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>          censoring <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>Please see the <a href="https://kamataak.github.io/bspam/">package website</a> for more detailed usage of the package.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="citations">Citations<a class="anchor" aria-label="anchor" href="#citations"></a>
+<h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
+</h2>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot.task.html">plot.task</a></span><span class="op">(</span><span class="va">MCEM_run</span>, parameter <span class="op">=</span> <span class="st">"a"</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot.person.html">plot.person</a></span><span class="op">(</span><span class="va">WCPM_all</span>, parameter <span class="op">=</span> <span class="st">"wcpm"</span>, show.se <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>Additional plotting functions documented in the package include <code><a href="reference/plot.information.html">plot.information()</a></code> for calibration information and <code><a href="reference/plot.wcpm.html">plot.wcpm()</a></code> for comparing observed and model-based WCPM scores.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot.information.html">plot.information</a></span><span class="op">(</span><span class="va">MCEM_run</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot.wcpm.html">plot.wcpm</a></span><span class="op">(</span><span class="va">WCPM_all</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="cite-this-software-as">Cite this software as:<a class="anchor" aria-label="anchor" href="#cite-this-software-as"></a>
+</h2>
+<p>You can use citation(“bspam”) to get the following information. The current version is 1.2.5.</p>
+<p>To cite package ‘bspam’ in publications use:</p>
+<p>Wang K, Kamata A, Potgieter C, Nese J, Kara Y, Somsong S, Qiao X (2023). bspam: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R. R package version 1.2.5, <a href="https://github.com/kamataak/bspam" class="external-link">https://github.com/kamataak/bspam</a></p>
+<p>A BibTeX entry for LaTeX users is</p>
+<p>@Manual{, title = {bspam: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R}, author = {Kuo Wang and Akihito Kamata and Cornelis J. Potgieter and Joseph F. T. Nese and Yusuf Kara and Sarunya Somsong and Xin Qiao}, year = {2023}, note = {R package version 1.2.5}, url = {<a href="https://github.com/kamataak/bspam" class="external-link uri">https://github.com/kamataak/bspam</a>}, }</p>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <p>Kara, Y., Kamata, A., Potgieter, C., &amp; Nese, J. F. (2020). Estimating model-based oral reading fluency: A bayesian approach with a binomial-lognormal joint latent model. Educational and Psychological Measurement, 1–25.</p>
-<p>Nese, J. F. T. &amp; Kamata, A. (2014-2018). Measuring Oral Reading Fluency: Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. Institute of Education Sciences, U.S. Department of Education. <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492" class="external-link uri">https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492</a></p>
+<p>Nese, J. F. T. &amp; Kamata, A. (2014-2018). Measuring Oral Reading Fluency: Computerized Oral Reading Evaluation (Project No. R305A140203) <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mi>r</mi><mi>a</mi><mi>n</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">Grant</annotation></semantics></math>. Institute of Education Sciences, U.S. Department of Education. <a href="https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492" class="external-link uri">https://ies.ed.gov/funding/grantsearch/details.asp?ID=1492</a></p>
 <p>Potgieter, N., Kamata, A., &amp; Kara, Y. (2017). An EM algorithm for estimating an oral reading speed and accuracy model. Manuscript submitted for publication.</p>
 <p>Qiao, X, Potgieter, N., &amp; Kamata, A. (2023). Likelihood Estimation of Model-based Oral Reading Fluency. Manuscript submitted for publication.</p>
 </div>
 <div class="section level2">
 <h2 id="copyright-statement">Copyright Statement<a class="anchor" aria-label="anchor" href="#copyright-statement"></a>
 </h2>
-<p>Copyright (C) 2022-2025 The ORF Project Team</p>
+<p>Copyright (C) 2022-2026 The ORF Project Team</p>
 <p>The bspam package is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.</p>
 <p>The bspam package is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this package. If not, see <a href="http://www.gnu.org/licenses/" class="external-link uri">http://www.gnu.org/licenses/</a>.</p>
 </div>
@@ -344,13 +498,13 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
+<li>Kuo Wang <br><small class="roles"> Author, contributor </small> <a href="https://orcid.org/0000-0002-4925-0591" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Akihito Kamata <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-9570-1464" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Cornelis J. Potgieter <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-1995-6817" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Joseph F. T. Nese <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-9878-7395" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Yusuf Kara <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-0691-0630" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Sarunya Somsong <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-4974-7346" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Xin Qiao <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-3248-7859" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Kuo Wang <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-4925-0591" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 
@@ -361,7 +515,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Akihito Kamata, Cornelis J. Potgieter, Joseph F. T. Nese, Yusuf Kara, Sarunya Somsong, Xin Qiao, Kuo Wang.</p>
+  <p>Developed by Kuo Wang, Akihito Kamata, Cornelis J. Potgieter, Joseph F. T. Nese, Yusuf Kara, Sarunya Somsong, Xin Qiao.</p>
 </div>
 
 <div class="pkgdown-footer-right">

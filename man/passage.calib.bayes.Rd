@@ -5,28 +5,30 @@
 \alias{passage.calib.bayes}
 \title{Task calibration example output object by Bayes}
 \format{
-two lists: $pass.param with 150 rows and $hyper.param with 4 variables
+A list of two elements: \code{$pass.param} is a data frame with
+150 rows and 10 variables, and \code{$hyper.param} is a data frame with
+1 row and 4 variables.
 
-$pass.param
+\code{$pass.param}
 \describe{
-  \item{a}{parameter controlling binomial success probabilities}
-  \item{b}{parameter controlling binomial success probabilities}
-  \item{alpha}{parameter controlling reading times}
-  \item{beta}{parameter controlling reading times}
-  \item{se_a}{standard error of a}
-  \item{se_b}{standard error of b}
-  \item{se_alpha}{standard error of alpha}
-  \item{se_beta}{standard error of beta}
-  \item{passage.id}{passage ID}
-  \item{nwords.p}{the total }
+  \item{\code{a}}{parameter controlling binomial success probabilities}
+  \item{\code{b}}{parameter controlling binomial success probabilities}
+  \item{\code{alpha}}{parameter controlling reading times}
+  \item{\code{beta}}{parameter controlling reading times}
+  \item{\code{se_a}}{standard error of a}
+  \item{\code{se_b}}{standard error of b}
+  \item{\code{se_alpha}}{standard error of alpha}
+  \item{\code{se_beta}}{standard error of beta}
+  \item{\code{passage.id}}{passage ID}
+  \item{\code{nwords.p}}{total number of words in the passage}
 }
 
-$hyper.param
+\code{$hyper.param}
 \describe{
-  \item{vartau}{variance of latent reading ability tau}
-  \item{rho}{correlation between two latent variables}
-  \item{se_vartau}{standard error of vartar}
-  \item{se_rho}{standard error of rho}
+  \item{\code{vartau}}{variance of latent speed ability tau}
+  \item{\code{rho}}{correlation between the two latent variables}
+  \item{\code{se_vartau}}{standard error of vartau}
+  \item{\code{se_rho}}{standard error of rho}
 }
 }
 \source{
@@ -36,15 +38,14 @@ $hyper.param
 passage.calib.bayes
 }
 \description{
-This is an example output object from running the 
-\code{fit.model.byaes}
-function by using the Bayesian estimator option. It is a result of calibrating 
-an oral reading fluency data set from Nese and Kamata (2014-2018) with 
-xxxx students on 150 passages.
+This is an example calibration output object obtained using
+the Bayesian estimator in \code{fit.model}, with \code{est = "bayes"}.
+The object contains calibrated oral reading fluency passage parameters
+together with population-level hyperparameters.
 }
 \references{
-Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency: 
-     Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant]. 
-     Institute of Education Sciences, U.S. Department of Education.
+Nese, J. F. T. & Kamata, A. (2014-2018). Measuring Oral Reading Fluency:
+Computerized Oral Reading Evaluation (Project No. R305A140203) [Grant].
+Institute of Education Sciences, U.S. Department of Education.
 }
 \keyword{datasets}

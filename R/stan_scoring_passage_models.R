@@ -1,25 +1,25 @@
-#' Bayesian Sampling Models for Passage-Level Observations
-#' 
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
+# Bayesian Sampling Models for Passage-Level Observations
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
 #
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
-#'
-#'
-#' This code defines Bayesian sampling models for estimating latent variables
-#' based on passage-level observations for a specific student. The models are
-#' formulated differently depending on the number of censored (incomplete)
-#' and fully observed passages. The goal is to estimate latent variables
-#' such as accuracy (theta_acc) and speed (theta_spd) for the student's
-#' reading performance.
+# A copy of the GNU General Public License is available at
+# http://www.gnu.org/licenses/
+#
+#
+# This code defines Bayesian sampling models for estimating latent variables
+# based on passage-level observations for a specific student. The models are
+# formulated differently depending on the number of censored (incomplete)
+# and fully observed passages. The goal is to estimate latent variables
+# such as accuracy (theta_acc) and speed (theta_spd) for the student's
+# reading performance.
 # Stan Models for Different Scenarios
 # Scenario 1: Multiple Observed and Multiple Censored Passages
 testlet_scoring_multi_obs_multi_cens <- "

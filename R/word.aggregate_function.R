@@ -74,4 +74,3 @@ agg.word <- function(data,
   return(dat_agg)
   
 }
-

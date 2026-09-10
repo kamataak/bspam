@@ -1,48 +1,72 @@
-#' Base function for fitting the speed-accuracy model by MCEM
+#' Fit the speed-accuracy model by Monte Carlo EM
 #'
-#' This is a base function for fitting the speed-accuracy model to 
-#' estimate the model parameters by the Monte Carlo EM algorithm 
-#' described in Potgieter et al. (2017). This function is used by the
-#' \code{\link{fit.model}} function, which is recommended for the users to use. 
+#' Lower-level routine for estimating parameters of the task-level
+#' speed-accuracy psychometric model using the Monte Carlo EM (MCEM)
+#' algorithm described in Potgieter et al. (2017). Most users should use
+#' \code{\link{fit.model}}, which provides the main model-fitting interface.
 #'
-#' @param Y       Numeric data matrix of accuracy scores in the size of n x I, 
-#'      where n is the number of tasks and I is the number of persons. 
-#'      Missing data are allowed.
-#' @param logT10  Numeric data matrix of time in the size of n x I matrix, where
-#'      n and I are defined above. The time data should be in the scale of 
-#'      log10(times). Missing data are allowed.
-#' @param N       Numeric vector of passage lengths in the length of n.
-#' @param I       Numeric, indicating the number of tasks.
-#' @param k.in    Numeric, indicating the number of imputations. Default is 5.
-#' @param reps.in Numeric, indicating the number of Monte-Carlo iterations, should be 50 to 100. Default is 50.
-#' @param ests.in An optional list of numeric vectors, indicating initial values of 
-#'      the model param- eters. If this argument is not given, \code{mom} function will 
-#'      be called to generate the initial values.
-#' @param verbose Boolean. If TRUE, the summary will be output. Default is FALSE.
+#' @param Y Numeric matrix of observed accuracy counts with persons in rows
+#'     and tasks in columns. Missing values are allowed.
+#' @param logT10 Numeric matrix of completion times with the same dimensions
+#'     as \code{Y}. Values are natural-log completion times standardized to
+#'     10 task units. In oral reading fluency (ORF) applications, this is the
+#'     natural logarithm of reading time per 10 words. Missing values are
+#'     allowed.
+#' @param N Numeric vector giving the maximum possible count for each task.
+#'     In the ORF assessment context, this is the number of words in each
+#'     passage.
+#' @param I Numeric value giving the number of tasks, corresponding to the
+#'     number of columns in \code{Y} and \code{logT10}.
+#' @param k.in Numeric value or vector specifying the number of Monte Carlo
+#'     imputations used at each stage of the MCEM procedure. Default is
+#'     \code{5}.
+#' @param reps.in Numeric value or vector specifying the number of MCEM
+#'     iterations associated with each value of \code{k.in}. Values of
+#'     approximately 50 to 100 are generally recommended. Default is
+#'     \code{50}.
+#' @param ests.in Optional list containing initial values for the model
+#'     parameters. If initial values are not supplied, they are generated
+#'     internally using the method-of-moments procedure.
+#' @param verbose Logical. If \code{TRUE}, progress information is printed.
+#'     Default is \code{FALSE}.
+#'
+#' @details
+#' The model jointly describes task accuracy and completion time through two
+#' correlated latent person variables. For each task, the count component is
+#' parameterized by accuracy parameters \code{a} and \code{b}, and the time
+#' component is parameterized by \code{alpha} and \code{beta}. The
+#' population-level parameters include \code{vartau}, the variance of the
+#' latent speed component, and \code{rho}, the correlation between the latent
+#' accuracy and speed components.
+#'
+#' The MCEM algorithm alternates between Monte Carlo imputation of the latent
+#' person variables and updates of the task and population-level parameters.
+#' The arguments \code{k.in} and \code{reps.in} may be vectors, allowing the
+#' number of Monte Carlo imputations to change across stages of the algorithm.
+#'
+#' This function expects the wide-format matrices used internally by
+#' \pkg{bspam}. Users with long-format response data should generally call
+#' \code{\link{fit.model}} directly or first prepare the data using
+#' \code{\link{prep}}.
+#'
+#' @return A list containing the estimated task and population-level
+#'     parameters, including \code{a}, \code{b}, \code{alpha}, \code{beta},
+#'     \code{vartau}, and \code{rho}.
+#'
+#' @seealso
+#' \code{\link{fit.model}} for the main model-fitting interface and
+#' \code{\link{prep}} for preparing response data.
+#'
+#' @references
+#' Potgieter, C. J., Kamata, A., & Kara, Y. (2017).
+#' An EM algorithm for estimating an oral reading speed and accuracy model.
+#' \emph{arXiv preprint arXiv:1705.10446}.
+#' \url{https://arxiv.org/abs/1705.10446}
 #'
 #' @import mvtnorm
 #' @import tidyverse
 #' @import nleqslv
 #'
-#' @details
-#' If the user is desired to use this function, note that the response
-#' data file needs to be in the wide format, which can be reshaped from
-#' a long-format response data by the \code{\link{prep}} function.
-#' 
-#' @note
-#' Update Memo:
-#' 10/24/2024 For test
-#' 04/29/2021 Modified the mcem function
-#'            based on Nelis's updated.
-#' 10/28/2021 Modified the mcem output
-#' 
-#' @references 
-#'   Potgieter, N., Kamata, A., & Kara, Y. (2017). An EM algorithm for 
-#'   estimating an oral reading speed and accuracy model. Manuscript submitted 
-#'   for publication.  
-#' @seealso \code{\link{prep}} \code{\link{fit.model}}.
-#'
-#' @return mcem list
 #' @export
 run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=50,ests.in=NA,verbose=FALSE) {
   
@@ -517,48 +541,90 @@ bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
   
 }
 
-#' Base function for scoring by likelihood-based approaches 
-#' 
-#' This is a base function for estimating factor scores by likelihood-based 
-#' approaches described in Potgieter et al. (2024). This function is used by 
-#' the \code{\link{scoring}} function, which is recommended for the users to use.
+#' Estimate person scores by likelihood-based methods
 #'
-#' Update Memo:
-#' 04/29/2021 Modified the wcpm function
-#'            based on Nelis's updated.
-#' 06/01/2021 Modified based on Nelis's MAP function.
-#' 06/01/2021 Modified based on Sarunya's BiEAP function.
-#' 06/20/2021 Modified based on Nelis's updated for MLE and EAP
-#' 06/21/2021 Modified a bug of MAP function.
-#' 07/12/2021 Modified est.eqs function based on Nelis's code.
-#' 07/13/2021 Added Map function for bootstrap.
-#' 07/30/2021 Modified wcpm function based on Sarunya's update
+#' Lower-level routine for estimating person-level latent accuracy and speed
+#' scores from a calibrated task-level speed-accuracy model using
+#' likelihood-based approaches. The supported estimators are maximum
+#' likelihood estimation (MLE), maximum a posteriori estimation (MAP), and
+#' expected a posteriori estimation (EAP). Most users should use
+#' \code{\link{scoring}}, which provides the main scoring interface.
 #'
-#' @param object A class object. Output from calibration phase 
-#'     by \code{\link{fit.model}} function.
-#' @param person.data A data frame. A long-format response data object.
-#' @param task.data A data frame? Estimated task parameter values?
-#' @param cases A vector of individual id for which scoring is desired. If no information is 
-#'      is specified, it will estimate scores for all cases in the \code{person.data}.
-#' @param est Quoted string, indicating the choice of the estimator. It has to be one of 
-#'      \code{"mle"}, \code{"map"}, \code{"eap"}, \code{"bayes"}. Default is \code{"map"}.
-#' @param perfect.cases A list of perfect cases (Perfect accurate).
-#' @param zero.cases A list of zero cases (Zero accurate).
-#' @param lo Numeric, indicating the lower bound of the quadratures. Default is -12.
-#' @param hi Numeric, indicating the upper bound of the quadratures. Default is 12.
-#' @param q  Numeric, indicating the number of quadratures. Default is 100.
-#' @param kappa  Numeric, indicating ?? Default is 1.
-#' @param external An optional vector of task ID's in strings. If \code{NULL} (default), 
-#'      the wcpm scores are derived with the tasks the individuals were assigned to. 
-#'      If not \code{NULL}, wcpm scores are derived with the tasks provided in the vector, rather
-#'      than the tasks the individuals were assigned.
-#' @param type Quoted string, indication of the choice of output. If \code{"general"} (default),
-#'      wcpm scores are not reported. If \code{"orf"}, wcpm scores will be reported.
-#' @references 
-#'   Qiao, X, Potgieter, N., & Kamata, A. (2023). Likelihood Estimation of 
-#'   Model-based Oral Reading Fluency. Manuscript submitted 
-#'   for publication.
-#'    
+#' @param object A fitted calibration object of class \code{"fit.model"},
+#'     typically obtained from \code{\link{fit.model}}.
+#' @param person.data A long-format data frame containing the standardized
+#'     person response data used for scoring.
+#' @param task.data A data frame containing calibrated task parameters,
+#'     including \code{a}, \code{b}, \code{alpha}, \code{beta},
+#'     \code{task.id}, and \code{max.counts}.
+#' @param cases A one-column data frame containing the person-by-occasion
+#'     identifiers to be scored, typically created by \code{\link{get.cases}}.
+#' @param perfect.cases A data frame identifying person-by-occasion cases with
+#'     perfect observed accuracy.
+#' @param zero.cases A data frame identifying person-by-occasion cases with
+#'     zero observed correct counts.
+#' @param est Character string specifying the estimator. Available options are
+#'     \code{"mle"}, \code{"map"}, and \code{"eap"}. Default is
+#'     \code{"map"}.
+#' @param lo Numeric lower bound used in the numerical scoring procedures.
+#'     Default is \code{-12}.
+#' @param hi Numeric upper bound used in the numerical scoring procedures.
+#'     Default is \code{12}.
+#' @param q Numeric value controlling the number of quadrature points used for
+#'     EAP scoring. Default is \code{100}.
+#' @param kappa Numeric tuning parameter retained for compatibility with the
+#'     scoring workflow. Default is \code{1}.
+#' @param external Optional vector of calibrated task identifiers used to
+#'     calculate model-based outcomes on a common task set. If \code{NULL},
+#'     model-based outcomes are calculated using the tasks observed for each
+#'     person.
+#' @param type Character string specifying the output type. If
+#'     \code{"general"}, latent scores and model-based count and time outcomes
+#'     are returned without WCPM. If \code{"orf"}, observed and model-based
+#'     WCPM variables are additionally returned.
+#'
+#' @details
+#' The calibration parameters in \code{object} and \code{task.data} are
+#' treated as fixed while person-level latent accuracy and speed scores are
+#' estimated. The function computes observed count and time summaries for each
+#' person-by-occasion case and applies the estimator selected by \code{est}.
+#'
+#' For MLE, the latent accuracy and speed components are estimated by
+#' likelihood maximization. For MAP, the joint posterior mode of the two
+#' latent components is obtained by a Newton-Raphson procedure. For EAP,
+#' numerical integration over a two-dimensional quadrature grid is used.
+#'
+#' When \code{external} is supplied, the latent person scores are still based
+#' on the observed response data, but model-based count, time, and WCPM
+#' outcomes are calculated using the specified calibrated tasks rather than
+#' the tasks observed for that person.
+#'
+#' Scoring is performed in parallel across person-by-occasion cases.
+#'
+#' @return Invisibly returns an object of class \code{"scoring"}. The object
+#'     contains one row per scored person-by-occasion case, with identifiers,
+#'     descriptive observed-data summaries, estimated latent accuracy and
+#'     speed scores, corresponding standard errors, and model-based outcomes.
+#'     When \code{type = "orf"}, observed and model-based WCPM variables are
+#'     also included.
+#'
+#' @seealso
+#' \code{\link{scoring}} for the main scoring interface,
+#' \code{\link{fit.model}} for model calibration, and
+#' \code{\link{get.cases}} for constructing person-by-occasion identifiers.
+#'
+#' @references
+#' Potgieter, C. J., Qiao, X., Kamata, A., & Kara, Y. (2024).
+#' Likelihood-based estimation of model-derived oral reading fluency.
+#' \emph{Journal of Educational Measurement, 61}(3), 542-559.
+#' \doi{10.1111/jedm.12404}
+#'
+#' Qiao, X., Evudottir, E., Potgieter, C. J., & Kamata, A. (2026).
+#' Likelihood-based estimation of model-derived oral reading fluency under
+#' overdispersed count-time data.
+#' \emph{Measurement: Interdisciplinary Research and Perspectives}.
+#' \doi{10.1080/15366367.2026.2643183}
+#'
 #' @import rootSolve
 #' @import doParallel
 #' @import parallel
@@ -567,7 +633,6 @@ bootmodel.cov <- function(Y,logT10,N,I,parms,k.in,reps.in,B) {
 #' @import dplyr
 #' @import miscTools
 #'
-#' @return wcpm list
 run.scoring <- function(object, person.data, task.data, cases, perfect.cases, zero.cases, est="map", lo = -12, hi = 12, q = 100, kappa = 1, external=NULL, type=NULL) {
   # loading logger
   log.initiating()

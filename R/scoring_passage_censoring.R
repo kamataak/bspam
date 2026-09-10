@@ -1,47 +1,47 @@
-#' scoring.passage function 
-#'
-#'
-#' Copyright (C) 2021-2024 The ORF Project Team
-#' 
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
+# scoring.passage function 
 #
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
-#' 
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
-#'
-#'
-#' Pre-processing data: Function prepares data for Stan model
-#' Enter a single student's data for preparation
-#' 
-#' Assume a student has read K >= 2 passages
-#' 
-#' @param Count A vector of observed count outcomes for the passages used for scoring the person.
-#' @param logT10 A vector of log-transformed reading times per 10 words for the passages used for scoring the person.
-#' @param N A vector containing the maximum possible counts, such as passage lengths, for the observed passages.
-#' @param N_score A vector containing the maximum possible counts, such as passage lengths, for the passages to be scored.
-#' @param a A Model parameters related to the count model for the observed passages.
-#' @param b A Model parameters related to the count model for the observed passages.
-#' @param alpha A Model parameters related to the time model for the observed passages.
-#' @param beta A Model parameters related to the time model for the observed passages.
-#' @param a_score A Model parameters related to the count model for the passages to be scored.
-#' @param b_score A Model parameters related to the count model for the passages to be scored.
-#' @param alpha_score A Model parameters related to the time model for the passages to be scored.
-#' @param beta_score A Model parameters related to the time model for the passages to be scored.
-#' @param sigma The standard deviation parameter for the latent speed component.
-#' @param rho The correlation between the latent accuracy and speed components.
-#' @param C A vector of censoring indicators for the observed passages, where 0 indicates a fully observed passage and 1 indicates a censored passage.
-#' @param type Output type. Use `"general"` for latent accuracy and speed
-#'     estimates and `"orf"` to additionally return model-based WCPM estimates.
-#'      
-#' @return A list containing data and model parameters formatted for
-#'     passage-level Stan scoring models.
+#
+# Copyright (C) 2021-2026 The ORF Project Team
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# A copy of the GNU General Public License is available at
+# http://www.gnu.org/licenses/
+#
+#
+# Pre-processing data: Function prepares data for Stan model
+# Enter a single student's data for preparation
+# 
+# Assume a student has read K >= 2 passages
+# 
+# @param Count A vector of observed count outcomes for the passages used for scoring the person.
+# @param logT10 A vector of log-transformed reading times per 10 words for the passages used for scoring the person.
+# @param N A vector containing the maximum possible counts, such as passage lengths, for the observed passages.
+# @param N_score A vector containing the maximum possible counts, such as passage lengths, for the passages to be scored.
+# @param a A Model parameters related to the count model for the observed passages.
+# @param b A Model parameters related to the count model for the observed passages.
+# @param alpha A Model parameters related to the time model for the observed passages.
+# @param beta A Model parameters related to the time model for the observed passages.
+# @param a_score A Model parameters related to the count model for the passages to be scored.
+# @param b_score A Model parameters related to the count model for the passages to be scored.
+# @param alpha_score A Model parameters related to the time model for the passages to be scored.
+# @param beta_score A Model parameters related to the time model for the passages to be scored.
+# @param sigma The standard deviation parameter for the latent speed component.
+# @param rho The correlation between the latent accuracy and speed components.
+# @param C A vector of censoring indicators for the observed passages, where 0 indicates a fully observed passage and 1 indicates a censored passage.
+# @param type Output type. Use `"general"` for latent accuracy and speed
+#     estimates and `"orf"` to additionally return model-based WCPM estimates.
+#      
+# @return A list containing data and model parameters formatted for
+#     passage-level Stan scoring models.
 scoring.passage.censoring <- function(Count=NULL, 
                                       logT10=NULL, 
                                       N=NULL,

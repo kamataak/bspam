@@ -2,7 +2,7 @@
 % Please edit documentation in R/Interface.R
 \name{scoring}
 \alias{scoring}
-\title{Estimate factor scores with task-level model}
+\title{Estimate person scores from a calibrated speed-accuracy model}
 \usage{
 scoring(
   calib.data = NA,
@@ -28,112 +28,180 @@ scoring(
 )
 }
 \arguments{
-\item{calib.data}{A class object. Output from calibration phase 
-by \code{\link{fit.model}} function}
+\item{calib.data}{A fitted calibration object obtained from
+\code{\link{fit.model}}. This should be an object of class
+\code{"fit.model"} or \code{"fit.model.testlet"}, depending on the
+scoring model being used.}
 
-\item{data}{A data frame. It is necessary when with 
- the next five arguments \code{person.id, task.id, 
-max. counts, obs. counts, time}.}
+\item{data}{A data frame containing response data or an object created by
+\code{\link{prep}}. When raw data are supplied, the relevant columns
+are identified using the column-name arguments below.}
 
-\item{person.id}{Quoted variable name in \code{data} that 
-indicates the unique individual identifier.}
+\item{person.id}{Quoted variable name in \code{data} identifying persons.}
 
-\item{task.id}{Quoted variable name in \code{data} that 
-represents the unique task identifier. In the ORF assessment
-context, it is the passage identifier.}
+\item{task.id}{Quoted variable name in \code{data} identifying tasks.
+In the ORF assessment context, this is the passage identifier.}
 
-\item{sub.task.id}{Quoted variable name in \code{data} that indicates 
-the unique sub task identifier. In the ORF assessment context, it is the
-sentence identifier. It is required when testlet is TRUE.}
+\item{sub.task.id}{Quoted variable name in \code{data} identifying
+sub-tasks. In the ORF assessment context, this is the sentence
+identifier. This argument is required when \code{testlet = TRUE}.}
 
-\item{occasion}{The column name in the data that represents the unique occasion.}
+\item{occasion}{Quoted variable name in \code{data} identifying measurement
+occasions. If not supplied, a single occasion is assumed.}
 
-\item{group}{The column name in the data that represents the unique group.}
+\item{group}{Quoted variable name in \code{data} identifying groups.
+If not supplied, a single group is assumed.}
 
-\item{max.counts}{Quoted variable name in \code{data} that 
-represents the number of attempts in the task. In the ORF assessment
-context, it is the number of words in the passage.}
+\item{max.counts}{Quoted variable name in \code{data} giving the maximum
+possible count for each task or sub-task. In the ORF assessment
+context, this is the number of words in the passage or sentence.}
 
-\item{obs.counts}{The column name in the data that represents the words read correctly for each case.}
+\item{obs.counts}{Quoted variable name in \code{data} giving the observed
+number of successful outcomes. In the ORF assessment context, this is
+the number of words read correctly.}
 
-\item{time}{The column name in the data that represents the time, in seconds, for each case.}
+\item{time}{Quoted variable name in \code{data} giving the observed
+completion time, in seconds.}
 
-\item{cens}{The column name in the data that represents the censoring indicators 
-whether a specific task or sub task was censored (1) or fully observed (0).
-This column is necessary when censoring argument is TRUE.}
+\item{cens}{Quoted variable name in \code{data} containing censoring
+indicators, where \code{1} indicates a censored observation and
+\code{0} indicates a fully observed response. This argument is used
+when \code{censoring = TRUE} or \code{testlet = TRUE}.}
 
-\item{cases}{A vector of individual id for which scoring is desired. If no information is 
-is specified, it will estimate scores for all cases in the \code{data}.}
+\item{cases}{Optional set of person-by-occasion cases for which scores are
+requested. If \code{NULL}, scores are estimated for all available
+cases in \code{data}.}
 
-\item{est}{Quoted string indicating the estimator. It has to be one of
-\code{"mle"}, \code{"map"}, \code{"eap"}, or \code{"bayes"}.
-Default is \code{"map"}.}
+\item{est}{Character string specifying the scoring estimator. Available
+options are \code{"mle"}, \code{"map"}, \code{"eap"}, and
+\code{"bayes"}. Default is \code{"map"}.}
 
-\item{se}{Quoted string indicating the standard error method. It has to be
-one of \code{"analytic"} or \code{"bootstrap"}.
-Default is \code{"analytic"}.}
+\item{se}{Character string specifying the standard-error method for
+non-censored scoring. Available options are \code{"analytic"} and
+\code{"bootstrap"}. Default is \code{"analytic"}.}
 
-\item{failsafe}{Numeric, indicating the number of retries for bootstrap, which can be set between
-0 and 50. Default is 0.}
+\item{failsafe}{Numeric value specifying the number of additional attempts
+allowed when a bootstrap calculation fails for a case. Values from
+\code{0} to \code{50} may be used. Default is \code{0}.}
 
-\item{bootstrap}{Numeric, indicating the number of bootstrap iterations. Default is 100.}
+\item{bootstrap}{Numeric value specifying the number of bootstrap
+replications when \code{se = "bootstrap"}. Default is \code{100}.}
 
-\item{external}{An optional vector of task ID's in strings. If \code{NULL} (default), 
-the wcpm scores are derived with the tasks the individuals were assigned to. 
-If not \code{NULL}, wcpm scores are derived with the tasks provided in the vector, rather
-than the tasks the individuals were assigned.}
+\item{external}{An optional vector of task identifiers used to define the
+tasks for model-based score calculation. If \code{NULL}, model-based
+outcomes are calculated using the tasks assigned to or observed for
+each person. If supplied, the specified calibrated tasks are used
+instead.}
 
-\item{type}{Quoted string, indication of the choice of output. If \code{"general"} (default),
-wcpm scores are not reported. If \code{"orf"}, wcpm scores will be reported.}
+\item{type}{Character string specifying the output type. If
+\code{"general"}, latent accuracy and speed scores and related
+model-based outcomes are returned without WCPM. If \code{"orf"},
+model-based WCPM is additionally returned. Default is
+\code{"general"}.}
 
-\item{censoring}{Boolean. If \code{TRUE}, interface will call task or sub task censoring.
+\item{censoring}{Logical. If \code{TRUE}, scoring accommodates censored
+task- or sub-task-level observations using the corresponding
+censoring model. Default is \code{FALSE}.}
+
+\item{testlet}{Logical. If \code{TRUE}, sub-task-level scoring is performed
+using the testlet model. In the ORF assessment context, this corresponds
+to sentence-level observations nested within passages. Setting
+\code{testlet = TRUE} also activates the censoring-scoring pathway.
 Default is \code{FALSE}.}
-
-\item{testlet}{Boolean. If \code{TRUE}, runs with sub task level, otherwise, with task level.
-This argument is necessary when censoring is TRUE. Default is \code{FALSE}.}
 }
 \value{
-scoring list or Bootstrap dataset or censoring list
+The returned object depends on the scoring procedure.
+    For standard analytic or Bayesian scoring without censoring, an object
+    of class \code{"scoring"} is returned containing person identifiers,
+    descriptive response information, estimated latent accuracy and speed
+    scores, their standard errors, and model-based outcomes appropriate to
+    the selected \code{type}.
+
+    With \code{se = "bootstrap"}, an object of class \code{"bootstrap"}
+    is returned. It contains \code{bootstrap.out}, with successfully
+    estimated bootstrap results, and \code{error_case}, identifying cases
+    for which bootstrap estimation was unsuccessful.
+
+    With censoring or testlet scoring, an object of class
+    \code{"scoring.censoring"} is returned containing the corresponding
+    Bayesian score estimates, posterior standard deviations, and
+    model-based outcomes.
 }
 \description{
-This is an interface function to estimated factor scores based on the 
-task-level (i.e., passage-level in ORF assessment context) accuracy 
-and speed data. It implements likelihood-based approaches (MLE, MAP,
-or EAP) described in Qiao et al. (under review) or fully Bayesian 
-method described in Kara et al. (2020).
+This is the main interface function for estimating person-level scores
+from a calibrated speed-accuracy psychometric model. It estimates latent
+accuracy and speed scores using likelihood-based methods, including
+maximum likelihood estimation (MLE), maximum a posteriori estimation
+(MAP), and expected a posteriori estimation (EAP), or a fully Bayesian
+approach.
 }
 \details{
-Additional details...
-}
-\note{
-More additional note...
+In oral reading fluency (ORF) applications, the function can additionally
+produce model-based words-correct-per-minute (WCPM) scores. Scoring can be
+performed at the task level or, when a testlet model is used, at the
+sub-task level while accounting for the nesting of sentences within
+passages. Censored observations can also be accommodated.
+
+
+The calibration parameters supplied through \code{calib.data} are treated
+as fixed when estimating person-level latent accuracy and speed scores.
+For standard task-level scoring without censoring, \code{est} selects
+among MLE, MAP, EAP, and fully Bayesian scoring.
+
+When \code{se = "analytic"}, standard errors are obtained as part of the
+standard scoring procedure. When \code{se = "bootstrap"}, case-level
+parametric bootstrap calculations are performed, with the number of
+replications controlled by \code{bootstrap}. The \code{failsafe} argument
+controls how many additional attempts are made for a case when a bootstrap
+calculation fails.
+
+The \code{external} argument can be used to calculate model-based outcomes
+on a specified set of calibrated tasks rather than on the tasks observed
+for each person. This can be useful when scores are to be expressed on a
+common task set.
+
+When \code{censoring = TRUE}, censored and fully observed responses are
+distinguished using the variable supplied through \code{cens}. When
+\code{testlet = TRUE}, scoring is performed at the sub-task level using
+the testlet model and the censoring-scoring pathway is activated
+automatically.
 }
 \examples{
-# example code
-WCPM_all <- scoring(calib.data=passage.calib.mcem, 
-                   data = passage2,
-                   person.id = "id.student",
-                   occasion = "occasion",
-                   group = "grade",
-                   task.id = "id.passage",
-                   max.counts = "numwords.pass",
-                   obs.counts = "wrc",
-                   time = "sec",
-                   est = "map", 
-                   se = "analytic",
-                   type="general")
+WCPM_all <- scoring(
+  calib.data = passage.calib.mcem,
+  data = passage2,
+  person.id = "id.student",
+  occasion = "occasion",
+  group = "grade",
+  task.id = "id.passage",
+  max.counts = "numwords.pass",
+  obs.counts = "wrc",
+  time = "sec",
+  est = "map",
+  se = "analytic",
+  type = "general"
+)
 
 }
 \references{
-Qiao, X, Potgieter, N., & Kamata, A. (2023). Likelihood Estimation of 
-  Model-based Oral Reading Fluency. Manuscript submitted 
-  for publication.  
-  
-  Kara, Y., Kamata, A., Potgieter, C., & Nese, J. F. (2020). Estimating 
-  model-based oral reading fluency: A bayesian approach with a 
-  binomial-lognormal joint latent model. 
-  Educational and Psychological Measurement, 1-25.
+Kara, Y., Kamata, A., Potgieter, C. J., & Nese, J. F. T. (2020).
+Estimating model-based oral reading fluency: A Bayesian approach.
+\emph{Educational and Psychological Measurement, 80}(5), 847-869.
+\doi{10.1177/0013164419900208}
+
+Potgieter, C. J., Qiao, X., Kamata, A., & Kara, Y. (2024).
+Likelihood-based estimation of model-derived oral reading fluency.
+\emph{Journal of Educational Measurement, 61}(3), 542-559.
+\doi{10.1111/jedm.12404}
+
+Qiao, X., Evudottir, E., Potgieter, C. J., & Kamata, A. (2026).
+Likelihood-based estimation of model-derived oral reading fluency under
+overdispersed count-time data.
+\emph{Measurement: Interdisciplinary Research and Perspectives}.
+\doi{10.1080/15366367.2026.2643183}
 }
 \seealso{
-\code{\link{fit.model}} for model parameter estimation.
+\code{\link{fit.model}} for model calibration,
+\code{\link{prep}} for preparing response data, and
+\code{\link{summary.scoring}} for summarizing scoring results.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Utility.R
 \name{agg.word}
 \alias{agg.word}
-\title{agg.word function to aggregate word information to sentence or passage level}
+\title{Aggregate word-level ORF data}
 \usage{
 agg.word(
   data,
@@ -19,40 +19,55 @@ agg.word(
 )
 }
 \arguments{
-\item{data}{= word level data}
+\item{data}{A data frame containing word-level response and timing data.}
 
-\item{agg.level}{indicator for sentence or passage level data, default is sentence.}
+\item{agg.level}{Character string specifying the aggregation level.
+Available options are \code{"sentence"} and \code{"passage"}.
+Default is \code{"sentence"}.}
 
-\item{person.id}{variable name that indicates the unique person identifier.}
+\item{person.id}{Quoted variable name identifying persons.}
 
-\item{passage.id}{variable name hat indicates 
-the unique task identifier. In the ORF assessment context, it is the
-passage identifier.}
+\item{passage.id}{Quoted variable name identifying passages.}
 
-\item{word.pos.sen}{The column name that represents 
-the word's specific position sequence in a sentence.}
+\item{word.pos.sen}{Quoted variable name giving each word's position within
+a sentence. Required when \code{agg.level = "sentence"}.}
 
-\item{word.pos.pas}{The column name that represents 
-the word's specific position sequence in a passage.}
+\item{word.pos.pas}{Quoted variable name giving each word's position within
+a passage. Required when \code{agg.level = "passage"}.}
 
-\item{sen.pos.pas}{The column name that represents 
-the sentence's specific position sequence in a passage.}
+\item{sen.pos.pas}{Quoted variable name giving each sentence's position
+within a passage. Required when \code{agg.level = "sentence"}.}
 
-\item{start.time}{The column name in the data that represents the start time
-that the word has been read.}
+\item{start.time}{Quoted variable name giving the word-level start time.}
 
-\item{end.time}{The column name in the data that represents the end time
-that the word has been read.}
+\item{end.time}{Quoted variable name giving the word-level end time.}
 
-\item{time.scale}{indicator for the unit of reading time, default is centi.
-the value can be centi (hundredth) or sec (second)}
+\item{time.scale}{Character string indicating the unit of the input start
+and end times. Use \code{"centi"} for hundredths of a second or
+\code{"sec"} for seconds. Default is \code{"centi"}.}
 
-\item{score}{The column name in the data that represents the word correctly 
-has been read. 0 or 1 with 1 means correctly read.}
+\item{score}{Quoted variable name giving the word-level accuracy indicator,
+coded \code{1} for a correctly read word and \code{0} otherwise.}
 }
 \value{
-data frame (sentence or passage level)
+A data frame containing the aggregated response information.
+    Sentence-level output includes \code{wrc}, \code{secs},
+    \code{nwords.sen}, and \code{wcpm.sen}. Passage-level output includes
+    \code{wrc}, \code{secs}, \code{nwords.pas}, and \code{wcpm.pas}.
 }
 \description{
-agg.word function to aggregate word information to sentence or passage level
+Aggregates word-level response and timing data to the sentence or passage
+level. The function calculates words read correctly, elapsed reading time,
+the number of words, and observed words-correct-per-minute (WCPM).
+}
+\details{
+When \code{agg.level = "sentence"}, the output contains one row per
+person-by-passage-by-sentence combination. When
+\code{agg.level = "passage"}, the output contains one row per
+person-by-passage combination.
+
+Regardless of the input \code{time.scale}, the returned elapsed-time
+variable is expressed in seconds. Observed WCPM is calculated as the number
+of words read correctly divided by elapsed time in seconds, multiplied by
+60.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Base.R
 \name{run.scoring}
 \alias{run.scoring}
-\title{Base function for scoring by likelihood-based approaches}
+\title{Estimate person scores by likelihood-based methods}
 \usage{
 run.scoring(
   object,
@@ -21,61 +21,99 @@ run.scoring(
 )
 }
 \arguments{
-\item{object}{A class object. Output from calibration phase 
-by \code{\link{fit.model}} function.}
+\item{object}{A fitted calibration object of class \code{"fit.model"},
+typically obtained from \code{\link{fit.model}}.}
 
-\item{person.data}{A data frame. A long-format response data object.}
+\item{person.data}{A long-format data frame containing the standardized
+person response data used for scoring.}
 
-\item{task.data}{A data frame? Estimated task parameter values?}
+\item{task.data}{A data frame containing calibrated task parameters,
+including \code{a}, \code{b}, \code{alpha}, \code{beta},
+\code{task.id}, and \code{max.counts}.}
 
-\item{cases}{A vector of individual id for which scoring is desired. If no information is 
-is specified, it will estimate scores for all cases in the \code{person.data}.}
+\item{cases}{A one-column data frame containing the person-by-occasion
+identifiers to be scored, typically created by \code{\link{get.cases}}.}
 
-\item{perfect.cases}{A list of perfect cases (Perfect accurate).}
+\item{perfect.cases}{A data frame identifying person-by-occasion cases with
+perfect observed accuracy.}
 
-\item{zero.cases}{A list of zero cases (Zero accurate).}
+\item{zero.cases}{A data frame identifying person-by-occasion cases with
+zero observed correct counts.}
 
-\item{est}{Quoted string, indicating the choice of the estimator. It has to be one of 
-\code{"mle"}, \code{"map"}, \code{"eap"}, \code{"bayes"}. Default is \code{"map"}.}
+\item{est}{Character string specifying the estimator. Available options are
+\code{"mle"}, \code{"map"}, and \code{"eap"}. Default is
+\code{"map"}.}
 
-\item{lo}{Numeric, indicating the lower bound of the quadratures. Default is -12.}
+\item{lo}{Numeric lower bound used in the numerical scoring procedures.
+Default is \code{-12}.}
 
-\item{hi}{Numeric, indicating the upper bound of the quadratures. Default is 12.}
+\item{hi}{Numeric upper bound used in the numerical scoring procedures.
+Default is \code{12}.}
 
-\item{q}{Numeric, indicating the number of quadratures. Default is 100.}
+\item{q}{Numeric value controlling the number of quadrature points used for
+EAP scoring. Default is \code{100}.}
 
-\item{kappa}{Numeric, indicating ?? Default is 1.}
+\item{kappa}{Numeric tuning parameter retained for compatibility with the
+scoring workflow. Default is \code{1}.}
 
-\item{external}{An optional vector of task ID's in strings. If \code{NULL} (default), 
-the wcpm scores are derived with the tasks the individuals were assigned to. 
-If not \code{NULL}, wcpm scores are derived with the tasks provided in the vector, rather
-than the tasks the individuals were assigned.}
+\item{external}{Optional vector of calibrated task identifiers used to
+calculate model-based outcomes on a common task set. If \code{NULL},
+model-based outcomes are calculated using the tasks observed for each
+person.}
 
-\item{type}{Quoted string, indication of the choice of output. If \code{"general"} (default),
-wcpm scores are not reported. If \code{"orf"}, wcpm scores will be reported.}
+\item{type}{Character string specifying the output type. If
+\code{"general"}, latent scores and model-based count and time outcomes
+are returned without WCPM. If \code{"orf"}, observed and model-based
+WCPM variables are additionally returned.}
 }
 \value{
-wcpm list
+Invisibly returns an object of class \code{"scoring"}. The object
+    contains one row per scored person-by-occasion case, with identifiers,
+    descriptive observed-data summaries, estimated latent accuracy and
+    speed scores, corresponding standard errors, and model-based outcomes.
+    When \code{type = "orf"}, observed and model-based WCPM variables are
+    also included.
 }
 \description{
-This is a base function for estimating factor scores by likelihood-based 
-approaches described in Potgieter et al. (2024). This function is used by 
-the \code{\link{scoring}} function, which is recommended for the users to use.
+Lower-level routine for estimating person-level latent accuracy and speed
+scores from a calibrated task-level speed-accuracy model using
+likelihood-based approaches. The supported estimators are maximum
+likelihood estimation (MLE), maximum a posteriori estimation (MAP), and
+expected a posteriori estimation (EAP). Most users should use
+\code{\link{scoring}}, which provides the main scoring interface.
 }
 \details{
-Update Memo:
-04/29/2021 Modified the wcpm function
-           based on Nelis's updated.
-06/01/2021 Modified based on Nelis's MAP function.
-06/01/2021 Modified based on Sarunya's BiEAP function.
-06/20/2021 Modified based on Nelis's updated for MLE and EAP
-06/21/2021 Modified a bug of MAP function.
-07/12/2021 Modified est.eqs function based on Nelis's code.
-07/13/2021 Added Map function for bootstrap.
-07/30/2021 Modified wcpm function based on Sarunya's update
+The calibration parameters in \code{object} and \code{task.data} are
+treated as fixed while person-level latent accuracy and speed scores are
+estimated. The function computes observed count and time summaries for each
+person-by-occasion case and applies the estimator selected by \code{est}.
+
+For MLE, the latent accuracy and speed components are estimated by
+likelihood maximization. For MAP, the joint posterior mode of the two
+latent components is obtained by a Newton-Raphson procedure. For EAP,
+numerical integration over a two-dimensional quadrature grid is used.
+
+When \code{external} is supplied, the latent person scores are still based
+on the observed response data, but model-based count, time, and WCPM
+outcomes are calculated using the specified calibrated tasks rather than
+the tasks observed for that person.
+
+Scoring is performed in parallel across person-by-occasion cases.
 }
 \references{
-Qiao, X, Potgieter, N., & Kamata, A. (2023). Likelihood Estimation of 
-  Model-based Oral Reading Fluency. Manuscript submitted 
-  for publication.
+Potgieter, C. J., Qiao, X., Kamata, A., & Kara, Y. (2024).
+Likelihood-based estimation of model-derived oral reading fluency.
+\emph{Journal of Educational Measurement, 61}(3), 542-559.
+\doi{10.1111/jedm.12404}
+
+Qiao, X., Evudottir, E., Potgieter, C. J., & Kamata, A. (2026).
+Likelihood-based estimation of model-derived oral reading fluency under
+overdispersed count-time data.
+\emph{Measurement: Interdisciplinary Research and Perspectives}.
+\doi{10.1080/15366367.2026.2643183}
+}
+\seealso{
+\code{\link{scoring}} for the main scoring interface,
+\code{\link{fit.model}} for model calibration, and
+\code{\link{get.cases}} for constructing person-by-occasion identifiers.
 }

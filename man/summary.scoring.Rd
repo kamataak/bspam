@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{summary.scoring}
 \alias{summary.scoring}
-\title{summary the information of wcpm class}
+\title{Summarize bspam scoring results}
 \usage{
 \method{summary}{scoring}(
   object,
@@ -14,33 +14,47 @@
 )
 }
 \arguments{
-\item{object}{object}
+\item{object}{A scoring object of class \code{"scoring"}, typically
+returned by \code{\link{scoring}}.}
 
-\item{digits}{print out numeric with specific digits}
+\item{digits}{Integer retained for compatibility with the summary method.
+The current screen output is formatted to three decimal places.
+Default is \code{4}.}
 
-\item{verbose}{boolean, if TRUE, shows the summary, default is TRUE}
+\item{verbose}{Logical. If \code{TRUE}, the formatted summary is printed.
+The processed summary data are returned invisibly regardless of this
+setting. Default is \code{TRUE}.}
 
-\item{factor.scores}{theta and tau output flag, default is TRUE # before was FALSE}
+\item{factor.scores}{Logical. If \code{FALSE}, columns whose names contain
+\code{"theta"} or \code{"tau"} are removed. Default is \code{TRUE}.}
 
-\item{show}{output flag, "long" and "short", default "short" only output estimate result. "long" will output estimate result and data.}
+\item{show}{Character string controlling the amount of information.
+With \code{"short"} (default), observed-data and design-summary columns
+are omitted. With \code{"long"}, those columns are retained.}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments for the summary method. Currently not used.}
 }
 \value{
-scoring dataset with task information and estimated score
+Invisibly returns a data frame containing the processed person-level
+    scoring summary. Included columns depend on \code{factor.scores},
+    \code{show}, scoring type, and whether ORF/WCPM output is present.
 }
 \description{
-Copyright (C) 2021-2023 The ORF Project Team
+Prints and returns a person-level summary from an object of class
+\code{"scoring"}. The method supports both task-level and testlet scoring
+output.
 }
 \details{
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/
+The method automatically distinguishes task-level scoring output from
+testlet scoring output. For task-level results, the short display removes
+occasion, group, task count, maximum-count total, observed-count total,
+observed time, and observed WCPM when present. For testlet results, the
+corresponding sub-task and testlet-specific fields are handled as well.
+
+When \code{verbose = TRUE}, a formatted table is printed. The invisibly
+returned object contains the corresponding numeric summary data rather than
+the display-formatted values.
+}
+\seealso{
+\code{\link{scoring}} and \code{\link{summary.bootstrap}}.
 }

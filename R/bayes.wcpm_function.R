@@ -1,27 +1,27 @@
 ##################################################################################################
 ################### THIS IS THE FUNCTION TO ESTIMATE MODEL-BASED WCPM PARAMETERS #################
 ##################################################################################################
-#' Bayes function when running mcem with bayes setting
-#' @param calib.data - fit.model class object
-#' @param person.data - individual reading data
-#' @param person.id The column name in the data that represents the unique individual identifier.
-#' @param task.id The column name in the data that represents the unique task identifier.
-#' @param max.counts The column name in the data that represents the number of words in a task.
-#' @param occasion The column name in the data that represents the unique occasion.
-#' @param group The column name in the data that represents the unique group.
-#' @param obs.counts The column name in the data that represents the words read correctly for each case.
-#' @param time The column name in the data that represents the time, in seconds, for each case.
-#' @param cases - student id vectors, will directly use passage data if no calib.data provided
-#' @param external - if not NULL, will use not student read passages for estimating
-#' @param parallel parallel=T, #logical, run in parallel? "T" or "F"
-#' @param type - output type, "general" and "orf", default "general" only output tau & theta. "orf" will output wcpm
-#' @param n.chains int., number of the chains
-#' @param iter int., number of the iterations after the burn-in period
-#' @param burn int., number of the burn-in iteration
-#' @param thin int, thinning interval, a.k.a, period of saving samples
-#'
-#' @import tibble
-#' @return list
+# Bayes function when running mcem with bayes setting
+# @param calib.data - fit.model class object
+# @param person.data - individual reading data
+# @param person.id The column name in the data that represents the unique individual identifier.
+# @param task.id The column name in the data that represents the unique task identifier.
+# @param max.counts The column name in the data that represents the number of words in a task.
+# @param occasion The column name in the data that represents the unique occasion.
+# @param group The column name in the data that represents the unique group.
+# @param obs.counts The column name in the data that represents the words read correctly for each case.
+# @param time The column name in the data that represents the time, in seconds, for each case.
+# @param cases - student id vectors, will directly use passage data if no calib.data provided
+# @param external - if not NULL, will use not student read passages for estimating
+# @param parallel parallel=T, #logical, run in parallel? "T" or "F"
+# @param type - output type, "general" and "orf", default "general" only output tau & theta. "orf" will output wcpm
+# @param n.chains int., number of the chains
+# @param iter int., number of the iterations after the burn-in period
+# @param burn int., number of the burn-in iteration
+# @param thin int, thinning interval, a.k.a, period of saving samples
+#
+# @import tibble
+# @return list
 bayes.wcpm <- function(
     calib.data=NA,
     person.data=NA,

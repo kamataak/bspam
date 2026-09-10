@@ -1,53 +1,116 @@
-#' This file includes utilities of bspam package.
-#'
-#' Copyright (C) 2021-2023 The ORF Project Team
-#'
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
+# This file includes utilities of the bspam package.
 #
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
+# Copyright (C) 2021-2026 The ORF Project Team
 #
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# A copy of the GNU General Public License is available at
+# http://www.gnu.org/licenses/
+#
+
+#' Prepare response data for bspam analyses
 #'
+#' Prepares long-format response data for model fitting and scoring with
+#' \pkg{bspam}. The function standardizes the required variable names and
+#' constructs the data structures used internally by the package.
 #'
-#' prep function prepares input data for fit.model function
+#' Both task-level and sub-task-level data are supported. In oral reading
+#' fluency (ORF) applications, task-level data correspond to passage-level
+#' observations, whereas sub-task-level data correspond to sentence-level
+#' observations nested within passages.
 #'
-#' @param data = student response data
-#' @param person.id Quoted variable name in \code{person.data} that indicates 
-#'     the unique person identifier.
-#' @param task.id Quoted variable name in \code{person.data} that indicates 
-#'     the unique task identifier. In the ORF assessment context, it is the
-#'     passage identifier.
-#' @param sub.task.id Quoted variable name in \code{person.data} that indicates 
-#'     the unique sub task identifier. In the ORF assessment context, it is the
-#'     sentence identifier. It is required when sentence_level is TRUE.
-#' @param occasion The column name in the data that represents the unique occasion.
-#' @param group The column name in the data that represents the unique group.
-#' @param max.counts Quoted variable name in \code{person.data} that indicates 
-#'     the number of attempts in the task. In the ORF assessment context,
-#'     it is the number of words in the passage. 
-#' @param obs.counts Quoted variable name in \code{person.data} that indicates 
-#'     the number of successful attempts in each task. In the ORF assessment
-#'     context, it is the number of words read correctly for the passage.
-#' @param time Quoted variable name in \code{person.data} that indicates 
-#'     the time in seconds took to complete the task. In the ORF context, 
-#'     it is the time took to complete reading the passage. 
-#' @param cens The column name in the data that represents the censoring indicators 
-#'      whether a specific task or sub task was censored (1) or fully observed (0).
-#' @param sentence_level flag for sentence or passage level data, default is FALSE
-#'      
+#' @param data A data frame containing the response data in long format.
+#' @param person.id Quoted variable name in \code{data} identifying persons.
+#' @param task.id Quoted variable name in \code{data} identifying tasks.
+#'     In the ORF assessment context, this is the passage identifier.
+#' @param sub.task.id Quoted variable name in \code{data} identifying
+#'     sub-tasks. In the ORF assessment context, this is the sentence
+#'     identifier. This argument is required when
+#'     \code{sentence_level = TRUE}.
+#' @param occasion Quoted variable name in \code{data} identifying measurement
+#'     occasions. If omitted, all observations are assigned to a single
+#'     occasion.
+#' @param group Quoted variable name in \code{data} identifying groups.
+#'     If omitted, all observations are assigned to a single group.
+#' @param max.counts Quoted variable name in \code{data} giving the maximum
+#'     possible count for each task or sub-task. In the ORF assessment
+#'     context, this is the number of words in the passage or sentence.
+#' @param obs.counts Quoted variable name in \code{data} giving the observed
+#'     number of successful outcomes. In the ORF assessment context, this is
+#'     the number of words read correctly.
+#' @param time Quoted variable name in \code{data} giving the observed
+#'     completion time, in seconds.
+#' @param cens Optional quoted variable name in \code{data} containing
+#'     censoring indicators. For sentence-level data, if this argument is
+#'     omitted, all observations are treated as fully observed and a
+#'     censoring indicator equal to \code{0} is created internally.
+#' @param sentence_level Logical. If \code{FALSE}, task-level data are
+#'     prepared. If \code{TRUE}, sub-task-level data are prepared.
+#'     Default is \code{FALSE}.
+#'
+#' @details
+#' For task-level data, \code{prep()} reshapes the observed count and time
+#' variables into person-by-task structures used by the task-level
+#' speed-accuracy model. Reading or completion times are transformed to the
+#' natural logarithm of time standardized to 10 task units. In ORF
+#' applications, this corresponds to log reading time per 10 words.
+#'
+#' For sub-task-level data, the function preserves the task and sub-task
+#' structure in the standardized long-format data and constructs corresponding
+#' person-by-observation matrices for sentence-level analyses.
+#'
+#' If \code{occasion} or \code{group} is not supplied, a constant value of
+#' \code{1} is created for that variable. For sentence-level data, if
+#' \code{cens} is not supplied, a censoring variable containing zeros is
+#' created, indicating that all observations are treated as fully observed.
+#'
+#' @return A prepared-data object containing two components:
+#'     \describe{
+#'       \item{\code{data.long}}{A standardized long-format data frame using
+#'       the variable names expected internally by \pkg{bspam}.}
+#'       \item{\code{data.wide}}{A list of matrices and vectors used by the
+#'       model-fitting and scoring functions.}
+#'     }
+#'
+#'     For task-level data, the returned object has class
+#'     \code{"prepared.task"}. Its \code{data.wide} component contains
+#'     \code{Y}, the observed count matrix; \code{logT10}, the matrix of
+#'     log-transformed completion times standardized to 10 units;
+#'     \code{N}, the vector of task maximum counts; and \code{I}, the number
+#'     of tasks.
+#'
+#'     For sub-task-level data, the returned object has class
+#'     \code{"prepared.sub.task"}. Its \code{data.wide} component contains
+#'     the corresponding count, time, and maximum-count structures used for
+#'     sentence-level analyses.
+#'
+#' @seealso
+#' \code{\link{fit.model}} for model calibration and
+#' \code{\link{scoring}} for person-level scoring.
+#'
+#' @examples
+#' prepared <- prep(
+#'   data = passage2,
+#'   person.id = "id.student",
+#'   task.id = "id.passage",
+#'   occasion = "occasion",
+#'   group = "grade",
+#'   max.counts = "numwords.pass",
+#'   obs.counts = "wrc",
+#'   time = "sec"
+#' )
+#'
 #' @import tidyr
 #' @import dplyr
 #' @import tidyverse
-#'
-#' @return data list (data.long: data frame,
-#'                    data.wide: list of Y, logT10, N, I)
 #'
 #' @export
 prep <- function(data=data,person.id="",task.id="",sub.task.id="",occasion="",group="",max.counts="",obs.counts="",time="", cens="",sentence_level = FALSE) {
@@ -233,11 +296,17 @@ prep <- function(data=data,person.id="",task.id="",sub.task.id="",occasion="",gr
     }
   )
 }
-#' Returns cases (person and occasion) applied in [fit.model] function.
+#' Create person-by-occasion case identifiers
 #'
-#' @param data = person response data
+#' Creates unique case identifiers by combining the \code{person.id} and
+#' \code{occasion} variables in prepared response data. These identifiers
+#' are used by scoring functions to identify person-by-occasion records.
 #'
-#' @return cases vector
+#' @param data A data frame containing \code{person.id} and
+#'     \code{occasion} variables.
+#'
+#' @return Invisibly returns a one-column data frame containing unique case
+#'     identifiers in the variable \code{cases}.
 #'
 #' @export
 get.cases <- function(data) {
@@ -248,6 +317,7 @@ get.cases <- function(data) {
   return(invisible(cases))
 }
 
+# Identify person-by-occasion cases with perfect accuracy.
 get.perfectcases <- function(data) {
   perfect.cases <- data %>% group_by(person.id,occasion) %>%
     summarise(obs.counts.sum=sum(obs.counts),
@@ -258,6 +328,7 @@ get.perfectcases <- function(data) {
   return(invisible(perfect.cases))
 }
 
+# Identify person-by-occasion cases with zero observed correct counts.
 get.zerocases <- function(data) {
   zero.cases <- data %>% group_by(person.id,occasion) %>%
     summarise(obs.counts.sum=sum(obs.counts),
@@ -268,6 +339,7 @@ get.zerocases <- function(data) {
   return(invisible(zero.cases))
 }
 
+# Convert raw response data to the standardized long format used internally.
 preplong <- function(data,
                      person.id="",
                      task.id="",
@@ -306,6 +378,7 @@ preplong <- function(data,
 }
 
 
+# Convert raw task-level response data to the wide matrices used internally.
 prepwide <- function(data,
                      person.id,
                      task.id,
@@ -345,13 +418,14 @@ prepwide <- function(data,
   return(data.in)
 }
 
+# Remove passages that do not meet the overlap criterion.
 exclude_passages <- function(passage) {
   err_list <- get_errlist(passage)
   return (passage %>% filter(!(id.passage %in% err_list)))
   
 }
 
-#' 
+# Identify passages that do not share enough students with other passages.
 get_errlist <- function(passage) {
   # get unique passage list
   passage_ids <- as.matrix(passage %>% select(id.passage) %>% unique())
@@ -381,32 +455,49 @@ get_errlist <- function(passage) {
   }
   return (err_list)
 }
-#' agg.word function to aggregate word information to sentence or passage level
+#' Aggregate word-level ORF data
 #'
-#' @param data = word level data
-#' @param agg.level indicator for sentence or passage level data, default is sentence.
-#' @param person.id variable name that indicates the unique person identifier.
-#' @param passage.id variable name hat indicates 
-#'     the unique task identifier. In the ORF assessment context, it is the
-#'     passage identifier.
-#' @param word.pos.sen The column name that represents 
-#'     the word's specific position sequence in a sentence. 
-#' @param word.pos.pas The column name that represents 
-#'     the word's specific position sequence in a passage. 
-#' @param sen.pos.pas The column name that represents 
-#'     the sentence's specific position sequence in a passage. 
-#' @param start.time The column name in the data that represents the start time
-#'     that the word has been read.
-#' @param end.time The column name in the data that represents the end time
-#'     that the word has been read.
-#' @param time.scale indicator for the unit of reading time, default is centi.
-#'     the value can be centi (hundredth) or sec (second)
-#' @param score The column name in the data that represents the word correctly 
-#'     has been read. 0 or 1 with 1 means correctly read.
-#'     
+#' Aggregates word-level response and timing data to the sentence or passage
+#' level. The function calculates words read correctly, elapsed reading time,
+#' the number of words, and observed words-correct-per-minute (WCPM).
+#'
+#' @param data A data frame containing word-level response and timing data.
+#' @param agg.level Character string specifying the aggregation level.
+#'     Available options are \code{"sentence"} and \code{"passage"}.
+#'     Default is \code{"sentence"}.
+#' @param person.id Quoted variable name identifying persons.
+#' @param passage.id Quoted variable name identifying passages.
+#' @param word.pos.sen Quoted variable name giving each word's position within
+#'     a sentence. Required when \code{agg.level = "sentence"}.
+#' @param word.pos.pas Quoted variable name giving each word's position within
+#'     a passage. Required when \code{agg.level = "passage"}.
+#' @param sen.pos.pas Quoted variable name giving each sentence's position
+#'     within a passage. Required when \code{agg.level = "sentence"}.
+#' @param start.time Quoted variable name giving the word-level start time.
+#' @param end.time Quoted variable name giving the word-level end time.
+#' @param time.scale Character string indicating the unit of the input start
+#'     and end times. Use \code{"centi"} for hundredths of a second or
+#'     \code{"sec"} for seconds. Default is \code{"centi"}.
+#' @param score Quoted variable name giving the word-level accuracy indicator,
+#'     coded \code{1} for a correctly read word and \code{0} otherwise.
+#'
+#' @details
+#' When \code{agg.level = "sentence"}, the output contains one row per
+#' person-by-passage-by-sentence combination. When
+#' \code{agg.level = "passage"}, the output contains one row per
+#' person-by-passage combination.
+#'
+#' Regardless of the input \code{time.scale}, the returned elapsed-time
+#' variable is expressed in seconds. Observed WCPM is calculated as the number
+#' of words read correctly divided by elapsed time in seconds, multiplied by
+#' 60.
+#'
+#' @return A data frame containing the aggregated response information.
+#'     Sentence-level output includes \code{wrc}, \code{secs},
+#'     \code{nwords.sen}, and \code{wcpm.sen}. Passage-level output includes
+#'     \code{wrc}, \code{secs}, \code{nwords.pas}, and \code{wcpm.pas}.
+#'
 #' @import tidyverse
-#'
-#' @return data frame (sentence or passage level)
 #'
 #' @export
 agg.word <- function(data, 
@@ -485,41 +576,62 @@ agg.word <- function(data,
   return(dat_agg)
   
 }
-#' desc.data function to describe data information 
-#' 
-#' @param data A data frame or a data generated by the \code{prep} function. 
-#' @param person.id Quoted variable name in \code{data} that indicates 
-#'     the unique person identifier.
-#' @param task.id Quoted variable name in \code{data} that indicates 
-#'     the unique task identifier. In the ORF assessment context, it is the
-#'     passage identifier.
-#' @param max.counts Quoted variable name in \code{data} that indicates 
-#'     the number of attempts in the task. In the ORF assessment context,
-#'     it is the number of words in the passage. 
-#' @param obs.counts Quoted variable name in \code{data} that indicates 
-#'     the number of successful attempts in each task. In the ORF assessment
-#'     context, it is the number of words read correctly for the passage.
-#' @param time Quoted variable name in \code{data} that indicates 
-#'     the time in seconds took to complete the task. In the ORF context, 
-#'     it is the time took to complete reading the passage.
-#' @param sub.task.id Quoted variable name in \code{data} that indicates 
-#'     the unique sub task identifier. In the ORF assessment context, it is the
-#'     sentence identifier. It is required when testlet is TRUE.
-#' @param desc.level Quoted string that indicates which data summarization. If \code{"sample"} (default),
-#'     will show description of data sample. If \code{"person"}, will output the summarization of person data. 
-#' 
-#' @param verbose Boolean. If \code{TRUE}, the summary will be output.
-#'     Default is \code{TRUE}.
-#'     
-#' @param type Quoted string, indication of the choice of output. If \code{"general"} (default),
-#'      wcpm scores are not reported. If \code{"orf"}, wcpm scores will be reported.
-#'      
-#' @param testlet Boolean. If \code{TRUE}, runs with sub task level, otherwise, with task level.
-#'      Default is \code{FALSE}.
-#'    
-#' @import tidyverse
+#' Summarize response data
 #'
-#' @return data frame (based on sample data or person information)
+#' Computes descriptive summaries of task-level or sub-task-level response
+#' data. Summaries can be produced at the person level or aggregated across
+#' the sample. For oral reading fluency (ORF) data, observed WCPM summaries
+#' can also be included.
+#'
+#' @param data A data frame containing response data.
+#' @param person.id Quoted variable name identifying persons.
+#' @param task.id Quoted variable name identifying tasks. In the ORF
+#'     assessment context, this is the passage identifier.
+#' @param max.counts Quoted variable name giving the maximum possible count
+#'     for each task or sub-task. In the ORF assessment context, this is the
+#'     number of words in the passage or sentence.
+#' @param obs.counts Quoted variable name giving the observed number of
+#'     successful outcomes. In the ORF assessment context, this is the number
+#'     of words read correctly.
+#' @param time Quoted variable name giving completion time, in seconds.
+#' @param sub.task.id Quoted variable name identifying sub-tasks. In the ORF
+#'     assessment context, this is the sentence identifier. This argument is
+#'     required when \code{testlet = TRUE}.
+#' @param desc.level Character string specifying the level of the descriptive
+#'     output. Use \code{"sample"} for a sample-level summary or
+#'     \code{"person"} for person-level summaries. Default is
+#'     \code{"sample"}.
+#' @param verbose Logical controlling the amount of sample-level output.
+#'     When \code{TRUE}, the full result from \code{psych::describe()} is
+#'     returned. When \code{FALSE}, a reduced set of summary statistics is
+#'     returned. Default is \code{TRUE}.
+#' @param type Character string specifying the output type. If
+#'     \code{"general"}, general count and time summaries are produced.
+#'     If \code{"orf"}, observed WCPM summaries are additionally produced.
+#'     Default is \code{"general"}.
+#' @param testlet Logical. If \code{FALSE}, task-level data are summarized.
+#'     If \code{TRUE}, sub-task-level data are summarized while retaining
+#'     their task structure. Default is \code{FALSE}.
+#'
+#' @details
+#' For task-level data, person-level summaries include the number of observed
+#' tasks and totals for maximum counts, observed counts, and time. With
+#' \code{type = "orf"}, the function also calculates passage-level observed
+#' WCPM, the average passage WCPM for each person, and an overall observed
+#' WCPM based on total correct words and total time.
+#'
+#' For sub-task-level data, person-level summaries additionally include the
+#' number of distinct sub-tasks. With \code{type = "orf"}, sentence-level
+#' observations are first aggregated within passages before passage-level and
+#' overall observed WCPM summaries are calculated.
+#'
+#' @return If \code{desc.level = "person"}, returns a person-level data frame.
+#'     If \code{desc.level = "sample"}, returns descriptive statistics
+#'     generated by \code{psych::describe()}; when \code{verbose = FALSE},
+#'     only the variables, sample size, mean, standard deviation, minimum, and
+#'     maximum are retained.
+#'
+#' @import tidyverse
 #'
 #' @export
 desc.data <- function(data=NULL, 
@@ -623,6 +735,7 @@ desc.data <- function(data=NULL,
   } 
 }
 
+# Check whether RStan is available before Stan-based analyses.
 .check_rstan <- function(context = "this analysis") {
   if (!requireNamespace("rstan", quietly = TRUE)) {
     stop(
@@ -635,6 +748,7 @@ desc.data <- function(data=NULL,
   invisible(TRUE)
 }
 
+# Check whether runjags and JAGS are available before JAGS-based analyses.
 .check_runjags <- function(context = "this analysis") {
   if (!requireNamespace("runjags", quietly = TRUE)) {
     stop(

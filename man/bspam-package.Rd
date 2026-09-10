@@ -4,15 +4,35 @@
 \name{bspam-package}
 \alias{bspam}
 \alias{bspam-package}
-\title{bspam : A package for fitting the speed-accuracy psychometric model for repeatedly measured count outcome data.}
+\title{bspam: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data}
 \description{
-`bspam` is an R package that contains functions to fit the speed-accuracy 
-psychometric model for repeatedly measured count outcome data (Potgieter, Kamata & Kara, 2017; 
-Kara, Kamata, Potgieter & Nese, 2020), where the accuracy is modeled by a binomial 
-count latent variable model. For example, the use of this modeling technique 
-allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.
+The \pkg{bspam} package provides tools for fitting and scoring
+speed-accuracy psychometric models for repeatedly measured binomial count
+outcome data. The model jointly represents accuracy and completion time
+through latent person-level accuracy and speed components.
+
+The package supports model calibration and person scoring using
+Monte Carlo EM and Bayesian approaches. It also includes functionality for
+oral reading fluency (ORF) applications, including model-based WCPM
+estimation, testlet models for sentence-level data, censoring-aware
+scoring, descriptive summaries, and interactive visualizations.
+
+Most users will interact with \code{\link{prep}}, \code{\link{fit.model}},
+\code{\link{scoring}}, and the associated summary and plotting methods.
 
 This is an R package that contains functions to fit the speed-accuracy psychometric model for count outcome data (Potgieter, Kamata & Kara, 2017; Kara, Kamata, Potgieter & Nese, 2020), where the accuracy is modeled by a binomial count latent variable model. For example, the use of this modeling technique allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.
+}
+\references{
+Potgieter, C. J., Kamata, A., & Kara, Y. (2017).
+An EM algorithm for estimating an oral reading speed and accuracy model.
+\emph{arXiv preprint arXiv:1705.10446}.
+\url{https://arxiv.org/abs/1705.10446}
+
+Kara, Y., Kamata, A., Potgieter, C. J., & Nese, J. F. T. (2020).
+Estimating model-based oral reading fluency: A Bayesian approach with a
+binomial-lognormal joint latent model.
+\emph{Educational and Psychological Measurement, 80}(5), 847-869.
+\doi{10.1177/0013164419900208}
 }
 \seealso{
 Useful links:

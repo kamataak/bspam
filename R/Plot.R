@@ -1,126 +1,222 @@
-#' Plot function to show graph of fit.model class
-#'
-#'
-#' Copyright (C) 2021-2024 The ORF Project Team
-#'
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
+# Plotting functions for the bspam package.
 #
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
+# Copyright (C) 2021-2026 The ORF Project Team
 #
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# A copy of the GNU General Public License is available at
+# http://www.gnu.org/licenses/
+#
+
+#' Plot calibrated task parameters
 #'
-#' @param x         A fit.model object
-#' @param task      task ids for plotting
-#' @param parameter model parameter for plotting, a,b,alpha,beta
-#' @param sort      sorting flag, TRUE or FALSE
-#' @param ... Additional arguments passed to the method.
+#' Creates an interactive plot of calibrated task parameters from a
+#' \code{"fit.model"} or \code{"fit.model.testlet"} object.
 #'
-#' @import plotly
+#' @param x A fitted calibration object of class \code{"fit.model"} or
+#'     \code{"fit.model.testlet"}.
+#' @param task Optional vector of task identifiers to include. If \code{NULL},
+#'     all available tasks are included.
+#' @param parameter Character vector specifying one or two parameters:
+#'     \code{"a"}, \code{"b"}, \code{"alpha"}, or \code{"beta"}.
+#' @param sort Logical. For a single parameter, if \code{TRUE}, tasks are
+#'     ordered by the parameter estimate. Default is \code{FALSE}.
+#' @param ... Additional arguments reserved for the plotting function.
+#'
+#' @details
+#' With one parameter, a horizontal bar plot is returned. With two parameters,
+#' a scatter plot is returned with one point per selected task.
+#'
+#' This function is intended to be called directly as \code{plot.task(...)}.
+#' It is not designed for automatic dispatch through \code{plot()}.
+#' For objects of class \code{"fit.model.testlet"}, each row of
+#' \code{task.param} corresponds to a sub-task, and the plot displays
+#' \code{sub.task.id} on the vertical axis. The \code{task} argument still
+#' filters by \code{task.id}.
 #' 
+#' @return A \code{plotly} object.
+#'
+#' @examples
+#' \dontrun{
+#' plot.task(fit, parameter = "a")
+#' plot.task(fit, parameter = c("a", "b"))
+#' }
+#' 
+#' @import plotly
 #' @export plot.task
-#' @export
 plot.task <- function(x, task = NULL, parameter, sort = F, ...) {
   object <- x
   
   if (!inherits(object, c("fit.model", "fit.model.testlet")))
     stop("Error: It seems like your object is not obtained through bspam. Make sure you use the calibration output from the `fit.model()` function!")
   
-  if(F %in% (parameter %in% c("a", "b", "alpha", "beta")))
+  if (F %in% (parameter %in% c("a", "b", "alpha", "beta")))
     stop("Error: Please check your parameter name(s)! Make sure they are entered correctly.")
   
-  #Selection of tasks if any
-  if(is.null(task)){
+  # Selection of tasks if any
+  if (is.null(task)) {
     task.sel <- object$task.param
-  }else{
-    if(F %in% (task %in% object$task.param$task.id))
+  } else {
+    if (F %in% (task %in% object$task.param$task.id))
       stop("Error: Please check your task IDs! Make sure they are entered correctly.")
     task.sel <- object$task.param %>%
       filter(task.id %in% task)
   }
   
-  if(length(parameter) == 1){
+  # Decide plotting label:
+  # fit.model -> task.id
+  # fit.model.testlet -> sub.task.id
+  if (inherits(object, "fit.model.testlet")) {
     task.sel <- task.sel %>%
-      mutate(task.id=as.character(task.id)) %>%
-      rename(par_grph=paste(parameter))
+      mutate(plot.id = as.character(sub.task.id))
+    y_title <- "Sub-task ID"
+  } else {
+    task.sel <- task.sel %>%
+      mutate(plot.id = as.character(task.id))
+    y_title <- "Task ID"
+  }
+  
+  if (length(parameter) == 1) {
+    task.sel <- task.sel %>%
+      mutate(par_grph = .data[[parameter]])
     
-    if(sort==T){
+    if (sort == TRUE) {
       task.sel <- task.sel %>%
         arrange(par_grph) %>%
-        mutate(task.id=factor(task.id, levels=.$task.id))
+        mutate(plot.id = factor(plot.id, levels = unique(plot.id)))
     }
-    plt_obj <- task.sel %>%
-      plot_ly(y=~task.id, 
-              x=~par_grph, 
-              type ="bar",
-              text=~paste("Task ID: ", task.id, '<br>Estimate:', paste(round(par_grph,3))), 
-              showlegend=F, 
-              hoverinfo='text',
-              textposition = "none",
-              height=max(n_distinct(task.sel$task.id)*13, 400),
-              color = I("#CC0035")) %>%
-      layout(xaxis=list(title = paste(parameter), zeroline = F, showline = F, showticklabels = T, showgrid = T),
-             yaxis=list(title = "Task ID", zeroline = F, showline = F, showticklabels = T, showgrid = T, dtick=1))
-  }else if(length(parameter) == 2){
-    task.sel <- task.sel %>% 
-      mutate(task.id=as.character(task.id)) %>%
-      rename(par_grph_x=paste(parameter[1]), par_grph_y=paste(parameter[2]))
+    
+    if (inherits(object, "fit.model.testlet")) {
+      hover_txt <- ~paste(
+        "Task ID: ", task.id,
+        "<br>Sub-task ID: ", sub.task.id,
+        "<br>Estimate: ", round(par_grph, 3)
+      )
+    } else {
+      hover_txt <- ~paste(
+        "Task ID: ", task.id,
+        "<br>Estimate: ", round(par_grph, 3)
+      )
+    }
     
     plt_obj <- task.sel %>%
-      plot_ly(x=~par_grph_x, 
-              y=~par_grph_y, 
-              type = "scatter", 
-              mode = "markers",
-              text=~paste("Task ID: ", task.id, '<br>', 
-                          paste(parameter[1]), ':', paste(round(par_grph_x, 3)), '<br>', 
-                          paste(parameter[2]), ':', paste(round(par_grph_y,3))),
-              showlegend=F,
-              hoverinfo='text',
-              textposition = "none",
-              color = I("#CC0035")) %>%
-      layout(xaxis = list(title = list(text =paste(parameter[1]))), 
-             yaxis = list(title = list(text =paste(parameter[2]))))
-  }
-  else{
+      plot_ly(
+        y = ~plot.id,
+        x = ~par_grph,
+        type = "bar",
+        text = hover_txt,
+        showlegend = FALSE,
+        hoverinfo = "text",
+        textposition = "none",
+        height = max(dplyr::n_distinct(task.sel$plot.id) * 13, 400),
+        color = I("#CC0035")
+      ) %>%
+      layout(
+        xaxis = list(
+          title = paste(parameter),
+          zeroline = FALSE,
+          showline = FALSE,
+          showticklabels = TRUE,
+          showgrid = TRUE
+        ),
+        yaxis = list(
+          title = y_title,
+          zeroline = FALSE,
+          showline = FALSE,
+          showticklabels = TRUE,
+          showgrid = TRUE,
+          dtick = 1
+        )
+      )
+    
+  } else if (length(parameter) == 2) {
+    task.sel <- task.sel %>%
+      mutate(
+        par_grph_x = .data[[parameter[1]]],
+        par_grph_y = .data[[parameter[2]]]
+      )
+    
+    if (inherits(object, "fit.model.testlet")) {
+      hover_txt <- ~paste(
+        "Task ID: ", task.id,
+        "<br>Sub-task ID: ", sub.task.id,
+        "<br>", parameter[1], ": ", round(par_grph_x, 3),
+        "<br>", parameter[2], ": ", round(par_grph_y, 3)
+      )
+    } else {
+      hover_txt <- ~paste(
+        "Task ID: ", task.id,
+        "<br>", parameter[1], ": ", round(par_grph_x, 3),
+        "<br>", parameter[2], ": ", round(par_grph_y, 3)
+      )
+    }
+    
+    plt_obj <- task.sel %>%
+      plot_ly(
+        x = ~par_grph_x,
+        y = ~par_grph_y,
+        type = "scatter",
+        mode = "markers",
+        text = hover_txt,
+        showlegend = FALSE,
+        hoverinfo = "text",
+        textposition = "none",
+        color = I("#CC0035")
+      ) %>%
+      layout(
+        xaxis = list(title = list(text = paste(parameter[1]))),
+        yaxis = list(title = list(text = paste(parameter[2])))
+      )
+    
+  } else {
     stop("Error: Only two parameters can be visualized at a time!")
   }
+  
   plt_obj
 }
-#' Plot function to show graph of scoring class
+
+#' Plot estimated person scores
 #'
+#' Creates an interactive plot of person-level scores from a \code{"scoring"}
+#' object.
 #'
-#' Copyright (C) 2021-2024 The ORF Project Team
+#' @param x A scoring object of class \code{"scoring"}.
+#' @param person Optional vector of person identifiers. If \code{NULL}, all
+#'     persons are included.
+#' @param parameter Character vector specifying one or two score types:
+#'     \code{"theta"}, \code{"tau"}, or \code{"wcpm"}.
+#' @param show.se Logical. If \code{TRUE}, approximately 95 percent intervals
+#'     based on estimate plus or minus \code{1.96} standard errors are shown.
+#' @param sort Logical. For a single score, if \code{TRUE}, persons are sorted
+#'     by the estimated score.
+#' @param ... Additional arguments reserved for the plotting function.
 #'
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
-#
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
-#
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
+#' @details
+#' One score produces a person-by-score plot; two scores produce a scatter plot.
+#' For \code{"wcpm"}, the observed WCPM column is excluded and the model-based
+#' WCPM estimate is used.
 #'
-#' @param x         A scoring object
-#' @param person    person ids for plotting
-#' @param parameter model parameter for plotting, a,b,alpha,beta
-#' @param show.se   standard error bar flag, TRUE for showing or FALSE for no showing
-#' @param sort      sorting flag, TRUE or FALSE
-#' @param ... Additional arguments passed to the method.
-#'
-#' @import plotly
+#' This function is intended to be called directly as \code{plot.person(...)}.
+#' It is not designed for automatic dispatch through \code{plot()}.
 #' 
+#' @return A \code{plotly} object.
+#'
+#' @examples
+#' \dontrun{
+#' plot.person(scores, parameter = "theta")
+#' plot.person(scores, parameter = c("theta", "tau"))
+#' }
+#' 
+#' @import plotly
 #' @export plot.person
-#' @export
 plot.person <- function(x, person=NULL, parameter, show.se=T, sort=F, ...) {
   object <- x
   
@@ -241,34 +337,37 @@ plot.person <- function(x, person=NULL, parameter, show.se=T, sort=F, ...) {
   }
   plt_obj
 }
-#' Plot function to show information of calibration
+
+#' Plot model-based WCPM information
 #'
+#' Creates an interactive three-dimensional visualization of model-based WCPM
+#' information over a grid of latent accuracy and speed values.
 #'
-#' Copyright (C) 2021-2024 The ORF Project Team
+#' @param x A calibrated model object containing \code{task.param} and
+#'     \code{hyper.param}.
+#' @param ... Additional arguments reserved for the plotting function.
 #'
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
-#
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
-#
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
+#' @details
+#' The current implementation visualizes WCPM information for the first
+#' calibrated task only. The axes are \code{theta}, \code{tau}, and WCPM
+#' information.
 #'
+#' This function is intended to be called directly as
+#' \code{plot.information(...)}. It is not designed for automatic dispatch
+#' through \code{plot()}.
+#' 
+#' @return A three-dimensional \code{plotly} scatter plot.
+#'
+#' @examples
+#' \dontrun{
+#' plot.information(fit)
+#' }
+#' 
 #' @import plotly
 #' @import mvtnorm
 #' @import tidyverse
 #' @import nleqslv
-#' 
-#' @param x A calibrated object.
-#' @param ... Additional arguments passed to the method.
-#' 
 #' @export plot.information
-#' @export
 plot.information <- function(x, ...) {
   calib_data <- x
   
@@ -840,34 +939,38 @@ plot.information <- function(x, ...) {
   plot_obj
 }
 
-#' Plot function to show graph of wcpm information from scoring class
+#' Plot observed versus model-based WCPM
 #'
+#' Creates an interactive scatter plot comparing observed WCPM with model-based
+#' WCPM estimates from a \code{"scoring"} object produced with
+#' \code{type = "orf"}.
 #'
-#' Copyright (C) 2021-2024 The ORF Project Team
+#' @param x A scoring object of class \code{"scoring"} containing
+#'     \code{wcpm.obs} and a model-based WCPM estimate.
+#' @param person Optional vector of person identifiers. If \code{NULL}, all
+#'     persons are included.
+#' @param show.se Logical. If \code{TRUE}, vertical error bars show
+#'     approximately 95 percent intervals based on \code{1.96} standard errors.
+#' @param show.abline Logical. If \code{TRUE}, the identity line \code{y = x}
+#'     is added.
+#' @param ... Additional arguments reserved for the plotting function.
 #'
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
-#
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
-#
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
+#' @details
+#' The x-axis is observed WCPM and the y-axis is model-based WCPM. The function
+#' requires scoring results generated with \code{type = "orf"}.
 #'
-#' @param x             A scoring object
-#' @param person        Person ids for plotting
-#' @param show.se       tandard error bar flag, TRUE (default) for showing or FALSE for no showing
-#' @param show.abline   abline flag, TRUE (default) for showing or FALSE for no showing
-#' @param ... Additional arguments passed to the method.
-#'
-#' @import plotly
+#' This function is intended to be called directly as \code{plot.wcpm(...)}.
+#' It is not designed for automatic dispatch through \code{plot()}.
 #' 
+#' @return A \code{plotly} scatter plot.
+#'
+#' @examples
+#' \dontrun{
+#' plot.wcpm(scores)
+#' }
+#' 
+#' @import plotly
 #' @export plot.wcpm
-#' @export
 plot.wcpm <- function(x, person=NULL, show.se=T, show.abline=T, ...) {
   object <- x
   
@@ -936,10 +1039,11 @@ plot.wcpm <- function(x, person=NULL, show.se=T, show.abline=T, ...) {
   if(isTRUE(show.abline)){
     plt_obj <- plt_obj %>%
       add_trace(x = ~par_grph_x, y = ~par_grph_x, 
-                type = 'scatter', mode = 'lines', name = 'Best Fit Line', 
+                type = 'scatter', mode = 'lines', name = 'Identity Line', 
                 line = list(color = 'black', width=1), hoverinfo="none", error_y=NULL)
   }else{
     plt_ob <- plt_obj
   }
   plt_obj
 }
+

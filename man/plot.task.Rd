@@ -2,33 +2,47 @@
 % Please edit documentation in R/Plot.R
 \name{plot.task}
 \alias{plot.task}
-\title{Plot function to show graph of fit.model class}
+\title{Plot calibrated task parameters}
 \usage{
 \method{plot}{task}(x, task = NULL, parameter, sort = F, ...)
 }
 \arguments{
-\item{x}{A fit.model object}
+\item{x}{A fitted calibration object of class \code{"fit.model"} or
+\code{"fit.model.testlet"}.}
 
-\item{task}{task ids for plotting}
+\item{task}{Optional vector of task identifiers to include. If \code{NULL},
+all available tasks are included.}
 
-\item{parameter}{model parameter for plotting, a,b,alpha,beta}
+\item{parameter}{Character vector specifying one or two parameters:
+\code{"a"}, \code{"b"}, \code{"alpha"}, or \code{"beta"}.}
 
-\item{sort}{sorting flag, TRUE or FALSE}
+\item{sort}{Logical. For a single parameter, if \code{TRUE}, tasks are
+ordered by the parameter estimate. Default is \code{FALSE}.}
 
-\item{...}{Additional arguments passed to the method.}
+\item{...}{Additional arguments reserved for the plotting function.}
+}
+\value{
+A \code{plotly} object.
 }
 \description{
-Copyright (C) 2021-2024 The ORF Project Team
+Creates an interactive plot of calibrated task parameters from a
+\code{"fit.model"} or \code{"fit.model.testlet"} object.
 }
 \details{
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/
+With one parameter, a horizontal bar plot is returned. With two parameters,
+a scatter plot is returned with one point per selected task.
+
+This function is intended to be called directly as \code{plot.task(...)}.
+It is not designed for automatic dispatch through \code{plot()}.
+For objects of class \code{"fit.model.testlet"}, each row of
+\code{task.param} corresponds to a sub-task, and the plot displays
+\code{sub.task.id} on the vertical axis. The \code{task} argument still
+filters by \code{task.id}.
+}
+\examples{
+\dontrun{
+plot.task(fit, parameter = "a")
+plot.task(fit, parameter = c("a", "b"))
+}
+
 }

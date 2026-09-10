@@ -92,6 +92,8 @@ utils::globalVariables(c(
   "se_grph_y",
   "par_grph_x",
   "par_grph_y",
+  "plot.id",
+  "sub.task.id",
   
   # prep()
   "obs_sequence",

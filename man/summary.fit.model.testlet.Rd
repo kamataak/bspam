@@ -2,32 +2,35 @@
 % Please edit documentation in R/summary.R
 \name{summary.fit.model.testlet}
 \alias{summary.fit.model.testlet}
-\title{summary the information of fit.model.testlet class}
+\title{Summarize a fitted testlet model}
 \usage{
 \method{summary}{fit.model.testlet}(object, digits = 4, ...)
 }
 \arguments{
-\item{object}{= object}
+\item{object}{A fitted testlet-model object of class
+\code{"fit.model.testlet"}, typically returned by
+\code{\link{fit.model.testlet}} or by \code{\link{fit.model}} with
+\code{testlet = TRUE}.}
 
-\item{digits}{= print out numeric with specific digits}
+\item{digits}{Integer passed to the table-printing method. The current
+implementation formats reported parameter estimates to three decimal
+places before printing. Default is \code{4}.}
 
-\item{...}{= parameter}
+\item{...}{Additional arguments for the summary method. Currently not used.}
 }
 \value{
-printing information
+Invisibly returns \code{NULL} after printing the model summary.
 }
 \description{
-Copyright (C) 2021-2023 The ORF Project Team
+Prints the estimated sub-task parameters and population-level
+hyperparameters from an object of class \code{"fit.model.testlet"}.
 }
 \details{
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/
+The printed output first reports the first four estimated sub-task
+parameters from the fitted model. It then prints \code{sigma},
+\code{gamma1}, \code{gamma2}, \code{rho.theta}, and
+\code{rho.testlet}.
+}
+\seealso{
+\code{\link{fit.model.testlet}} and \code{\link{fit.model}}.
 }

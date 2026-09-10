@@ -1,24 +1,24 @@
-#' Get bootstrap SE
-#' case is a single stu_season_id
-#'
-#' Added MAP function 07/14/2021
-#' Modified a bug of MLE 07/23/2021
-#' Modified EAP 10/28/2021
-#'
-#' @details
-#' EAP bootstrap SE uses Gauss-Hermite quadrature from \pkg{statmod}.
-#' 
-#' @param object - mcem class object
-#' @param person.data - Individual response data
-#' @param case - Case number
-#' @param est - SE type.(MLE, EAP, and MAP.) default MAP
-#' @param perfect.cases - Perfect accurate case
-#' @param zero.cases - Zero accurate case
-#' @param kappa - Default kappa = 1, better be 5
-#' @param bootstrap - K number of bootstrap, default is 100
-#' @param external - if not NULL, will use unread task for estimating
-#'
-#' @return SE dataset
+# Get bootstrap SE
+# case is a single stu_season_id
+#
+# Added MAP function 07/14/2021
+# Modified a bug of MLE 07/23/2021
+# Modified EAP 10/28/2021
+#
+# @details
+# EAP bootstrap SE uses Gauss-Hermite quadrature from \pkg{statmod}.
+# 
+# @param object - mcem class object
+# @param person.data - Individual response data
+# @param case - Case number
+# @param est - SE type.(MLE, EAP, and MAP.) default MAP
+# @param perfect.cases - Perfect accurate case
+# @param zero.cases - Zero accurate case
+# @param kappa - Default kappa = 1, better be 5
+# @param bootstrap - K number of bootstrap, default is 100
+# @param external - if not NULL, will use unread task for estimating
+#
+# @return SE dataset
 getBootstrapSE <- function (object, person.data, case=NA, perfect.cases, zero.cases, est="map", kappa=1, bootstrap=100, external=NULL) {
   log.initiating()
   flog.info("Begin getBootstrapSE process", name = "orfrlog")

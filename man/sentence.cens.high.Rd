@@ -15,7 +15,8 @@
   \item{\code{numwords.sent}}{the total number of words in the sentence}
   \item{\code{wrc}}{the number of words read correct}
   \item{\code{sec}}{time to read the sentence in seconds}
-  \item{\code{cens}}{whether a specific passage was censored (0) or fully observed (1)}
+  \item{\code{cens}}{censoring indicator, where 1 indicates a censored
+  observation and 0 indicates a fully observed observation}
 }
 }
 \source{

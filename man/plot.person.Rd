@@ -2,35 +2,46 @@
 % Please edit documentation in R/Plot.R
 \name{plot.person}
 \alias{plot.person}
-\title{Plot function to show graph of scoring class}
+\title{Plot estimated person scores}
 \usage{
 \method{plot}{person}(x, person = NULL, parameter, show.se = T, sort = F, ...)
 }
 \arguments{
-\item{x}{A scoring object}
+\item{x}{A scoring object of class \code{"scoring"}.}
 
-\item{person}{person ids for plotting}
+\item{person}{Optional vector of person identifiers. If \code{NULL}, all
+persons are included.}
 
-\item{parameter}{model parameter for plotting, a,b,alpha,beta}
+\item{parameter}{Character vector specifying one or two score types:
+\code{"theta"}, \code{"tau"}, or \code{"wcpm"}.}
 
-\item{show.se}{standard error bar flag, TRUE for showing or FALSE for no showing}
+\item{show.se}{Logical. If \code{TRUE}, approximately 95 percent intervals
+based on estimate plus or minus \code{1.96} standard errors are shown.}
 
-\item{sort}{sorting flag, TRUE or FALSE}
+\item{sort}{Logical. For a single score, if \code{TRUE}, persons are sorted
+by the estimated score.}
 
-\item{...}{Additional arguments passed to the method.}
+\item{...}{Additional arguments reserved for the plotting function.}
+}
+\value{
+A \code{plotly} object.
 }
 \description{
-Copyright (C) 2021-2024 The ORF Project Team
+Creates an interactive plot of person-level scores from a \code{"scoring"}
+object.
 }
 \details{
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/
+One score produces a person-by-score plot; two scores produce a scatter plot.
+For \code{"wcpm"}, the observed WCPM column is excluded and the model-based
+WCPM estimate is used.
+
+This function is intended to be called directly as \code{plot.person(...)}.
+It is not designed for automatic dispatch through \code{plot()}.
+}
+\examples{
+\dontrun{
+plot.person(scores, parameter = "theta")
+plot.person(scores, parameter = c("theta", "tau"))
+}
+
 }

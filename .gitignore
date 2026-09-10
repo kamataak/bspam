@@ -5,4 +5,4 @@
 *.pdf
 .positai
 inst/doc
-orfrlog.log
+*.log

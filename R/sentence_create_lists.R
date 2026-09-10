@@ -1,61 +1,61 @@
-#' Call by scoring.sentence.censoring function 
-#'
-#'
-#' Copyright (C) 2021-2024 The ORF Project Team
-#' 
-#' This program is free software; you can redistribute it and/or modify
-#' it under the terms of the GNU General Public License as published by
-#' the Free Software Foundation; either version 3 of the License, or
-#' (at your option) any later version.
+# Call by scoring.sentence.censoring function 
 #
-#' This program is distributed in the hope that it will be useful,
-#' but WITHOUT ANY WARRANTY; without even the implied warranty of
-#' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#' GNU General Public License for more details.
-#' 
-#' A copy of the GNU General Public License is available at
-#' http://www.gnu.org/licenses/
-#'
-#'
-#' Pre-processing data: Function prepares data for Stan model
-#' Enter a single student's data for preparation
-#' 
-#' Assume a student has read K >= 2 passages
-#' 
-#' @param Count A vector of observed counts, such as the number of words
-#'     read correctly, for each sentence.
-#' @param logT10 A vector of log-transformed reading times per 10 words
-#'     for each sentence.
-#' @param MaxN A vector containing the maximum possible counts, such as
-#'     the number of words, for each observed sentence.
-#' @param MaxN_score A vector containing the maximum possible counts,
-#'     such as the number of words, for each sentence to be scored.
-#' @param Passage A vector of passage indicators identifying the passage
-#'     to which each observed sentence belongs.
-#' @param Passage_score A vector of passage indicators identifying the
-#'     passage to which each sentence to be scored belongs.
-#' @param a Model parameter related to the count model.
-#' @param b Model parameter related to the count model.
-#' @param alpha Model parameter related to the time model.
-#' @param beta Model parameter related to the time model.
-#' @param a_score Model parameter related to the count model for sentences or passages to be scored.
-#' @param b_score Model parameter related to the count model for sentences or passages to be scored.
-#' @param alpha_score Model parameter related to the time model for sentences or passages to be scored.
-#' @param beta_score Model parameter related to the time model for sentences or passages to be scored.
-#' @param gamma1 Hyperparameter related to the count testlet effect.
-#' @param gamma2 Hyperparameter related to the time testlet effect.
-#' @param sigma The standard deviation parameter for the latent speed
-#'     component.
-#' @param rho The correlation between the latent accuracy and speed
-#'     components.
-#' @param rhoTestlet The correlation between the count and time testlet
-#'     effects.
-#' @param C A vector of censoring indicators for the observed sentences,
-#'     where 0 indicates a fully observed sentence and 1 indicates a
-#'     censored sentence.
-#'
-#' @return A list containing data and model parameters formatted for
-#'     sentence-level Stan scoring models.
+#
+# Copyright (C) 2021-2026 The ORF Project Team
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# A copy of the GNU General Public License is available at
+# http://www.gnu.org/licenses/
+#
+#
+# Pre-processing data: Function prepares data for Stan model
+# Enter a single student's data for preparation
+# 
+# Assume a student has read K >= 2 passages
+# 
+# @param Count A vector of observed counts, such as the number of words
+#     read correctly, for each sentence.
+# @param logT10 A vector of log-transformed reading times per 10 words
+#     for each sentence.
+# @param MaxN A vector containing the maximum possible counts, such as
+#     the number of words, for each observed sentence.
+# @param MaxN_score A vector containing the maximum possible counts,
+#     such as the number of words, for each sentence to be scored.
+# @param Passage A vector of passage indicators identifying the passage
+#     to which each observed sentence belongs.
+# @param Passage_score A vector of passage indicators identifying the
+#     passage to which each sentence to be scored belongs.
+# @param a Model parameter related to the count model.
+# @param b Model parameter related to the count model.
+# @param alpha Model parameter related to the time model.
+# @param beta Model parameter related to the time model.
+# @param a_score Model parameter related to the count model for sentences or passages to be scored.
+# @param b_score Model parameter related to the count model for sentences or passages to be scored.
+# @param alpha_score Model parameter related to the time model for sentences or passages to be scored.
+# @param beta_score Model parameter related to the time model for sentences or passages to be scored.
+# @param gamma1 Hyperparameter related to the count testlet effect.
+# @param gamma2 Hyperparameter related to the time testlet effect.
+# @param sigma The standard deviation parameter for the latent speed
+#     component.
+# @param rho The correlation between the latent accuracy and speed
+#     components.
+# @param rhoTestlet The correlation between the count and time testlet
+#     effects.
+# @param C A vector of censoring indicators for the observed sentences,
+#     where 0 indicates a fully observed sentence and 1 indicates a
+#     censored sentence.
+#
+# @return A list containing data and model parameters formatted for
+#     sentence-level Stan scoring models.
 create_data_list_sentence <- function(Count, logT10, MaxN, MaxN_score,
                              Passage, Passage_score, a, b, 
                              alpha, beta,

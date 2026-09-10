@@ -2,16 +2,20 @@
 % Please edit documentation in R/Utility.R
 \name{get.cases}
 \alias{get.cases}
-\title{Returns cases (person and occasion) applied in [fit.model] function.}
+\title{Create person-by-occasion case identifiers}
 \usage{
 get.cases(data)
 }
 \arguments{
-\item{data}{= person response data}
+\item{data}{A data frame containing \code{person.id} and
+\code{occasion} variables.}
 }
 \value{
-cases vector
+Invisibly returns a one-column data frame containing unique case
+    identifiers in the variable \code{cases}.
 }
 \description{
-Returns cases (person and occasion) applied in [fit.model] function.
+Creates unique case identifiers by combining the \code{person.id} and
+\code{occasion} variables in prepared response data. These identifiers
+are used by scoring functions to identify person-by-occasion records.
 }

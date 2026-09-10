@@ -2,27 +2,35 @@
 % Please edit documentation in R/Plot.R
 \name{plot.information}
 \alias{plot.information}
-\title{Plot function to show information of calibration}
+\title{Plot model-based WCPM information}
 \usage{
 \method{plot}{information}(x, ...)
 }
 \arguments{
-\item{x}{A calibrated object.}
+\item{x}{A calibrated model object containing \code{task.param} and
+\code{hyper.param}.}
 
-\item{...}{Additional arguments passed to the method.}
+\item{...}{Additional arguments reserved for the plotting function.}
+}
+\value{
+A three-dimensional \code{plotly} scatter plot.
 }
 \description{
-Copyright (C) 2021-2024 The ORF Project Team
+Creates an interactive three-dimensional visualization of model-based WCPM
+information over a grid of latent accuracy and speed values.
 }
 \details{
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-A copy of the GNU General Public License is available at
-http://www.gnu.org/licenses/
+The current implementation visualizes WCPM information for the first
+calibrated task only. The axes are \code{theta}, \code{tau}, and WCPM
+information.
+
+This function is intended to be called directly as
+\code{plot.information(...)}. It is not designed for automatic dispatch
+through \code{plot()}.
+}
+\examples{
+\dontrun{
+plot.information(fit)
+}
+
 }
