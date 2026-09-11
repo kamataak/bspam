@@ -47,6 +47,7 @@ Imports:
 Suggests: 
     knitr,
     rstan,
+    BH,
     runjags,
     rjags,
     rmarkdown,
@@ -57,5 +58,4 @@ RoxygenNote: 7.3.3
 LazyData: yes
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2023-10-27 20:19:32 UTC; kuowang
 VignetteBuilder: knitr
