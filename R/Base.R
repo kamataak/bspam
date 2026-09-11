@@ -1077,8 +1077,12 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, ze
   rho <- mean(MCEM$hyper.param$rho)
   vartau <- mean(MCEM$hyper.param$vartau)
   
-  numCores <- detectCores() - 1
+  numCores <- max(1L, detectCores() - 1L)
   
+  # CRAN checks limit packages to at most 2 parallel workers
+  if (identical(toupper(Sys.getenv("_R_CHECK_LIMIT_CORES_")), "TRUE")) {
+    numCores <- min(numCores, 2L)
+  }
   
   cl <- makeCluster(numCores)
   on.exit(stopCluster(cl), add = TRUE)
