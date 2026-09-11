@@ -136,14 +136,14 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts
         data {
           int<lower=1> N; 
           int<lower=1> K;
-          int<lower=0> Count[N]; 
-          int<lower=0> MaxN[N]; 
-          int<lower=0> Passage[N]; 
-          real logT10[N];
-          real a[N];
-          real b[N];
-          real alpha[N];
-          real beta[N];
+          array[N] int<lower=0> Count; 
+          array[N] int<lower=0> MaxN; 
+          array[N] int<lower=0> Passage; 
+          array[N] real logT10;
+          array[N] real a;
+          array[N] real b;
+          array[N] real alpha;
+          array[N] real beta;
           real<lower=0> gamma1;
           real<lower=0> gamma2;
           real<lower=0> sigma;
@@ -154,15 +154,15 @@ fit.model.testlet <- function(data=NULL, person.id="", sub.task.id="",obs.counts
         parameters {
           real Z1;
           real Z2;
-          real V1[K];
-          real V2[K];
+          array[K] real V1;
+          array[K] real V2;
         }
         
         transformed parameters {
           real theta1;
           real theta2;
-          real U1[K];
-          real U2[K];
+          array[K] real U1;
+          array[K] real U2;
           
           theta1 = Z1;
           theta2 = rho*Z1 + sqrt(1-rho^2)*Z2;

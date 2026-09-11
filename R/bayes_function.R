@@ -199,9 +199,9 @@ bayes <- function(
   data{
     int <lower=0> J; //number of individuals
     int <lower=0> I; //number of passages
-    int <lower=0> res[I,J]; //array of counts
-    real tim[I,J]; //array of times
-    int <lower=0> nw[I]; //vector of number of the words per passage
+    array[I,J] int<lower=0> res; //array of counts
+    array[I,J] real tim; //array of times
+    array[I] int<lower=0> nw; //vector of number of the words per passage
   }
   
   parameters{

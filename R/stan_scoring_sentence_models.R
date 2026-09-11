@@ -29,28 +29,28 @@ data {
   int<lower=0> N_score;           // Number of sentences for scoring
   int<lower=0> K;                 // Number of passages with data
   int<lower=0> K_score;           // Number of passages for scoring
-  int<lower=0> Passage_obs[N_obs]; // Passage indices of observed values
-  int<lower=0> Passage_cens[N_cens]; // Passage indices of censored values
-  int<lower=0> Passage_score[N_score]; //Passage indicators for scoring
-  int<lower=0> Count_obs[N_obs];        // Array of observed values
-  int<lower=0> Count_cens[N_cens];      // Array of censoring points for censored values
-  real logT10_obs[N_obs];        // Array of observed values
-  real logT10_cens[N_cens];      // Array of censoring points for censored values
-  int<lower=0> MaxN_obs[N_obs]; // Sentence lengths of observed values
-  int<lower=0> MaxN_cens[N_cens]; // Sentence lengths of censored values
-  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
-  real a_obs[N_obs];
-  real a_cens[N_cens];
-  real b_obs[N_obs];
-  real b_cens[N_cens];
-  real alpha_obs[N_obs];
-  real alpha_cens[N_cens];
-  real beta_obs[N_obs];
-  real beta_cens[N_cens];
-  real a_score[N_score]; // All _score params are for sentences of scoring passages
-  real b_score[N_score];
-  real alpha_score[N_score];
-  real beta_score[N_score];
+  array[N_obs] int<lower=0> Passage_obs; // Passage indices of observed values
+  array[N_cens] int<lower=0> Passage_cens; // Passage indices of censored values
+  array[N_score] int<lower=0> Passage_score; //Passage indicators for scoring
+  array[N_obs] int<lower=0> Count_obs;        // Array of observed values
+  array[N_cens] int<lower=0> Count_cens;      // Array of censoring points for censored values
+  array[N_obs] real logT10_obs;        // Array of observed values
+  array[N_cens] real logT10_cens;      // Array of censoring points for censored values
+  array[N_obs] int<lower=0> MaxN_obs; // Sentence lengths of observed values
+  array[N_cens] int<lower=0> MaxN_cens; // Sentence lengths of censored values
+  array[N_score] int<lower=0> MaxN_score; //Sentence lengths for scoring passages
+  array[N_obs] real a_obs;
+  array[N_cens] real a_cens;
+  array[N_obs] real b_obs;
+  array[N_cens] real b_cens;
+  array[N_obs] real alpha_obs;
+  array[N_cens] real alpha_cens;
+  array[N_obs] real beta_obs;
+  array[N_cens] real beta_cens;
+  array[N_score] real a_score; // All _score params are for sentences of scoring passages
+  array[N_score] real b_score;
+  array[N_score] real alpha_score;
+  array[N_score] real beta_score;
   real<lower=0> gamma1;
   real<lower=0> gamma2;
   real<lower=0> sigma;
@@ -60,15 +60,15 @@ data {
 parameters {
   real Z1;
   real Z2;
-  real V1[K];
-  real V2[K];
+  array[K] real V1;
+  array[K] real V2;
 }
 
 transformed parameters {
   real theta1;
   real theta2;
-  real U1[K];
-  real U2[K];
+  array[K] real U1;
+  array[K] real U2;
   
   theta1 = Z1;
   theta2 = rho*Z1 + sqrt(1-rho^2)*Z2;
@@ -123,16 +123,16 @@ for (i in 1:N_cens) {
 // Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
 
 generated quantities{
-  real tim_ex[N_score]; //Expeced time matrix
-  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  array[N_score] real tim_ex; //Expeced time matrix
+  array[N_score] real<lower=0> cnt_ex; //Expected count matrix
   real <lower=0> exp_cnt; //Model-based obs.counts
   real <lower=0> exp_tim; //Model-based secs
   real <lower=0> wcpm; //Model-based WCPM
   
-  real V1_score[K_score]; 
-  real V2_score[K_score]; 
-  real U1_score[K_score];
-  real U2_score[K_score];
+  array[K_score] real V1_score; 
+  array[K_score] real V2_score; 
+  array[K_score] real U1_score;
+  array[K_score] real U2_score;
   
   for (k in 1:K_score){
         V1_score[k] = normal_rng(0, 1);
@@ -160,28 +160,28 @@ data {
   int<lower=0> N_score;           // Number of sentences for scoring
   int<lower=0> K;                 // Number of passages with data
   int<lower=0> K_score;           // Number of passages for scoring
-  int<lower=0> Passage_obs[N_obs]; // Passage indices of observed values
+  array[N_obs] int<lower=0> Passage_obs; // Passage indices of observed values
   int<lower=0> Passage_cens; //   Passage index of censored value
-  int<lower=0> Passage_score[N_score]; //Passage indicators for scoring
-  int<lower=0> Count_obs[N_obs];        // Array of observed values
+  array[N_score] int<lower=0> Passage_score; //Passage indicators for scoring
+  array[N_obs] int<lower=0> Count_obs;        // Array of observed values
   int<lower=0> Count_cens;      // Censoring point for censored value
-  real logT10_obs[N_obs];        // Array of observed values
+  array[N_obs] real logT10_obs;        // Array of observed values
   real logT10_cens;      // Censoring points for censored value
-  int<lower=0> MaxN_obs[N_obs]; // Sentence lengths of observed values
+  array[N_obs] int<lower=0> MaxN_obs; // Sentence lengths of observed values
   int<lower=0> MaxN_cens; // Sentence length of censored value
-  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
-  real a_obs[N_obs];
+  array[N_score] int<lower=0> MaxN_score; //Sentence lengths for scoring passages
+  array[N_obs] real a_obs;
   real a_cens;
-  real b_obs[N_obs];
+  array[N_obs] real b_obs;
   real b_cens;
-  real alpha_obs[N_obs];
+  array[N_obs] real alpha_obs;
   real alpha_cens;
-  real beta_obs[N_obs];
+  array[N_obs] real beta_obs;
   real beta_cens;
-  real a_score[N_score]; // All _score params are for sentences of scoring passages
-  real b_score[N_score];
-  real alpha_score[N_score];
-  real beta_score[N_score];
+  array[N_score] real a_score; // All _score params are for sentences of scoring passages
+  array[N_score] real b_score;
+  array[N_score] real alpha_score;
+  array[N_score] real beta_score;
   real<lower=0> gamma1;
   real<lower=0> gamma2;
   real<lower=0> sigma;
@@ -191,15 +191,15 @@ data {
 parameters {
   real Z1;
   real Z2;
-  real V1[K];
-  real V2[K];
+  array[K] real V1;
+  array[K] real V2;
 }
 
 transformed parameters {
   real theta1;
   real theta2;
-  real U1[K];
-  real U2[K];
+  array[K] real U1;
+  array[K] real U2;
   
   theta1 = Z1;
   theta2 = rho*Z1 + sqrt(1-rho^2)*Z2;
@@ -252,16 +252,16 @@ model {
 // Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
 
 generated quantities{
-  real tim_ex[N_score]; //Expeced time matrix
-  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  array[N_score] real tim_ex; //Expeced time matrix
+  array[N_score] real<lower=0> cnt_ex; //Expected count matrix
   real <lower=0> exp_cnt; //Model-based obs.counts
   real <lower=0> exp_tim; //Model-based secs
   real <lower=0> wcpm; //Model-based WCPM
   
-  real V1_score[K_score]; 
-  real V2_score[K_score]; 
-  real U1_score[K_score];
-  real U2_score[K_score];
+  array[K_score] real V1_score; 
+  array[K_score] real V2_score; 
+  array[K_score] real U1_score;
+  array[K_score] real U2_score;
   
   for (k in 1:K_score){
         V1_score[k] = normal_rng(0, 1);
@@ -292,27 +292,27 @@ data {
   int<lower=0> K;                 // Number of passages with data
   int<lower=0> K_score;           // Number of passages for scoring
   int<lower=0> Passage_obs;       // Passage index of observed value
-  int<lower=0> Passage_cens[N_cens]; // Passage indices of censored values
-  int<lower=0> Passage_score[N_score]; //Passage indicators for scoring
+  array[N_cens] int<lower=0> Passage_cens; // Passage indices of censored values
+  array[N_score] int<lower=0> Passage_score; //Passage indicators for scoring
   int<lower=0> Count_obs;         // Observed value
-  int<lower=0> Count_cens[N_cens]; // Array of censoring points for censored values
+  array[N_cens] int<lower=0> Count_cens; // Array of censoring points for censored values
   real logT10_obs;               // Observed value
-  real logT10_cens[N_cens];      // Array of censoring points for censored values
+  array[N_cens] real logT10_cens;      // Array of censoring points for censored values
   int<lower=0> MaxN_obs;         // Sentence length of observed value
-  int<lower=0> MaxN_cens[N_cens]; // Sentence lengths of censored values
-  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
+  array[N_cens] int<lower=0> MaxN_cens; // Sentence lengths of censored values
+  array[N_score] int<lower=0> MaxN_score; //Sentence lengths for scoring passages
   real a_obs;
-  real a_cens[N_cens];
+  array[N_cens] real a_cens;
   real b_obs;
-  real b_cens[N_cens];
+  array[N_cens] real b_cens;
   real alpha_obs;
-  real alpha_cens[N_cens];
+  array[N_cens] real alpha_cens;
   real beta_obs;
-  real beta_cens[N_cens];
-  real a_score[N_score]; // All _score params are for sentences of scoring passages
-  real b_score[N_score];
-  real alpha_score[N_score];
-  real beta_score[N_score];
+  array[N_cens] real beta_cens;
+  array[N_score] real a_score; // All _score params are for sentences of scoring passages
+  array[N_score] real b_score;
+  array[N_score] real alpha_score;
+  array[N_score] real beta_score;
   real<lower=0> gamma1;
   real<lower=0> gamma2;
   real<lower=0> sigma;
@@ -322,15 +322,15 @@ data {
 parameters {
   real Z1;
   real Z2;
-  real V1[K];
-  real V2[K];
+  array[K] real V1;
+  array[K] real V2;
 }
 
 transformed parameters {
   real theta1;
   real theta2;
-  real U1[K];
-  real U2[K];
+  array[K] real U1;
+  array[K] real U2;
   
   theta1 = Z1;
   theta2 = rho*Z1 + sqrt(1-rho^2)*Z2;
@@ -385,16 +385,16 @@ model {
 // Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
 
 generated quantities{
-  real tim_ex[N_score]; //Expeced time matrix
-  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  array[N_score] real tim_ex; //Expeced time matrix
+  array[N_score] real<lower=0> cnt_ex; //Expected count matrix
   real <lower=0> exp_cnt; //Model-based obs.counts
   real <lower=0> exp_tim; //Model-based secs
   real <lower=0> wcpm; //Model-based WCPM
   
-  real V1_score[K_score]; 
-  real V2_score[K_score]; 
-  real U1_score[K_score];
-  real U2_score[K_score];
+  array[K_score] real V1_score; 
+  array[K_score] real V2_score; 
+  array[K_score] real U1_score;
+  array[K_score] real U2_score;
   
   for (k in 1:K_score){
         V1_score[k] = normal_rng(0, 1);
@@ -423,20 +423,20 @@ data {
   int<lower=0> N_score;           // Number of sentences for scoring
   int<lower=0> K;                 // Number of passages read
   int<lower=0> K_score;           // Number of passages for scoring
-  int<lower=0> Passage_obs[N_obs]; // Passage indicators for sentences read
-  int<lower=0> Passage_score[N_score]; //Passage indicators for scoring
-  int<lower=0> Count_obs[N_obs];        // Array of observed values
-  real logT10_obs[N_obs];        // Array of observed values
-  int<lower=0> MaxN_obs[N_obs]; // Sentence lengths of observed values
-  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
-  real a_obs[N_obs]; // All _obs params are for sentences of passages read!
-  real b_obs[N_obs];
-  real alpha_obs[N_obs];
-  real beta_obs[N_obs];
-  real a_score[N_score]; // All _score params are for sentences of scoring passages
-  real b_score[N_score];
-  real alpha_score[N_score];
-  real beta_score[N_score];
+  array[N_obs] int<lower=0> Passage_obs; // Passage indicators for sentences read
+  array[N_score] int<lower=0> Passage_score; //Passage indicators for scoring
+  array[N_obs] int<lower=0> Count_obs;        // Array of observed values
+  array[N_obs] real logT10_obs;        // Array of observed values
+  array[N_obs] int<lower=0> MaxN_obs; // Sentence lengths of observed values
+  array[N_score] int<lower=0> MaxN_score; //Sentence lengths for scoring passages
+  array[N_obs] real a_obs; // All _obs params are for sentences of passages read!
+  array[N_obs] real b_obs;
+  array[N_obs] real alpha_obs;
+  array[N_obs] real beta_obs;
+  array[N_score] real a_score; // All _score params are for sentences of scoring passages
+  array[N_score] real b_score;
+  array[N_score] real alpha_score;
+  array[N_score] real beta_score;
   real<lower=0> gamma1;
   real<lower=0> gamma2;
   real<lower=0> sigma;
@@ -446,15 +446,15 @@ data {
 parameters {
   real Z1;
   real Z2;
-  real V1[K];
-  real V2[K];
+  array[K] real V1;
+  array[K] real V2;
 }
 
 transformed parameters {
   real theta1;
   real theta2;
-  real U1[K];
-  real U2[K];
+  array[K] real U1;
+  array[K] real U2;
   
   theta1 = Z1;
   theta2 = rho*Z1 + sqrt(1-rho^2)*Z2;
@@ -488,16 +488,16 @@ model {
 // The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
 // Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
 generated quantities{
-  real tim_ex[N_score]; //Expeced time matrix
-  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  array[N_score] real tim_ex; //Expeced time matrix
+  array[N_score] real<lower=0> cnt_ex; //Expected count matrix
   real <lower=0> exp_cnt; //Model-based obs.counts
   real <lower=0> exp_tim; //Model-based secs
   real <lower=0> wcpm; //Model-based WCPM
   
-  real V1_score[K_score]; 
-  real V2_score[K_score]; 
-  real U1_score[K_score];
-  real U2_score[K_score];
+  array[K_score] real V1_score; 
+  array[K_score] real V2_score; 
+  array[K_score] real U1_score;
+  array[K_score] real U2_score;
   
   for (k in 1:K_score){
         V1_score[k] = normal_rng(0, 1);
@@ -527,20 +527,20 @@ data {
   int<lower=0> N_score;           // Number of sentences for scoring
   int<lower=0> K;                 // Number of passages with data
   int<lower=0> K_score;           // Number of passages for scoring
-  int<lower=0> Passage_cens[N_cens]; // Passage indices of censored values
-  int<lower=0> Passage_score[N_score]; //Passage indicators for scoring
-  int<lower=0> Count_cens[N_cens];      // Array of censoring points for censored values
-  real logT10_cens[N_cens];      // Array of censoring points for censored values
-  int<lower=0> MaxN_cens[N_cens]; // Sentence lengths of censored values
-  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
-  real a_cens[N_cens];
-  real b_cens[N_cens];
-  real alpha_cens[N_cens];
-  real beta_cens[N_cens];
-  real a_score[N_score]; // All _score params are for sentences of scoring passages
-  real b_score[N_score];
-  real alpha_score[N_score];
-  real beta_score[N_score];
+  array[N_cens] int<lower=0> Passage_cens; // Passage indices of censored values
+  array[N_score] int<lower=0> Passage_score; //Passage indicators for scoring
+  array[N_cens] int<lower=0> Count_cens;      // Array of censoring points for censored values
+  array[N_cens] real logT10_cens;      // Array of censoring points for censored values
+  array[N_cens] int<lower=0> MaxN_cens; // Sentence lengths of censored values
+  array[N_score] int<lower=0> MaxN_score; //Sentence lengths for scoring passages
+  array[N_cens] real a_cens;
+  array[N_cens] real b_cens;
+  array[N_cens] real alpha_cens;
+  array[N_cens] real beta_cens;
+  array[N_score] real a_score; // All _score params are for sentences of scoring passages
+  array[N_score] real b_score;
+  array[N_score] real alpha_score;
+  array[N_score] real beta_score;
   real<lower=0> gamma1;
   real<lower=0> gamma2;
   real<lower=0> sigma;
@@ -550,15 +550,15 @@ data {
 parameters {
   real Z1;
   real Z2;
-  real V1[K];
-  real V2[K];
+  array[K] real V1;
+  array[K] real V2;
 }
 
 transformed parameters {
   real theta1;
   real theta2;
-  real U1[K];
-  real U2[K];
+  array[K] real U1;
+  array[K] real U2;
   
   theta1 = Z1;
   theta2 = rho*Z1 + sqrt(1-rho^2)*Z2;
@@ -603,16 +603,16 @@ model {
 // Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
 
 generated quantities{
-  real tim_ex[N_score]; //Expeced time matrix
-  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  array[N_score] real tim_ex; //Expeced time matrix
+  array[N_score] real<lower=0> cnt_ex; //Expected count matrix
   real <lower=0> exp_cnt; //Model-based obs.counts
   real <lower=0> exp_tim; //Model-based secs
   real <lower=0> wcpm; //Model-based WCPM
   
-  real V1_score[K_score]; 
-  real V2_score[K_score]; 
-  real U1_score[K_score];
-  real U2_score[K_score];
+  array[K_score] real V1_score; 
+  array[K_score] real V2_score; 
+  array[K_score] real U1_score;
+  array[K_score] real U2_score;
   
   for (k in 1:K_score){
         V1_score[k] = normal_rng(0, 1);
@@ -644,14 +644,14 @@ data {
   int<lower=0> K_score;           // Number of passages for scoring
   int<lower=0> Passage_obs;       // Passage index of observed value
   int<lower=0> Passage_cens; // Passage indices of censored values
-  int<lower=0> Passage_score[N_score]; //Passage indicators for scoring
+  array[N_score] int<lower=0> Passage_score; //Passage indicators for scoring
   int<lower=0> Count_obs;         // Observed value
   int<lower=0> Count_cens; // Array of censoring points for censored values
   real logT10_obs;               // Observed value
   real logT10_cens;      // Array of censoring points for censored values
   int<lower=0> MaxN_obs;         // Sentence length of observed value
   int<lower=0> MaxN_cens; // Sentence lengths of censored values
-  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
+  array[N_score] int<lower=0> MaxN_score; //Sentence lengths for scoring passages
   real a_obs;
   real a_cens;
   real b_obs;
@@ -660,10 +660,10 @@ data {
   real alpha_cens;
   real beta_obs;
   real beta_cens;
-  real a_score[N_score]; // All _score params are for sentences of scoring passages
-  real b_score[N_score];
-  real alpha_score[N_score];
-  real beta_score[N_score];
+  array[N_score] real a_score; // All _score params are for sentences of scoring passages
+  array[N_score] real b_score;
+  array[N_score] real alpha_score;
+  array[N_score] real beta_score;
   real<lower=0> gamma1;
   real<lower=0> gamma2;
   real<lower=0> sigma;
@@ -673,15 +673,15 @@ data {
 parameters {
   real Z1;
   real Z2;
-  real V1[K];
-  real V2[K];
+  array[K] real V1;
+  array[K] real V2;
 }
 
 transformed parameters {
   real theta1;
   real theta2;
-  real U1[K];
-  real U2[K];
+  array[K] real U1;
+  array[K] real U2;
   
   theta1 = Z1;
   theta2 = rho*Z1 + sqrt(1-rho^2)*Z2;
@@ -736,16 +736,16 @@ model {
 // Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
 
 generated quantities{
-  real tim_ex[N_score]; //Expeced time matrix
-  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  array[N_score] real tim_ex; //Expeced time matrix
+  array[N_score] real<lower=0> cnt_ex; //Expected count matrix
   real <lower=0> exp_cnt; //Model-based obs.counts
   real <lower=0> exp_tim; //Model-based secs
   real <lower=0> wcpm; //Model-based WCPM
   
-  real V1_score[K_score]; 
-  real V2_score[K_score]; 
-  real U1_score[K_score];
-  real U2_score[K_score];
+  array[K_score] real V1_score; 
+  array[K_score] real V2_score; 
+  array[K_score] real U1_score;
+  array[K_score] real U2_score;
   
   for (k in 1:K_score){
         V1_score[k] = normal_rng(0, 1);

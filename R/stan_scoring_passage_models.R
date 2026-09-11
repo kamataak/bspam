@@ -27,25 +27,25 @@ data {
   int<lower=0> N_obs;             // Number of observed values
   int<lower=0> N_cens;            // Number of censored values
   int<lower=0> N_score;           // Number of tasks for scoring
-  int<lower=0> Count_obs[N_obs];        // Array of observed values
-  int<lower=0> Count_cens[N_cens];      // Array of censoring points for censored values
-  real logT10_obs[N_obs];        // Array of observed values
-  real logT10_cens[N_cens];      // Array of censoring points for censored values
-  int<lower=0> MaxN_obs[N_obs]; // Sentence lengths of observed values
-  int<lower=0> MaxN_cens[N_cens]; // Sentence lengths of censored values
-  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
-  real a_obs[N_obs];
-  real a_cens[N_cens];
-  real b_obs[N_obs];
-  real b_cens[N_cens];
-  real alpha_obs[N_obs];
-  real alpha_cens[N_cens];
-  real beta_obs[N_obs];
-  real beta_cens[N_cens];
-  real a_score[N_score]; // All _score params are for sentences of scoring passages
-  real b_score[N_score];
-  real alpha_score[N_score];
-  real beta_score[N_score];
+  array[N_obs] int<lower=0> Count_obs;        // Array of observed values
+  array[N_cens] int<lower=0> Count_cens;      // Array of censoring points for censored values
+  array[N_obs] real logT10_obs;        // Array of observed values
+  array[N_cens] real logT10_cens;      // Array of censoring points for censored values
+  array[N_obs] int<lower=0> MaxN_obs; // Sentence lengths of observed values
+  array[N_cens] int<lower=0> MaxN_cens; // Sentence lengths of censored values
+  array[N_score] int<lower=0> MaxN_score; //Sentence lengths for scoring passages
+  array[N_obs] real a_obs;
+  array[N_cens] real a_cens;
+  array[N_obs] real b_obs;
+  array[N_cens] real b_cens;
+  array[N_obs] real alpha_obs;
+  array[N_cens] real alpha_cens;
+  array[N_obs] real beta_obs;
+  array[N_cens] real beta_cens;
+  array[N_score] real a_score; // All _score params are for sentences of scoring passages
+  array[N_score] real b_score;
+  array[N_score] real alpha_score;
+  array[N_score] real beta_score;
   real<lower=0> sigma;
   real<lower=-1,upper=1> rho;
 }
@@ -102,8 +102,8 @@ for (i in 1:N_cens) {
 // The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
 // Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
 generated quantities{
-  real tim_ex[N_score]; //Expeced time matrix
-  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  array[N_score] real tim_ex; //Expeced time matrix
+  array[N_score] real<lower=0> cnt_ex; //Expected count matrix
   real <lower=0> exp_cnt; //Model-based obs.counts
   real <lower=0> exp_tim; //Model-based secs
   real <lower=0> wcpm; //Model-based WCPM
@@ -129,25 +129,25 @@ testlet_scoring_multi_obs_one_cens <- "
 data {
   int<lower=0> N_obs;             // Number of observed values
   int<lower=0> N_score;           // Number of tasks for scoring
-  int<lower=0> Count_obs[N_obs];        // Array of observed values
+  array[N_obs] int<lower=0> Count_obs;        // Array of observed values
   int<lower=0> Count_cens;      // Censoring point for censored value
-  real logT10_obs[N_obs];        // Array of observed values
+  array[N_obs] real logT10_obs;        // Array of observed values
   real logT10_cens;      // Censoring points for censored value
-  int<lower=0> MaxN_obs[N_obs]; // Sentence lengths of observed values
+  array[N_obs] int<lower=0> MaxN_obs; // Sentence lengths of observed values
   int<lower=0> MaxN_cens; // Sentence length of censored value
-  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
-  real a_obs[N_obs];
+  array[N_score] int<lower=0> MaxN_score; //Sentence lengths for scoring passages
+  array[N_obs] real a_obs;
   real a_cens;
-  real b_obs[N_obs];
+  array[N_obs] real b_obs;
   real b_cens;
-  real alpha_obs[N_obs];
+  array[N_obs] real alpha_obs;
   real alpha_cens;
-  real beta_obs[N_obs];
+  array[N_obs] real beta_obs;
   real beta_cens;
-  real a_score[N_score]; // All _score params are for sentences of scoring passages
-  real b_score[N_score];
-  real alpha_score[N_score];
-  real beta_score[N_score];
+  array[N_score] real a_score; // All _score params are for sentences of scoring passages
+  array[N_score] real b_score;
+  array[N_score] real alpha_score;
+  array[N_score] real beta_score;
   real<lower=0> sigma;
   real<lower=-1,upper=1> rho;
 }
@@ -202,8 +202,8 @@ model {
 // The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
 // Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
 generated quantities{
-  real tim_ex[N_score]; //Expeced time matrix
-  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  array[N_score] real tim_ex; //Expeced time matrix
+  array[N_score] real<lower=0> cnt_ex; //Expected count matrix
   real <lower=0> exp_cnt; //Model-based obs.counts
   real <lower=0> exp_tim; //Model-based secs
   real <lower=0> wcpm; //Model-based WCPM
@@ -231,24 +231,24 @@ data {
   int<lower=0> N_cens;            // Number of censored values
   int<lower=0> N_score;           // Number of tasks for scoring
   int<lower=0> Count_obs;         // Observed value
-  int<lower=0> Count_cens[N_cens]; // Array of censoring points for censored values
+  array[N_cens] int<lower=0> Count_cens; // Array of censoring points for censored values
   real logT10_obs;               // Observed value
-  real logT10_cens[N_cens];      // Array of censoring points for censored values
+  array[N_cens] real logT10_cens;      // Array of censoring points for censored values
   int<lower=0> MaxN_obs;         // Sentence length of observed value
-  int<lower=0> MaxN_cens[N_cens]; // Sentence lengths of censored values
-  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
+  array[N_cens] int<lower=0> MaxN_cens; // Sentence lengths of censored values
+  array[N_score] int<lower=0> MaxN_score; //Sentence lengths for scoring passages
   real a_obs;
-  real a_cens[N_cens];
+  array[N_cens] real a_cens;
   real b_obs;
-  real b_cens[N_cens];
+  array[N_cens] real b_cens;
   real alpha_obs;
-  real alpha_cens[N_cens];
+  array[N_cens] real alpha_cens;
   real beta_obs;
-  real beta_cens[N_cens];
-  real a_score[N_score]; // All _score params are for sentences of scoring passages
-  real b_score[N_score];
-  real alpha_score[N_score];
-  real beta_score[N_score];
+  array[N_cens] real beta_cens;
+  array[N_score] real a_score; // All _score params are for sentences of scoring passages
+  array[N_score] real b_score;
+  array[N_score] real alpha_score;
+  array[N_score] real beta_score;
   real<lower=0> sigma;
   real<lower=-1,upper=1> rho;
 }
@@ -304,8 +304,8 @@ model {
 // The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
 // Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
 generated quantities{
-  real tim_ex[N_score]; //Expeced time matrix
-  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  array[N_score] real tim_ex; //Expeced time matrix
+  array[N_score] real<lower=0> cnt_ex; //Expected count matrix
   real <lower=0> exp_cnt; //Model-based obs.counts
   real <lower=0> exp_tim; //Model-based secs
   real <lower=0> wcpm; //Model-based WCPM
@@ -331,18 +331,18 @@ testlet_scoring_multi_obs_no_cens <- "
 data {
   int<lower=0> N_obs;             // Number of observed values
   int<lower=0> N_score;           // Number of tasks for scoring
-  int<lower=0> Count_obs[N_obs];  // Array of observed values
-  real logT10_obs[N_obs];        // Array of observed values
-  int<lower=0> MaxN_obs[N_obs]; // Sentence lengths of observed values
-  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
-  real a_obs[N_obs];
-  real b_obs[N_obs];
-  real alpha_obs[N_obs];
-  real beta_obs[N_obs];
-  real a_score[N_score]; // All _score params are for sentences of scoring passages
-  real b_score[N_score];
-  real alpha_score[N_score];
-  real beta_score[N_score];
+  array[N_obs] int<lower=0> Count_obs;  // Array of observed values
+  array[N_obs] real logT10_obs;        // Array of observed values
+  array[N_obs] int<lower=0> MaxN_obs; // Sentence lengths of observed values
+  array[N_score] int<lower=0> MaxN_score; //Sentence lengths for scoring passages
+  array[N_obs] real a_obs;
+  array[N_obs] real b_obs;
+  array[N_obs] real alpha_obs;
+  array[N_obs] real beta_obs;
+  array[N_score] real a_score; // All _score params are for sentences of scoring passages
+  array[N_score] real b_score;
+  array[N_score] real alpha_score;
+  array[N_score] real beta_score;
   real<lower=0> sigma;
   real<lower=-1,upper=1> rho;
 }
@@ -379,8 +379,8 @@ model {
 // The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
 // Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
 generated quantities{
-  real tim_ex[N_score]; //Expeced time matrix
-  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  array[N_score] real tim_ex; //Expeced time matrix
+  array[N_score] real<lower=0> cnt_ex; //Expected count matrix
   real <lower=0> exp_cnt; //Model-based obs.counts
   real <lower=0> exp_tim; //Model-based secs
   real <lower=0> wcpm; //Model-based WCPM
@@ -406,18 +406,18 @@ testlet_scoring_no_obs_multi_cens <- "
 data {
   int<lower=0> N_cens;            // Number of censored values
   int<lower=0> N_score;           // Number of tasks for scoring
-  int<lower=0> Count_cens[N_cens];      // Array of censoring points for censored values
-  real logT10_cens[N_cens];      // Array of censoring points for censored values
-  int<lower=0> MaxN_cens[N_cens]; // Sentence lengths of censored values
-  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
-  real a_cens[N_cens];
-  real b_cens[N_cens];
-  real alpha_cens[N_cens];
-  real beta_cens[N_cens];
-  real a_score[N_score]; // All _score params are for sentences of scoring passages
-  real b_score[N_score];
-  real alpha_score[N_score];
-  real beta_score[N_score];
+  array[N_cens] int<lower=0> Count_cens;      // Array of censoring points for censored values
+  array[N_cens] real logT10_cens;      // Array of censoring points for censored values
+  array[N_cens] int<lower=0> MaxN_cens; // Sentence lengths of censored values
+  array[N_score] int<lower=0> MaxN_score; //Sentence lengths for scoring passages
+  array[N_cens] real a_cens;
+  array[N_cens] real b_cens;
+  array[N_cens] real alpha_cens;
+  array[N_cens] real beta_cens;
+  array[N_score] real a_score; // All _score params are for sentences of scoring passages
+  array[N_score] real b_score;
+  array[N_score] real alpha_score;
+  array[N_score] real beta_score;
   real<lower=0> sigma;
   real<lower=-1,upper=1> rho;
 }
@@ -463,8 +463,8 @@ model {
 // The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
 // Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
 generated quantities{
-  real tim_ex[N_score]; //Expeced time matrix
-  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  array[N_score] real tim_ex; //Expeced time matrix
+  array[N_score] real<lower=0> cnt_ex; //Expected count matrix
   real <lower=0> exp_cnt; //Model-based obs.counts
   real <lower=0> exp_tim; //Model-based secs
   real <lower=0> wcpm; //Model-based WCPM
@@ -498,7 +498,7 @@ data {
   real logT10_cens;      // Array of censoring points for censored values
   int<lower=0> MaxN_obs; // Sentence lengths of observed values
   int<lower=0> MaxN_cens; // Sentence lengths of censored values
-  int<lower=0> MaxN_score[N_score]; //Sentence lengths for scoring passages
+  array[N_score] int<lower=0> MaxN_score; //Sentence lengths for scoring passages
   real a_obs;
   real a_cens;
   real b_obs;
@@ -507,10 +507,10 @@ data {
   real alpha_cens;
   real beta_obs;
   real beta_cens;
-  real a_score[N_score]; // All _score params are for sentences of scoring passages
-  real b_score[N_score];
-  real alpha_score[N_score];
-  real beta_score[N_score];
+  array[N_score] real a_score; // All _score params are for sentences of scoring passages
+  array[N_score] real b_score;
+  array[N_score] real alpha_score;
+  array[N_score] real beta_score;
   real<lower=0> sigma;
   real<lower=-1,upper=1> rho;
 }
@@ -561,8 +561,8 @@ model {
 // The part below will estimate model-based wrc, seconds, and WCPM from internal or external passages!
 // Note the selection of internal vs external is handled with prior functions that would call this stan syntax!
 generated quantities{
-  real tim_ex[N_score]; //Expeced time matrix
-  real <lower=0> cnt_ex[N_score]; //Expected count matrix
+  array[N_score] real tim_ex; //Expeced time matrix
+  array[N_score] real<lower=0> cnt_ex; //Expected count matrix
   real <lower=0> exp_cnt; //Model-based obs.counts
   real <lower=0> exp_tim; //Model-based secs
   real <lower=0> wcpm; //Model-based WCPM
