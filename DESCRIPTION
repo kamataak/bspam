@@ -1,7 +1,7 @@
 Package: bspam
 Type: Package
 Encoding: UTF-8
-Title: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R
+Title: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data
 Version: 1.2.6
 Authors@R: c(
              person(given = "Kuo", family = "Wang", 
@@ -33,11 +33,13 @@ Authors@R: c(
                     comment = c(ORCID = "0000-0002-3248-7859"))
             )
 Maintainer: Kuo Wang <wangkuo@nifty.com>
-Description: This is an R package that contains functions to fit the speed-accuracy 
-    psychometric model for count outcome data (Potgieter, Kamata & Kara, 2017; Kara, 
-    Kamata, Potgieter & Nese, 2020), where the accuracy is modeled by a binomial count 
-    latent variable model. For example, the use of this modeling technique allows 
-    model-based calibration and scoring for oral reading fluency (ORF) assessment data. 
+Description: Provides functions to fit speed-accuracy psychometric models
+    for binomial count outcome data. The models jointly represent accuracy
+    and response time and can be used for model-based calibration and scoring
+    of oral reading fluency (ORF) assessment data. The methods are based on
+    Potgieter, Kamata and Kara (2017) <https://arxiv.org/abs/1705.10446>
+    and Kara, Kamata, Potgieter and Nese (2020)
+    <doi:10.1177/0013164419900208>. 
 License: GPL (>= 3)
 Depends: R (>= 3.5.0)
 Imports: 
