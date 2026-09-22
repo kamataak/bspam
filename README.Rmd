@@ -3,7 +3,7 @@ title: "bspam"
 output: github_document
 ---
 
-# Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R
+# Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data 
 
 `bspam` is an R package that contains functions to fit the speed-accuracy psychometric model for repeatedly measured count outcome data (Potgieter, Kamata & Kara, 2017; Kara, Kamata, Potgieter & Nese, 2020), where the accuracy and speed are modeled by a binomial count and a log-normal latent variable models, respectively. 
 
@@ -281,7 +281,7 @@ Please see the [package website](https://kamataak.github.io/bspam/) for more det
 
 ## Citation for bspam R package
 
-Wang K, Kamata A, Potgieter C, Nese J, Kara Y, Somsong S, Qiao X (2023). bspam: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R. R package version 1.2.5, [https://github.com/kamataak/bspam](https://github.com/kamataak/bspam)
+Wang K, Kamata A, Potgieter C, Nese J, Kara Y, Somsong S, Qiao X (2023). bspam: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R. R package version 1.2.6, [https://github.com/kamataak/bspam](https://github.com/kamataak/bspam)
 
 ## Citations of References
 

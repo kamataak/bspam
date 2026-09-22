@@ -1,7 +1,7 @@
 
 # bspam
 
-# Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R
+# Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data 
 
 `bspam` is an R package that contains functions to fit the
 speed-accuracy psychometric model for repeatedly measured count outcome
@@ -554,7 +554,7 @@ A BibTeX entry for LaTeX users is
     title = {bspam: Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data with R},
     author = {Kuo Wang and Akihito Kamata and Cornelis J. Potgieter and Joseph F. T. Nese and Yusuf Kara and Sarunya Somsong and Xin Qiao},
     year = {2023},
-    note = {R package version 1.2.5},
+    note = {R package version 1.2.6},
     url = {https://github.com/kamataak/bspam},
   }
   
