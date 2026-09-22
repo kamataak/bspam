@@ -4,7 +4,7 @@
 \alias{plot.task}
 \title{Plot calibrated task parameters}
 \usage{
-\method{plot}{task}(x, task = NULL, parameter, sort = F, ...)
+\method{plot}{task}(x, task = NULL, parameter, sort = FALSE, ...)
 }
 \arguments{
 \item{x}{A fitted calibration object of class \code{"fit.model"} or

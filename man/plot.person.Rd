@@ -4,7 +4,7 @@
 \alias{plot.person}
 \title{Plot estimated person scores}
 \usage{
-\method{plot}{person}(x, person = NULL, parameter, show.se = T, sort = F, ...)
+\method{plot}{person}(x, person = NULL, parameter, show.se = TRUE, sort = FALSE, ...)
 }
 \arguments{
 \item{x}{A scoring object of class \code{"scoring"}.}

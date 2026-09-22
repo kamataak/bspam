@@ -4,7 +4,7 @@
 \alias{plot.wcpm}
 \title{Plot observed versus model-based WCPM}
 \usage{
-\method{plot}{wcpm}(x, person = NULL, show.se = T, show.abline = T, ...)
+\method{plot}{wcpm}(x, person = NULL, show.se = TRUE, show.abline = TRUE, ...)
 }
 \arguments{
 \item{x}{A scoring object of class \code{"scoring"} containing
