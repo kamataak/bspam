@@ -29,7 +29,7 @@ This function is intended to be called directly as
 through \code{plot()}.
 }
 \examples{
-\dontrun{
+\donttest{
 plot.information(fit)
 }
 

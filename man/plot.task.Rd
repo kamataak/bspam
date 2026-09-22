@@ -40,7 +40,7 @@ For objects of class \code{"fit.model.testlet"}, each row of
 filters by \code{task.id}.
 }
 \examples{
-\dontrun{
+\donttest{
 plot.task(fit, parameter = "a")
 plot.task(fit, parameter = c("a", "b"))
 }

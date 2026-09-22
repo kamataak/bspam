@@ -39,7 +39,7 @@ This function is intended to be called directly as \code{plot.person(...)}.
 It is not designed for automatic dispatch through \code{plot()}.
 }
 \examples{
-\dontrun{
+\donttest{
 plot.person(scores, parameter = "theta")
 plot.person(scores, parameter = c("theta", "tau"))
 }
