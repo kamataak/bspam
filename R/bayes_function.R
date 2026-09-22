@@ -9,7 +9,7 @@
 # @param max.counts The column name in the data that represents the number of words in a task.
 # @param obs.counts The column name in the data that represents the words read correctly for each case.
 # @param time The column name in the data that represents the time, in seconds, for each case.
-# @param parallel parallel=T, #logical, run in parallel? "T" or "F"
+# @param parallel parallel=TRUE, #logical, run in parallel? "TRUE" or "FALSE"
 # @param n.chains int., number of the chains
 # @param thin int, thinning interval, a.k.a, period of saving samples
 # @param iter int., number of the iterations after the burn-in period
@@ -24,7 +24,7 @@ bayes <- function(
     max.counts = "",
     obs.counts = "",
     time = "",
-    parallel=TRUE, #logical, run in parallel? "T" or "F"
+    parallel=TRUE, #logical, run in parallel? "TRUE" or "FALSE"
     n.chains=NA, # pos. int., number of the chains
     thin=1, #pos. int, thinning interval, a.k.a, period of saving samples
     iter=NA,  # pos. int., number of the iterations after the burn-in period
@@ -108,10 +108,10 @@ bayes <- function(
 
   if(time.mis==TRUE | count.mis==TRUE){
     bayes.soft="jags"
-    cat("\n \n ==== Estimation will be done with JAGS ==== \n \n")
+    message("Estimation will be performed with JAGS.")
   }else{
     bayes.soft="stan"
-    cat("\n \n ==== Estimation will be done with STAN ==== \n \n")
+    message("Estimation will be performed with Stan.")
   }
 
 

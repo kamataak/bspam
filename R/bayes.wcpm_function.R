@@ -153,11 +153,11 @@ bayes.wcpm <- function(
   count.mis <- TRUE %in% is.na(count.data)
   if (time.mis == TRUE | count.mis == TRUE) {
     bayes.soft = "jags"
-    cat("==== Running the analyses with JAGS ==== \n \n")
+    message("Bayesian scoring will be performed with JAGS.")
   }
   else {
     bayes.soft = "stan"
-    cat("==== Running the analysis with STAN ==== \n \n")
+    message("Bayesian scoring will be performed with Stan.")
   }
   if (bayes.soft == "jags") {
     

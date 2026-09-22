@@ -460,8 +460,7 @@ numerical.cov <- function(Y,logT10,N,I,parms,h.val,M) {
   if (sum(abs(Im(I.eigen)))==0) {pd.check <- min(eigen(I.incomp)$values)}
   if (pd.check<0) {
     I.incomp <- Matrix::nearPD(I.incomp,keepDiag = TRUE)$mat
-    print("Estimated Information Matrix not Positive Definite")
-    print("Finding nearest Positive Definite Matrix")
+    message("Estimated information matrix is not positive definite; using the nearest positive definite matrix.")
   }
   EigenD <- eigen(I.incomp)
   I.eigen <- EigenD$values
@@ -484,7 +483,6 @@ boot.cov <- function(Y,logT10,N,I,k.in,reps.in,B,alpha.inv) {
   boot.parms <- matrix(0,nrow=B,ncol=(4*I+2))
   
   for (b in 1:B) {
-    Boot.start <- Sys.time()
     index <- sample(1:n,n,replace=TRUE)
     Y.boot <- Y[index,]
     logT10.boot <- logT10[index,]
@@ -493,12 +491,6 @@ boot.cov <- function(Y,logT10,N,I,k.in,reps.in,B,alpha.inv) {
     
     boot.parms[b,] <- c(MCEMboot$a,MCEMboot$b,MCEMboot$alpha,
                         MCEMboot$beta,MCEMboot$vartau,MCEMboot$rho)
-    if (b%%5==0) {
-      print(b)
-      Boot.end <- Sys.time()
-      Boot.time <- Boot.end - Boot.start
-      print(Boot.time)
-    }
   }
   if (alpha.inv==TRUE) {
     boot.parms[,(2*I+1):(3*I)] <- 1/boot.parms[,(2*I+1):(3*I)]
@@ -831,8 +823,7 @@ run.scoring <- function(object, person.data, task.data, cases, perfect.cases, ze
       {
         map = c(th_init, tau_init)
         message<-paste('MAP does not converge in replication',rep)
-        model.file.name<-paste("mapnonconvergence",rep,".txt")
-        write(x=message,file=model.file.name,append = FALSE)
+        warning(message, call. = FALSE)
       }
       # standard error
       map_se = sqrt(diag(solve( -matrix(c(lam11, lam12, lam12, lam22),nrow=2,ncol=2), diag(2) )))
