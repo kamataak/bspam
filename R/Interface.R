@@ -226,7 +226,7 @@ fit.model <- function(data=NA, person.id="",task.id="",sub.task.id="",max.counts
                        max.counts,
                        obs.counts,
                        time,
-                       parallel=T, #logical, run in parallel? "T" or "F"
+                       parallel=TRUE, #logical, run in parallel? "TRUE" or "FALSE"
                        n.chains=NA, # pos. int., number of the chains
                        thin=1, #pos. int, thinning interval, a.k.a, period of saving samples
                        iter=NA,  # pos. int., number of the iterations after the burn-in period
@@ -446,7 +446,7 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
       } else { # raw data set
         id_col <- which(colnames(data)==person.id)
         if (occasion == ""){ 
-          id_sel <- unlist(data[,id_col], use.names = F) %in% cases$cases
+          id_sel <- unlist(data[,id_col], use.names = FALSE) %in% cases$cases
           data <- data[id_sel,]
         }else {
           occ_col <- which(colnames(data)==occasion)
@@ -835,7 +835,7 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
             cases = cases,
             external=external,
             type=type,
-            parallel=T, #logical, run in parallel? "T" or "F"
+            parallel=TRUE, #logical, run in parallel? "TRUE" or "FALSE"
             n.chains=NA, # pos. int., number of the chains
             iter=NA,  # pos. int., number of the iterations after the burn-in period
             burn=NA,  # pos. int., number of the burn-in iterations
@@ -855,7 +855,7 @@ scoring <- function(calib.data=NA, data=NA, person.id="", task.id="", sub.task.i
             cases = cases,
             external=external,
             type=type,
-            parallel=T, #logical, run in parallel? "T" or "F"
+            parallel=TRUE, #logical, run in parallel? "TRUE" or "FALSE"
             n.chains=NA, # pos. int., number of the chains
             iter=NA,  # pos. int., number of the iterations after the burn-in period
             burn=NA,  # pos. int., number of the burn-in iterations

@@ -13,7 +13,7 @@ agg.word <- function(data,
     
     col_sel <- c(person.id, passage.id, word.pos.sen, sen.pos.pas, start.time, end.time, score)
     
-    if(all(col_sel %in% colnames(data))!=T){ 
+    if(all(col_sel %in% colnames(data))!=TRUE){ 
       stop("Error: At least one of your column names are not correct!")
     }
     
@@ -34,16 +34,16 @@ agg.word <- function(data,
     
     dat_agg <- dat_sel %>%
       group_by(person.id, passage.id, sen.pos.pas) %>%
-      summarise(wrc=sum(score, na.rm = T), 
-                secs=(max(end.time, na.rm = T)-min(start.time[start.time > 0], na.rm = T))/100, 
-                nwords.sen=max(word.pos.sen, na.rm = T), 
+      summarise(wrc=sum(score, na.rm = TRUE), 
+                secs=(max(end.time, na.rm = TRUE)-min(start.time[start.time > 0], na.rm = TRUE))/100, 
+                nwords.sen=max(word.pos.sen, na.rm = TRUE), 
                 wcpm.sen=wrc/secs*60)
     
   }else if (agg.level=="passage"){
     
     col_sel <- c(person.id, passage.id, word.pos.pas, start.time, end.time, score)
     
-    if(all(col_sel %in% colnames(data))!=T){ 
+    if(all(col_sel %in% colnames(data))!=TRUE){ 
       stop("Error: At least one of your column names are not correct!")
     }
     
@@ -64,9 +64,9 @@ agg.word <- function(data,
     
     dat_agg <- dat_sel %>%
       group_by(person.id, passage.id) %>%
-      summarise(wrc=sum(score, na.rm = T), 
-                secs=(max(end.time, na.rm = T)-min(start.time[start.time > 0], na.rm = T))/100, 
-                nwords.pas=max(word.pos.pas, na.rm = T), 
+      summarise(wrc=sum(score, na.rm = TRUE), 
+                secs=(max(end.time, na.rm = TRUE)-min(start.time[start.time > 0], na.rm = TRUE))/100, 
+                nwords.pas=max(word.pos.pas, na.rm = TRUE), 
                 wcpm.pas=wrc/secs*60)
   }else{
     stop("\nIncorrect agg.level specification! It should be either `sentence` or `passage`")

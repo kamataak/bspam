@@ -515,7 +515,7 @@ agg.word <- function(data,
     
     col_sel <- c(person.id, passage.id, word.pos.sen, sen.pos.pas, start.time, end.time, score)
     
-    if(all(col_sel %in% colnames(data))!=T){ 
+    if(all(col_sel %in% colnames(data))!=TRUE){ 
       stop("Error: At least one of your column names are not correct!")
     }
     
@@ -536,16 +536,16 @@ agg.word <- function(data,
     
     dat_agg <- dat_sel %>%
       group_by(person.id, passage.id, sen.pos.pas) %>%
-      summarise(wrc=sum(score, na.rm = T), 
-                secs=(max(end.time, na.rm = T)-min(start.time[start.time > 0], na.rm = T))/100, 
-                nwords.sen=max(word.pos.sen, na.rm = T), 
+      summarise(wrc=sum(score, na.rm = TRUE), 
+                secs=(max(end.time, na.rm = TRUE)-min(start.time[start.time > 0], na.rm = TRUE))/100, 
+                nwords.sen=max(word.pos.sen, na.rm = TRUE), 
                 wcpm.sen=wrc/secs*60)
     
   }else if (agg.level=="passage"){
     
     col_sel <- c(person.id, passage.id, word.pos.pas, start.time, end.time, score)
     
-    if(all(col_sel %in% colnames(data))!=T){ 
+    if(all(col_sel %in% colnames(data))!=TRUE){ 
       stop("Error: At least one of your column names are not correct!")
     }
     
@@ -566,9 +566,9 @@ agg.word <- function(data,
     
     dat_agg <- dat_sel %>%
       group_by(person.id, passage.id) %>%
-      summarise(wrc=sum(score, na.rm = T), 
-                secs=(max(end.time, na.rm = T)-min(start.time[start.time > 0], na.rm = T))/100, 
-                nwords.pas=max(word.pos.pas, na.rm = T), 
+      summarise(wrc=sum(score, na.rm = TRUE), 
+                secs=(max(end.time, na.rm = TRUE)-min(start.time[start.time > 0], na.rm = TRUE))/100, 
+                nwords.pas=max(word.pos.pas, na.rm = TRUE), 
                 wcpm.pas=wrc/secs*60)
   }else{
     stop("\nIncorrect agg.level specification! It should be either `sentence` or `passage`")
@@ -642,20 +642,20 @@ desc.data <- function(data=NULL,
                       time=NULL, 
                       sub.task.id=NULL, 
                       desc.level="sample", 
-                      verbose=T,
+                      verbose=TRUE,
                       type="general",
-                      testlet=F){
+                      testlet=FALSE){
   
-  if(testlet==F & !is.null(sub.task.id)){
-    stop("Error: You chose testlet=F but provided a sub.task.id! If the data contain testlets, choose testlet=T.")
+  if(testlet==FALSE & !is.null(sub.task.id)){
+    stop("Error: You chose testlet=FALSE but provided a sub.task.id! If the data contain testlets, choose testlet=TRUE.")
   }
   
-  if(testlet==T & is.null(sub.task.id)){
-    stop("Error: You chose testlet=T but did not provide a sub.task.id!")
+  if(testlet==TRUE & is.null(sub.task.id)){
+    stop("Error: You chose testlet=TRUE but did not provide a sub.task.id!")
   }
   
   
-  if(testlet==F){
+  if(testlet==FALSE){
     vars <- c(person.id, task.id, max.counts, obs.counts, time)
     data <- data %>% select(all_of(vars))
     colnames(data) <- c("person.id", "task.id", "max.counts", "obs.counts", "time")
@@ -664,25 +664,25 @@ desc.data <- function(data=NULL,
       data.person <- data %>%
         group_by(person.id) %>%
         summarise(n.task=n_distinct(task.id), 
-                  tot.max.counts=sum(max.counts, na.rm = T), 
-                  tot.obs.counts=sum(obs.counts, na.rm = T), 
-                  tot.time=sum(time, na.rm = T))
+                  tot.max.counts=sum(max.counts, na.rm = TRUE), 
+                  tot.obs.counts=sum(obs.counts, na.rm = TRUE), 
+                  tot.time=sum(time, na.rm = TRUE))
     }else if(type=="orf"){
       data.person <- data %>%
         mutate(pas.wcpm=obs.counts/time*60) %>%
         group_by(person.id) %>%
         summarise(n.pas=n_distinct(task.id), 
-                  tot.max.counts=sum(max.counts, na.rm = T), 
-                  tot.obs.counts=sum(obs.counts, na.rm = T), 
-                  tot.time=sum(time, na.rm = T), 
-                  avg.pas.wcpm=mean(pas.wcpm, na.omit=T)) %>%
+                  tot.max.counts=sum(max.counts, na.rm = TRUE), 
+                  tot.obs.counts=sum(obs.counts, na.rm = TRUE), 
+                  tot.time=sum(time, na.rm = TRUE), 
+                  avg.pas.wcpm=mean(pas.wcpm, na.omit=TRUE)) %>%
         ungroup() %>%
         mutate(gen.wcpm=tot.obs.counts/tot.time*60)
     }else{
       stop("Error: type can be either `general` or `orf`!")
     }
     
-  }else if (testlet==T){
+  }else if (testlet==TRUE){
     vars <- c(person.id, task.id, sub.task.id, max.counts, obs.counts, time)
     data <- data %>% select(all_of(vars))
     colnames(data) <- c("person.id", "task.id", "sub.task.id", "max.counts", "obs.counts", "time")
@@ -693,25 +693,25 @@ desc.data <- function(data=NULL,
           group_by(person.id) %>%
           summarise(n.task=n_distinct(task.id),
                     n.subtask=n_distinct(unq.subtask), 
-                    tot.max.counts=sum(max.counts, na.rm = T), 
-                    tot.obs.counts=sum(obs.counts, na.rm = T), 
-                    tot.time=sum(time, na.rm = T))
+                    tot.max.counts=sum(max.counts, na.rm = TRUE), 
+                    tot.obs.counts=sum(obs.counts, na.rm = TRUE), 
+                    tot.time=sum(time, na.rm = TRUE))
     }else if (type=="orf"){
       data.person <- data %>%
         group_by(person.id, task.id) %>%
-        summarise(pas.max.counts=sum(max.counts, na.rm = T), 
-                  pas.obs.counts=sum(obs.counts, na.rm = T), 
-                  pas.time=sum(time, na.rm = T), 
+        summarise(pas.max.counts=sum(max.counts, na.rm = TRUE), 
+                  pas.obs.counts=sum(obs.counts, na.rm = TRUE), 
+                  pas.time=sum(time, na.rm = TRUE), 
                   pas.sent=n_distinct(sub.task.id)) %>%
         ungroup() %>%
         mutate(pas.wcpm=pas.obs.counts/pas.time*60) %>%
         group_by(person.id) %>%
         summarise(n.pas=n_distinct(task.id),
-                  n.sent=sum(pas.sent, na.rm=T), 
-                  tot.max.counts=sum(pas.max.counts, na.rm = T), 
-                  tot.obs.counts=sum(pas.obs.counts, na.rm = T), 
-                  tot.time=sum(pas.time, na.rm = T), 
-                  avg.pas.wcpm=mean(pas.wcpm, na.rm=T)) %>%
+                  n.sent=sum(pas.sent, na.rm=TRUE), 
+                  tot.max.counts=sum(pas.max.counts, na.rm = TRUE), 
+                  tot.obs.counts=sum(pas.obs.counts, na.rm = TRUE), 
+                  tot.time=sum(pas.time, na.rm = TRUE), 
+                  avg.pas.wcpm=mean(pas.wcpm, na.rm=TRUE)) %>%
         ungroup() %>%
         mutate(gen.wcpm=tot.obs.counts/tot.time*60)
     }else{
@@ -725,9 +725,9 @@ desc.data <- function(data=NULL,
     samp.desc <- data.person %>%
       select(-person.id) %>%
       psych::describe()
-    if(verbose==T){
+    if(verbose==TRUE){
       return(samp.desc)
-    } else if(verbose==F){
+    } else if(verbose==FALSE){
       samp.desc.short <- samp.desc %>%
         select(vars, n, mean, sd, min, max)
       return(samp.desc.short)

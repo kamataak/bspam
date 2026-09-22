@@ -24,7 +24,7 @@ bayes <- function(
     max.counts = "",
     obs.counts = "",
     time = "",
-    parallel=T, #logical, run in parallel? "T" or "F"
+    parallel=TRUE, #logical, run in parallel? "T" or "F"
     n.chains=NA, # pos. int., number of the chains
     thin=1, #pos. int, thinning interval, a.k.a, period of saving samples
     iter=NA,  # pos. int., number of the iterations after the burn-in period
@@ -103,10 +103,10 @@ bayes <- function(
 
   #Now, check if the data have any missing values.
   #If so, we will use JAGS. If not, we will use STAN.
-  time.mis <- T %in% is.na(time.data)
-  count.mis <- T %in% is.na(count.data)
+  time.mis <- TRUE %in% is.na(time.data)
+  count.mis <- TRUE %in% is.na(count.data)
 
-  if(time.mis==T | count.mis==T){
+  if(time.mis==TRUE | count.mis==TRUE){
     bayes.soft="jags"
     cat("\n \n ==== Estimation will be done with JAGS ==== \n \n")
   }else{
@@ -119,7 +119,7 @@ bayes <- function(
     
     .check_runjags("Bayesian calibration with JAGS")
     
-    runjags::runjags.options(force.summary=T)
+    runjags::runjags.options(force.summary=TRUE)
 
     # -------------------------------------------------------- JAGS syntax
     jags.syntax <- "

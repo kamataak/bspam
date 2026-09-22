@@ -13,9 +13,9 @@ desc.data(
   time = NULL,
   sub.task.id = NULL,
   desc.level = "sample",
-  verbose = T,
+  verbose = TRUE,
   type = "general",
-  testlet = F
+  testlet = FALSE
 )
 }
 \arguments{

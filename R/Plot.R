@@ -52,20 +52,20 @@
 #' 
 #' @import plotly
 #' @export plot.task
-plot.task <- function(x, task = NULL, parameter, sort = F, ...) {
+plot.task <- function(x, task = NULL, parameter, sort = FALSE, ...) {
   object <- x
   
   if (!inherits(object, c("fit.model", "fit.model.testlet")))
     stop("Error: It seems like your object is not obtained through bspam. Make sure you use the calibration output from the `fit.model()` function!")
   
-  if (F %in% (parameter %in% c("a", "b", "alpha", "beta")))
+  if (FALSE %in% (parameter %in% c("a", "b", "alpha", "beta")))
     stop("Error: Please check your parameter name(s)! Make sure they are entered correctly.")
   
   # Selection of tasks if any
   if (is.null(task)) {
     task.sel <- object$task.param
   } else {
-    if (F %in% (task %in% object$task.param$task.id))
+    if (FALSE %in% (task %in% object$task.param$task.id))
       stop("Error: Please check your task IDs! Make sure they are entered correctly.")
     task.sel <- object$task.param %>%
       filter(task.id %in% task)
@@ -217,13 +217,13 @@ plot.task <- function(x, task = NULL, parameter, sort = F, ...) {
 #' 
 #' @import plotly
 #' @export plot.person
-plot.person <- function(x, person=NULL, parameter, show.se=T, sort=F, ...) {
+plot.person <- function(x, person=NULL, parameter, show.se=TRUE, sort=FALSE, ...) {
   object <- x
   
   if (!inherits(object, "scoring"))
     stop("Error: It seems like your object is not obtained through bspam. Make sure you use the scoring output from the `scoring()` function!")
   
-  if(F %in% (parameter %in% c("theta", "tau", "wcpm")))
+  if(FALSE %in% (parameter %in% c("theta", "tau", "wcpm")))
     stop("Error: Please check your parameter name(s)! Make sure they are entered correctly.")
   
   object <- unclass(object)
@@ -249,13 +249,13 @@ plot.person <- function(x, person=NULL, parameter, show.se=T, sort=F, ...) {
       mutate(person.id=as.factor(person.id)) %>%
       rename(par_grph=paste(parameter))
     
-    if(sort==T){
+    if(sort==TRUE){
       person.sel <- person.sel %>%
         arrange(par_grph) %>%
         mutate(person.id=factor(person.id, levels=.$person.id))
     }
     
-    if(show.se==T){
+    if(show.se==TRUE){
       person.sel <- person.sel %>%
         rename(se_grph=paste("se.", parameter, sep = "")) %>%
         mutate(se_grph=1.96*se_grph) %>%
@@ -270,27 +270,27 @@ plot.person <- function(x, person=NULL, parameter, show.se=T, sort=F, ...) {
                 type ="scatter",
                 mode = "markers",
                 text=~paste("person ID: ", person.id, '<br>Estimate:', paste(round(par_grph,3)), '<br>CI Low:', paste(round(ci_low,3)), '<br>CI High:', paste(round(ci_high,3))),
-                showlegend=F, 
+                showlegend=FALSE, 
                 hoverinfo='text',
                 error_x=error_x,
                 textposition = "none",
                 height=max(n_distinct(person.sel$person.id)*13, 400),
                 color = I("#CC0035")) %>%
-        layout(xaxis=list(title = paste(parameter), zeroline = F, showline = F, showticklabels = T, showgrid = T), 
-               yaxis=list(title = "Person ID", zeroline = F, showline = F, showticklabels = T, showgrid = T, dtick = 1, autosize=T, automargin = TRUE, tickmode = "linear")) 
+        layout(xaxis=list(title = paste(parameter), zeroline = FALSE, showline = FALSE, showticklabels = TRUE, showgrid = TRUE), 
+               yaxis=list(title = "Person ID", zeroline = FALSE, showline = FALSE, showticklabels = TRUE, showgrid = TRUE, dtick = 1, autosize=TRUE, automargin = TRUE, tickmode = "linear")) 
     }else{
       plt_obj <- person.sel %>% 
         plot_ly(y=~person.id, 
                 x=~par_grph, 
                 type ="bar",
                 text=~paste("person ID: ", person.id, '<br>Estimate:', paste(round(par_grph,3))), 
-                showlegend=F, 
+                showlegend=FALSE, 
                 hoverinfo='text',
                 textposition = "none",
                 height=max(n_distinct(person.sel$person.id)*13, 400),
                 color = I("#CC0035")) %>%
-        layout(xaxis=list(title = paste(parameter), zeroline = F, showline = F, showticklabels = T, showgrid = T),
-               yaxis=list(title = "Person ID", zeroline = F, showline = F, showticklabels = T, showgrid = T, dtick=1, automargin = TRUE, tickmode = "linear", autosize=T))
+        layout(xaxis=list(title = paste(parameter), zeroline = FALSE, showline = FALSE, showticklabels = TRUE, showgrid = TRUE),
+               yaxis=list(title = "Person ID", zeroline = FALSE, showline = FALSE, showticklabels = TRUE, showgrid = TRUE, dtick=1, automargin = TRUE, tickmode = "linear", autosize=TRUE))
     }
     
   }else if(length(parameter) == 2){
@@ -299,7 +299,7 @@ plot.person <- function(x, person=NULL, parameter, show.se=T, sort=F, ...) {
       mutate(person.id=as.character(person.id)) %>%
       rename(par_grph_x=paste(parameter[1]), par_grph_y=paste(parameter[2]))
     
-    if(show.se==T){
+    if(show.se==TRUE){
       person.sel <- person.sel %>%
         rename(se_grph_x=paste("se.", parameter[1], sep = ""), 
                se_grph_y=paste("se.", parameter[2], sep = "")) %>%
@@ -326,7 +326,7 @@ plot.person <- function(x, person=NULL, parameter, show.se=T, sort=F, ...) {
               error_x=error_x,
               error_y=error_y,
               text=text,
-              showlegend=F,
+              showlegend=FALSE,
               hoverinfo='text',
               textposition = "none",
               color = I("#CC0035")) %>%
@@ -971,7 +971,7 @@ plot.information <- function(x, ...) {
 #' 
 #' @import plotly
 #' @export plot.wcpm
-plot.wcpm <- function(x, person=NULL, show.se=T, show.abline=T, ...) {
+plot.wcpm <- function(x, person=NULL, show.se=TRUE, show.abline=TRUE, ...) {
   object <- x
   
   if (!inherits(object, "scoring"))
@@ -987,7 +987,7 @@ plot.wcpm <- function(x, person=NULL, show.se=T, show.abline=T, ...) {
   if(is.null(person)){
     person.sel <- object
   }else{
-    if(F %in% (person %in% object$person.id))
+    if(FALSE %in% (person %in% object$person.id))
       stop("Error: Please check your person IDs! Make sure they are entered correctly.")
     person.sel <- object %>%
       filter(person.id %in% person)
@@ -1002,7 +1002,7 @@ plot.wcpm <- function(x, person=NULL, show.se=T, show.abline=T, ...) {
     mutate(person.id=as.character(person.id)) %>%
     rename(par_grph_x=paste(parameter[1]), par_grph_y=paste(parameter[2]))
   
-  if(show.se==T){
+  if(show.se==TRUE){
     person.sel <- person.sel %>%
       rename(se_grph_y=paste("se.", parameter[2], sep = "")) %>%
       mutate(se_grph_y=1.96*se_grph_y) %>%
@@ -1027,7 +1027,7 @@ plot.wcpm <- function(x, person=NULL, show.se=T, show.abline=T, ...) {
             mode = "markers",
             error_y=error_y,
             text=text,
-            showlegend=F,
+            showlegend=FALSE,
             hoverinfo='text',
             textposition = "none",
             color = I("#CC0035")) %>%

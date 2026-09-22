@@ -20,7 +20,7 @@ scoring, descriptive summaries, and interactive visualizations.
 Most users will interact with \code{\link{prep}}, \code{\link{fit.model}},
 \code{\link{scoring}}, and the associated summary and plotting methods.
 
-This is an R package that contains functions to fit the speed-accuracy psychometric model for count outcome data (Potgieter, Kamata & Kara, 2017; Kara, Kamata, Potgieter & Nese, 2020), where the accuracy is modeled by a binomial count latent variable model. For example, the use of this modeling technique allows model-based calibration and scoring for oral reading fluency (ORF) assessment data.
+Provides functions to fit speed-accuracy psychometric models for binomial count outcome data. The models jointly represent accuracy and response time and can be used for model-based calibration and scoring of oral reading fluency (ORF) assessment data. The methods are based on Potgieter, Kamata and Kara (2017) \url{https://arxiv.org/abs/1705.10446} and Kara, Kamata, Potgieter and Nese (2020) \doi{10.1177/0013164419900208}.
 }
 \references{
 Potgieter, C. J., Kamata, A., & Kara, Y. (2017).

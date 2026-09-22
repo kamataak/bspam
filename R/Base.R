@@ -84,7 +84,7 @@ run.mcem <- function(Y,logT10,N,I,k.in=5,reps.in=50,ests.in=NA,verbose=FALSE) {
     LP <- 0
     for (k in 1:Ik) {
       # LP <- LP + log(alpha[k]) + lchoose(N[k],Y[k]) + Y[k]*log(pnorm(a[k]*z-b[k])) + (N[k]-Y[k])*log(1-pnorm(a[k]*z-b[k]))
-      LP <- LP + log(alpha[k]) + dbinom(Y[k],N[k],pnorm(a[k]*z-b[k]),log = T)
+      LP <- LP + log(alpha[k]) + dbinom(Y[k],N[k],pnorm(a[k]*z-b[k]),log = TRUE)
     }
     LP <- -LP
     return(LP)
@@ -404,11 +404,11 @@ numerical.cov <- function(Y,logT10,N,I,parms,h.val,M) {
     Z1 <- Z[,1]
     Z2 <- Z[,2]
     
-    a.mat <- matrix(a,nrow=n,ncol=I,byrow=T)
-    b.mat <- matrix(b,nrow=n,ncol=I,byrow=T)
-    alpha.mat <- matrix(alpha,nrow=n,ncol=I,byrow=T)
-    beta.mat <- matrix(beta,nrow=n,ncol=I,byrow=T)
-    N.mat <- matrix(N,nrow=n,ncol=I,byrow=T)
+    a.mat <- matrix(a,nrow=n,ncol=I,byrow=TRUE)
+    b.mat <- matrix(b,nrow=n,ncol=I,byrow=TRUE)
+    alpha.mat <- matrix(alpha,nrow=n,ncol=I,byrow=TRUE)
+    beta.mat <- matrix(beta,nrow=n,ncol=I,byrow=TRUE)
+    N.mat <- matrix(N,nrow=n,ncol=I,byrow=TRUE)
     
     log.f <- matrix(0,n,M)
     
@@ -416,7 +416,7 @@ numerical.cov <- function(Y,logT10,N,I,parms,h.val,M) {
     
     for (m in 1:M) {
       
-      logL1 <- rowSums(dbinom(Y,N.mat,pnorm(a.mat*Z1[m]-b.mat),log=T)*(Ind>0))
+      logL1 <- rowSums(dbinom(Y,N.mat,pnorm(a.mat*Z1[m]-b.mat),log=TRUE)*(Ind>0))
       #logL2B <- rowSums((log(alpha.mat)+dnorm(alpha.mat*(logT10-beta.mat+rho*sqrt(vartau)*Z1[m]+sqrt(vartau*(1-rho^2))*Z2[m]),log=T))*(Ind>0))
       result <- logT10-beta.mat+rho*sqrt(vartau)*Z1[m]+sqrt(vartau*(1-rho^2))*Z2[m]
       
@@ -424,7 +424,7 @@ numerical.cov <- function(Y,logT10,N,I,parms,h.val,M) {
       #      print(sapply(result, class))
       #      print(sapply(sd, class))
       
-      dd <- dnorm(result,sd=sd,log=T)
+      dd <- dnorm(result,sd=sd,log=TRUE)
       
       logL2 <- rowSums(dd*(Ind>0))
       log.f[,m] <- logL1 + logL2
@@ -485,7 +485,7 @@ boot.cov <- function(Y,logT10,N,I,k.in,reps.in,B,alpha.inv) {
   
   for (b in 1:B) {
     Boot.start <- Sys.time()
-    index <- sample(1:n,n,replace=T)
+    index <- sample(1:n,n,replace=TRUE)
     Y.boot <- Y[index,]
     logT10.boot <- logT10[index,]
     MOMboot <- mom(Y.boot,logT10.boot,N,I)
@@ -500,7 +500,7 @@ boot.cov <- function(Y,logT10,N,I,k.in,reps.in,B,alpha.inv) {
       print(Boot.time)
     }
   }
-  if (alpha.inv==T) {
+  if (alpha.inv==TRUE) {
     boot.parms[,(2*I+1):(3*I)] <- 1/boot.parms[,(2*I+1):(3*I)]
   }
   CV.boot <- cov(boot.parms)

@@ -13,7 +13,7 @@
 # @param time The column name in the data that represents the time, in seconds, for each case.
 # @param cases - student id vectors, will directly use passage data if no calib.data provided
 # @param external - if not NULL, will use not student read passages for estimating
-# @param parallel parallel=T, #logical, run in parallel? "T" or "F"
+# @param parallel parallel=TRUE, #logical, run in parallel? "TRUE" or "FALSE"
 # @param type - output type, "general" and "orf", default "general" only output tau & theta. "orf" will output wcpm
 # @param n.chains int., number of the chains
 # @param iter int., number of the iterations after the burn-in period
@@ -35,7 +35,7 @@ bayes.wcpm <- function(
     cases = NULL,
     external=NULL,
     type = NULL,
-    parallel=T, #logical, run in parallel? "T" or "F"
+    parallel=TRUE, #logical, run in parallel? "TRUE" or "FALSE"
     n.chains=NA, # pos. int., number of the chains
     iter=NA,  # pos. int., number of the iterations after the burn-in period
     burn=NA,  # pos. int., number of the burn-in iterations
@@ -149,9 +149,9 @@ bayes.wcpm <- function(
                      .RNG.seed = i)
     inits[[i]] <- gen_init
   }
-  time.mis <- T %in% is.na(time.data)
-  count.mis <- T %in% is.na(count.data)
-  if (time.mis == T | count.mis == T) {
+  time.mis <- TRUE %in% is.na(time.data)
+  count.mis <- TRUE %in% is.na(count.data)
+  if (time.mis == TRUE | count.mis == TRUE) {
     bayes.soft = "jags"
     cat("==== Running the analyses with JAGS ==== \n \n")
   }
@@ -176,7 +176,7 @@ bayes.wcpm <- function(
     n.obs <- length(time.data)
     ind.per.obs <- ind.per[-mis.time.loc]
     ind.pas.obs <- ind.pas[-mis.time.loc]
-    runjags::runjags.options(force.summary = T)
+    runjags::runjags.options(force.summary = TRUE)
     data.list <- list(J = J, K = K, tim = log(time.data), 
                       res = count.data, N = n.obs, ind_per = ind.per.obs, 
                       ind_pas = ind.pas.obs, nw_read = nw, a_read = pas_param_read$a, 

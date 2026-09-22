@@ -384,19 +384,19 @@ testlet_parms_mom <- function(Y,logT10,Pass,N,n.It) {
   
   ##
   # Calculating omega (alpha), beta, and sigma for time data
-  beta.out <- apply(logT10,2,mean,na.rm=T)
+  beta.out <- apply(logT10,2,mean,na.rm=TRUE)
   sigma2.in <- NULL
   n.C <- NULL
   PID <- unique(Pass)
   n.P <- length(PID)
   for (j in 1:n.P) {
     C <- cov(logT10[,Pass==PID[j]],use="pairwise.complete.obs")
-    sigma2.in <- c(sigma2.in,mean(C[upper.tri(C)==T]))
+    sigma2.in <- c(sigma2.in,mean(C[upper.tri(C)==TRUE]))
     n0 <- dim(C)[1]
     n.C <- c(n.C,n0*(n0-1)/2)
   }
   sigma2 <- sum(n.C*sigma2.in)/sum(n.C)
-  omega2 <- apply(logT10,2,var,na.rm=T)-sigma2
+  omega2 <- apply(logT10,2,var,na.rm=TRUE)-sigma2
   sigma.out <- sqrt(sigma2)
   omega2[omega2<=0] <- min(omega2[omega2>0])*0.8
   omega.out <- sqrt(omega2)
@@ -405,10 +405,10 @@ testlet_parms_mom <- function(Y,logT10,Pass,N,n.It) {
   # gamma2 estimation
   S <- 1-is.na(logT10)
   n.pair.mat <- t(S)%*%S
-  ind.mat1 <- matrix(rep(Pass,n.It),byrow=T,nrow=n.It)
+  ind.mat1 <- matrix(rep(Pass,n.It),byrow=TRUE,nrow=n.It)
   ind.mat2 <- t(ind.mat1)
   C.full <- cov(logT10,use="pairwise.complete.obs")
-  index <- which(upper.tri(C.full)==T)
+  index <- which(upper.tri(C.full)==TRUE)
   C.select <- C.full[index]
   ind1.select <- ind.mat1[index]
   ind2.select <- ind.mat2[index]
@@ -418,7 +418,7 @@ testlet_parms_mom <- function(Y,logT10,Pass,N,n.It) {
   ind1.select <- ind1.select[index]
   ind2.select <- ind2.select[index]
   n.pairs <- n.pairs[index]
-  index <- which(is.na(C.select)==F)
+  index <- which(is.na(C.select)==FALSE)
   C.select <- C.select[index]
   ind1.select <- ind1.select[index]
   ind2.select <- ind2.select[index]
@@ -426,7 +426,7 @@ testlet_parms_mom <- function(Y,logT10,Pass,N,n.It) {
   ind.pos1 <- match(ind1.select, unique(Pass))
   ind.pos2 <- match(ind2.select, unique(Pass))
   unique.id <- matrix(as.numeric(unique(cbind(ind.pos1,ind.pos2))),
-                      ncol = 2, byrow = F)
+                      ncol = 2, byrow = FALSE)
   Y.exp <- rep(0,nrow(unique.id))
   n.use <- rep(0,length(Y.exp))
   for (kk in 1:nrow(unique.id)) {
@@ -442,25 +442,25 @@ testlet_parms_mom <- function(Y,logT10,Pass,N,n.It) {
   
   ##
   # gamma1 estimation
-  N.mat <- matrix(rep(N,n.It),byrow=T,nrow=n.It)
+  N.mat <- matrix(rep(N,n.It),byrow=TRUE,nrow=n.It)
   S <- 1-is.na(Y)
   n.pair.mat <- t(S)%*%S
   Y.0 <- Y
-  Y.0[is.na(Y.0)==T] <- 0
+  Y.0[is.na(Y.0)==TRUE] <- 0
   Y.cross <- t(Y.0)%*%Y.0
   Y.cross <- Y.cross/n.pair.mat
   p.cross <- Y.cross/N.mat/t(N.mat)
-  mean.Y <- apply(Y,2,mean,na.rm=T)
+  mean.Y <- apply(Y,2,mean,na.rm=TRUE)
   mean.p <- mean.Y/N
-  mat.mean.p1 <- matrix(rep(mean.p,n.It),byrow=T,nrow=n.It)
+  mat.mean.p1 <- matrix(rep(mean.p,n.It),byrow=TRUE,nrow=n.It)
   mat.mean.p2 <- t(mat.mean.p1)
-  ind.mat1 <- matrix(rep(Pass,n.It),byrow=T,nrow=n.It)
+  ind.mat1 <- matrix(rep(Pass,n.It),byrow=TRUE,nrow=n.It)
   ind.mat2 <- t(ind.mat1)
-  a.est1 <- matrix(rep(a.out,n.It),byrow=T,nrow=n.It)
+  a.est1 <- matrix(rep(a.out,n.It),byrow=TRUE,nrow=n.It)
   a.est2 <- t(a.est1)
-  b.est1 <- matrix(rep(b.out,n.It),byrow=T,nrow=n.It)
+  b.est1 <- matrix(rep(b.out,n.It),byrow=TRUE,nrow=n.It)
   b.est2 <- t(b.est1)
-  index <- which(upper.tri(p.cross)==T)
+  index <- which(upper.tri(p.cross)==TRUE)
   n.pair <- n.pair.mat[index]
   p.cross <- p.cross[index]
   mat.mean.p1 <- mat.mean.p1[index]
@@ -471,7 +471,7 @@ testlet_parms_mom <- function(Y,logT10,Pass,N,n.It) {
   a.est2 <- a.est2[index]
   b.est1 <- b.est1[index]
   b.est2 <- b.est2[index]
-  index <- which(is.na(p.cross)==F)
+  index <- which(is.na(p.cross)==FALSE)
   n.pair <- n.pair[index]
   p.cross <- p.cross[index]
   mat.mean.p1 <- mat.mean.p1[index]
@@ -521,21 +521,21 @@ testlet_parms_mom <- function(Y,logT10,Pass,N,n.It) {
   ##
   # rho estimation
   cov_YT <- cov(Y,logT10,use="pairwise.complete.obs")
-  N.mat <- matrix(rep(N,n.It),byrow=F,nrow=n.It)
+  N.mat <- matrix(rep(N,n.It),byrow=FALSE,nrow=n.It)
   S <- 1-is.na(Y)
   n.pair.mat <- t(S)%*%S
-  a.est <- matrix(rep(a.out,n.It),byrow=F,nrow=n.It)
-  b.est <- matrix(rep(b.out,n.It),byrow=F,nrow=n.It)
+  a.est <- matrix(rep(a.out,n.It),byrow=FALSE,nrow=n.It)
+  b.est <- matrix(rep(b.out,n.It),byrow=FALSE,nrow=n.It)
   scaled.cov <- -cov_YT*sqrt(2*pi/sigma2)/N.mat*sqrt((1+a.est^2)/a.est^2)*exp(0.5*b.est^2/(1+a.est^2))
   scaled.cov <- scaled.cov*sqrt(1+gamma1.out^2)*sqrt(1+gamma2.out^2)
-  ind.mat1 <- matrix(rep(Pass,n.It),byrow=F,nrow=n.It)
+  ind.mat1 <- matrix(rep(Pass,n.It),byrow=FALSE,nrow=n.It)
   ind.mat2 <- t(ind.mat1)
   n.pair1 <- n.pair.mat[ind.mat1!=ind.mat2]
   scaled.cov1 <- scaled.cov[ind.mat1!=ind.mat2]
   n.pair2 <- n.pair.mat[ind.mat1==ind.mat2]
   scaled.cov2 <- scaled.cov[ind.mat1==ind.mat2]
-  n.pair1 <- n.pair1[is.na(scaled.cov1)==F]
-  scaled.cov1 <- scaled.cov1[is.na(scaled.cov1)==F]
+  n.pair1 <- n.pair1[is.na(scaled.cov1)==FALSE]
+  scaled.cov1 <- scaled.cov1[is.na(scaled.cov1)==FALSE]
   scaled.cov1[scaled.cov1>1] <- 1
   scaled.cov1[scaled.cov1<(-1)] <- -1
   rho.theta <- mean(scaled.cov1)
@@ -567,7 +567,7 @@ Item.Parms.NegLogLLH.Count <- function(par,Y,n.Y,N.item,gamma1,theta1,U1) {
   
   V1 <- (theta1+gamma1*U1)/sqrt(1+gamma1^2)
   Arg1 <- t(pnorm(V1*a-b))
-  Count.LogLLH <- rowMeans(apply(Arg1, 2, function(col) dbinom(Y,N.item,col,log=T)))
+  Count.LogLLH <- rowMeans(apply(Arg1, 2, function(col) dbinom(Y,N.item,col,log=TRUE)))
   
   NegLogLLH <- -sum(Count.LogLLH)
   
@@ -617,7 +617,7 @@ Item.Parms.NegLogLLH.logTime <- function(par,logT10,n.T,sigma,gamma2,theta2,U2) 
   
   V2 <- sigma*t((theta2+gamma2*U2)/sqrt(1+gamma2^2))
   logTime.LogLLH <- rowMeans(apply(V2, 2, 
-                                   function(col) dnorm(logT10, mean = beta - col, sd = 1/alpha, log=T)))
+                                   function(col) dnorm(logT10, mean = beta - col, sd = 1/alpha, log=TRUE)))
   
   NegLogLLH <- -sum(logTime.LogLLH)
   
@@ -668,7 +668,7 @@ Parms.NegLogLLH.rhoTheta <- function(par,n,theta1,theta2) {
   for (i in 1:n) {
     
     Sigma <- matrix(c(1,rho,rho,1),nrow=2)
-    Theta.LogLLH <- mean(apply(cbind(theta1[,i],theta2[,i]), 1, function(row) dmvnorm(row,mean=c(0,0),sigma=Sigma,log=T)))
+    Theta.LogLLH <- mean(apply(cbind(theta1[,i],theta2[,i]), 1, function(row) dmvnorm(row,mean=c(0,0),sigma=Sigma,log=TRUE)))
     
     LogLLH[i] <- Theta.LogLLH
     
@@ -695,7 +695,7 @@ Parms.NegLogLLH.Testlet <- function(par,n,K,U1,U2) {
     Sigma2 <- matrix(c(1,rhoTestlet,rhoTestlet,1),nrow=2)
     U.LogLLH <- rep(0,K)
     for (j in which(S==1)) {
-      U.LogLLH[j] <- mean(apply(cbind(A1[,j],A2[,j]), 1, function(row) dmvnorm(row,mean=c(0,0),sigma=Sigma2,log=T)))
+      U.LogLLH[j] <- mean(apply(cbind(A1[,j],A2[,j]), 1, function(row) dmvnorm(row,mean=c(0,0),sigma=Sigma2,log=TRUE)))
     }
     
     LogLLH[i] <- sum(U.LogLLH)
