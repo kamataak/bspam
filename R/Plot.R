@@ -45,7 +45,7 @@
 #' @return A \code{plotly} object.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' plot.task(fit, parameter = "a")
 #' plot.task(fit, parameter = c("a", "b"))
 #' }
@@ -210,7 +210,7 @@ plot.task <- function(x, task = NULL, parameter, sort = FALSE, ...) {
 #' @return A \code{plotly} object.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' plot.person(scores, parameter = "theta")
 #' plot.person(scores, parameter = c("theta", "tau"))
 #' }
@@ -359,7 +359,7 @@ plot.person <- function(x, person=NULL, parameter, show.se=TRUE, sort=FALSE, ...
 #' @return A three-dimensional \code{plotly} scatter plot.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' plot.information(fit)
 #' }
 #' 
@@ -481,8 +481,7 @@ plot.information <- function(x, ...) {
         while ((abs(l1_curr) > tol_loglike) || (abs(delta) > tol_NR)) {
           if (itr > max_itr) {
             message<-paste('MLE does not converge in replication',rep)
-            model.file.name<-paste("mlenonconvergence",rep,".txt")
-            write(x=message,file=model.file.name,append = FALSE)
+            warning(message, call. = FALSE)
             break }
           itr <- itr + 1
           delta <- l1_curr / l2(theta_curr)
@@ -568,9 +567,7 @@ plot.information <- function(x, ...) {
       { 
         map = c(th_init, tau_init) 
         message<-paste('MAP does not converge in replication',rep)
-        model.file.name<-paste("mapnonconvergence",rep,".txt")
-        write(x=message,file=model.file.name,append = FALSE)
-        write(x=message,file=model.file.name,append = FALSE)
+        warning(message, call. = FALSE)
       }
       # standard error
       map_se = sqrt(diag(solve( -matrix(c(lam11, lam12, lam12, lam22),nrow=2,ncol=2), diag(2) )))
@@ -836,7 +833,6 @@ plot.information <- function(x, ...) {
   theta_rep <- rep(theta, I)  
   tau_rep <- rep(tau, I)
   
-  set.seed(1)
   mu_time <- beta_rep - tau_rep
   sd_time <- 1/alpha_rep
   time_data <- rnorm(n=N*I, mean=mu_time, sd=sd_time)
@@ -965,7 +961,7 @@ plot.information <- function(x, ...) {
 #' @return A \code{plotly} scatter plot.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' plot.wcpm(scores)
 #' }
 #' 
