@@ -46,8 +46,9 @@
 #'
 #' @examples
 #' \donttest{
-#' plot.task(fit, parameter = "a")
-#' plot.task(fit, parameter = c("a", "b"))
+#' data("passage.calib.mcem")
+#' plot.task(passage.calib.mcem, parameter = "a")
+#' plot.task(passage.calib.mcem, parameter = c("a", "b"))
 #' }
 #' 
 #' @import plotly
@@ -211,6 +212,14 @@ plot.task <- function(x, task = NULL, parameter, sort = FALSE, ...) {
 #'
 #' @examples
 #' \donttest{
+#' scores <- data.frame(
+#'   person.id = c("1", "2"),
+#'   theta.map = c(-0.5, 0.6),
+#'   tau.map = c(-0.2, 0.3),
+#'   se.theta.map = c(0.2, 0.2),
+#'   se.tau.map = c(0.1, 0.1)
+#' )
+#' class(scores) <- c("scoring", "data.frame")
 #' plot.person(scores, parameter = "theta")
 #' plot.person(scores, parameter = c("theta", "tau"))
 #' }
@@ -360,7 +369,8 @@ plot.person <- function(x, person=NULL, parameter, show.se=TRUE, sort=FALSE, ...
 #'
 #' @examples
 #' \donttest{
-#' plot.information(fit)
+#' data("passage.calib.mcem")
+#' plot.information(passage.calib.mcem)
 #' }
 #' 
 #' @import plotly
@@ -962,6 +972,13 @@ plot.information <- function(x, ...) {
 #'
 #' @examples
 #' \donttest{
+#' scores <- data.frame(
+#'   person.id = c("1", "2"),
+#'   wcpm.obs = c(100, 120),
+#'   wcpm.map = c(105, 118),
+#'   se.wcpm.map = c(5, 6)
+#' )
+#' class(scores) <- c("scoring", "data.frame")
 #' plot.wcpm(scores)
 #' }
 #' 
