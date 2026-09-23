@@ -30,7 +30,8 @@ through \code{plot()}.
 }
 \examples{
 \donttest{
-plot.information(fit)
+data("passage.calib.mcem")
+plot.information(passage.calib.mcem)
 }
 
 }

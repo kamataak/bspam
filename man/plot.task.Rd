@@ -41,8 +41,9 @@ filters by \code{task.id}.
 }
 \examples{
 \donttest{
-plot.task(fit, parameter = "a")
-plot.task(fit, parameter = c("a", "b"))
+data("passage.calib.mcem")
+plot.task(passage.calib.mcem, parameter = "a")
+plot.task(passage.calib.mcem, parameter = c("a", "b"))
 }
 
 }

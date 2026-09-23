@@ -38,6 +38,13 @@ It is not designed for automatic dispatch through \code{plot()}.
 }
 \examples{
 \donttest{
+scores <- data.frame(
+  person.id = c("1", "2"),
+  wcpm.obs = c(100, 120),
+  wcpm.map = c(105, 118),
+  se.wcpm.map = c(5, 6)
+)
+class(scores) <- c("scoring", "data.frame")
 plot.wcpm(scores)
 }
 
