@@ -447,7 +447,6 @@ get_errlist <- function(passage) {
       }
     }
     if (flag == 0) {
-      print(paste("got ",passage_ids[i]))
       ll <- length(err_list)+1
       err_list[ll] <- passage_ids[i]
     }
