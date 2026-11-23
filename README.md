@@ -1,6 +1,9 @@
 
 # bspam
 
+[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/bspam?color=blue)](https://r-pkg.org/pkg/bspam)
+[![Monthly Downloads](https://cranlogs.r-pkg.org/badges/bspam?color=green)](https://r-pkg.org/pkg/bspam)
+
 # Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data 
 
 `bspam` is an R package that contains functions to fit the
@@ -44,7 +47,11 @@ if(!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
 2.  Install `bspam` by running the following R code.
 
 ``` r
-remotes::install_github("kamataak/bspam")
+install.packages("bspam") # install from CRAN
+```
+
+``` r
+remotes::install_github("kamataak/bspam") # install from GitHub
 ```
 
 ### Optional:
