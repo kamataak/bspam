@@ -1,8 +1,7 @@
 
 # bspam
 
-[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/bspam?color=blue)](https://r-pkg.org/pkg/bspam)
-[![Monthly Downloads](https://cranlogs.r-pkg.org/badges/bspam?color=green)](https://r-pkg.org/pkg/bspam)
+**CRAN Downloads:** [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/bspam?color=blue)](https://r-pkg.org/pkg/bspam)
 
 # Speed-Accuracy Psychometric Modeling for Binomial Count Outcome Data 
 
